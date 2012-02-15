@@ -12,10 +12,14 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    glcanvas.cpp
+    glcanvas.cpp \
+    objectmanager.cpp \
+    gameobject.cpp
 
 HEADERS  += mainwindow.h \
-    glcanvas.h
+    glcanvas.h \
+    objectmanager.h \
+    gameobject.h
 
 FORMS    += mainwindow.ui
 
