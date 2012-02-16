@@ -2,6 +2,7 @@
 #define GLCANVAS_H
 
 #include <QGLWidget>
+#include <QtOpenGL>
 
 class GLCanvas : public QGLWidget
 {
