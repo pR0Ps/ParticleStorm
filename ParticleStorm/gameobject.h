@@ -2,25 +2,53 @@
 #define GAMEOBJECT_H
 
 #include <QColor>
-#include "objectmanager.h"
+
+class ObjectManager;
 
 class GameObject {
 public:
-    explicit GameObject();
-    bool isActive();
-    void draw();
-    void update();
-    void modHealth(int n);
-    void applyForce(double x, double y, double mag);
-    void die();
-    void doCollision(const ObjectManager& om);
-    void doCollision(const GameObject ob);
+    GameObject(ObjectManager *manager);
+    GameObject();
+
+    //draw the object
+    virtual void draw() = 0;
+
+    //pan the object with the screen
+    void pan(double x, double y);
+
+    //update the object (pos from vel, AI, etc)
+    virtual void update() = 0;
+
+    //apply force to the object
+    virtual void applyForce(double x, double y, double mag) = 0;
+
+    //kill the object (make sure to set inUse = false so it gets removed)
+    virtual void die();
+
+    //look for a collision with another object + handle result
+    virtual void doCollision(GameObject *ob) = 0;
+
+    //set
+    void setManager(ObjectManager *om);
+    void setLife(int n, bool rel);
+
+    //get
+    bool getInUse();
+    bool getLife();
+    double getX();
+    double getY();
 
 private:
+    //functions
+    void init();
+
+    //properties
     double x, y;
     double x_vel, y_vel;
     int life;
     QColor clr;
+    bool inUse;
+    ObjectManager *manager;
 };
 
 #endif // GAMEOBJECT_H
