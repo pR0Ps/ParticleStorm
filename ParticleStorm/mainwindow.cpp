@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete canvas;
 }
 
 void MainWindow::on_actionQuit_triggered()
