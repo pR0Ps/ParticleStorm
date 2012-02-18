@@ -15,7 +15,6 @@ SOURCES += main.cpp\
     glcanvas.cpp \
     objectmanager.cpp \
     gameobject.cpp \
-    globals.cpp \
     player.cpp \
     star.cpp \
     particle.cpp \
@@ -26,13 +25,13 @@ SOURCES += main.cpp\
     particlemanager.cpp \
     powerupmanager.cpp \
     enemymanager.cpp \
-    shrapnelmanager.cpp
+    shrapnelmanager.cpp \
+    util.cpp
 
 HEADERS  += mainwindow.h \
     glcanvas.h \
     objectmanager.h \
     gameobject.h \
-    globals.h \
     player.h \
     star.h \
     particle.h \
@@ -43,7 +42,8 @@ HEADERS  += mainwindow.h \
     particlemanager.h \
     powerupmanager.h \
     enemymanager.h \
-    shrapnelmanager.h
+    shrapnelmanager.h \
+    util.h
 
 FORMS    += mainwindow.ui
 

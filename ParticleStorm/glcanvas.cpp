@@ -1,4 +1,5 @@
 #include "glcanvas.h"
+#include "util.h"
 #include <QGLWidget>
 #include <QtOpenGL>
 #include <time.h>
@@ -83,13 +84,7 @@ void GLCanvas::doBlur(){
 //test scene
 void GLCanvas::drawScene(){
     //red box around the window
-    glBegin(GL_LINE_LOOP);
-        glColor3f(1, 0, 0);
-        glVertex2i(11, 11);
-        glVertex2i(11, MAX_Y-10);
-        glVertex2i(MAX_X-10, MAX_Y - 10);
-        glVertex2i(MAX_X-10, 11);
-    glEnd();
+    Util::drawBox(10, 10, MAX_X - 10, MAX_Y - 10, false, QColor(255, 0, 0));
 
     //the triangle
     glBegin(GL_TRIANGLES);
