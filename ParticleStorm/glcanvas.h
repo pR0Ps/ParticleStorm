@@ -7,11 +7,9 @@
 #define MAX_X 1024
 #define MAX_Y 768
 #define MAX_FPS 60
-#define LINES_PER_BLUR 400
+#define LINES_PER_FADE 400
 
-class GLCanvas : public QGLWidget
-{
-    Q_OBJECT
+class GLCanvas : public QGLWidget{
 public:
     explicit GLCanvas(QWidget *parent = 0);
     ~GLCanvas();
@@ -21,23 +19,21 @@ public:
 
 private:
     void drawFramebuffer();
-    void doBlur();
-    void drawScene();
-    void update();
+    void doFade(); //fade the previous screen every frame
+    void drawHUD();
+    void update(); //update the logic for all the objects
+
+    QGLFramebufferObject *fbo; //offscreen framebuffer
 
     //testing stuff
+    void drawScene();
     int coords[6];
     int vels[6];
 
-    QGLFramebufferObject *fbo; //use for blurring effect
-    //int frameTimer; //
-
 protected:
+    //overrides
     void initializeGL();
     void paintGL();
-
-signals:
-
 };
 
 #endif // GLCANVAS_H

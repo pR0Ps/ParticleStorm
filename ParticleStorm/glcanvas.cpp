@@ -1,7 +1,5 @@
 #include "glcanvas.h"
 #include "util.h"
-#include <QGLWidget>
-#include <QtOpenGL>
 #include <time.h>
 
 GLCanvas::GLCanvas(QWidget *parent) : QGLWidget(parent){
@@ -41,6 +39,9 @@ void GLCanvas::initializeGL(){
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_DEPTH_TEST);
+
     //init and clear the framebuffer
     QGLFramebufferObjectFormat format;
     format.setAttachment(QGLFramebufferObject::NoAttachment);
@@ -51,16 +52,18 @@ void GLCanvas::initializeGL(){
         glColor3i(0, 0, 0);
         glClear(GL_COLOR_BUFFER_BIT);
     fbo->release();
-
 }
 
 //draw the contents of the framebuffer
 void GLCanvas::drawFramebuffer(){
     glEnable(GL_TEXTURE_2D);
+    //glEnable (GL_BLEND);
+    //glBlendFunc (GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     glBindTexture(GL_TEXTURE_2D, fbo->texture());
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    //glColor4d(0, 0, 0, 150);
     glBegin(GL_QUADS);
         glTexCoord2f(0, 0); glVertex2i(0, 0);
         glTexCoord2f(0, 1); glVertex2i(0, MAX_Y);
@@ -68,12 +71,20 @@ void GLCanvas::drawFramebuffer(){
         glTexCoord2f(1, 0); glVertex2i(MAX_X, 0);
     glEnd();
     glDisable(GL_TEXTURE_2D);
+    //glDisable (GL_BLEND);
 }
 
-//blur the frame
-void GLCanvas::doBlur(){
+//fade the frame
+void GLCanvas::doFade(){
     glColor3f(0, 0, 0);
-    for (int i = 0 ; i < LINES_PER_BLUR ; i++){
+
+    //outsides don't get cleared very well
+    Util::drawBox(0, 0, MAX_X, 10, true);
+    Util::drawBox(0, MAX_Y - 10, MAX_X - 10, MAX_Y, true);
+    Util::drawBox(0, 10, 10, MAX_Y - 10, true);
+    Util::drawBox(MAX_X - 10, 10, MAX_X, MAX_Y, true);
+
+    for (int i = 0 ; i < LINES_PER_FADE ; i++){
         glBegin(GL_LINE);
             glVertex2i(qrand() % MAX_X, qrand() % MAX_Y);
             glVertex2i(qrand() % MAX_X, qrand() % MAX_Y);
@@ -83,15 +94,17 @@ void GLCanvas::doBlur(){
 
 //test scene
 void GLCanvas::drawScene(){
-    //red box around the window
-    Util::drawBox(10, 10, MAX_X - 10, MAX_Y - 10, false, QColor(255, 0, 0));
-
     //the triangle
     glBegin(GL_TRIANGLES);
         glColor3f(1, 0, 0); glVertex2i(coords[0], coords[1]);
         glColor3f(0, 1, 0); glVertex2i(coords[2], coords[3]);
         glColor3f(0, 0, 1); glVertex2i(coords[4], coords[5]);
     glEnd();
+}
+
+void GLCanvas::drawHUD(){
+    Util::drawMeter(20, MAX_Y - 35, 220, MAX_Y - 20, .75, QColor(200, 0, 0));
+    Util::drawMeter(240, MAX_Y - 35, 440, MAX_Y - 20, 1, QColor(0, 0, 200));
 }
 
 //update game logic - automatically called
@@ -130,11 +143,11 @@ void GLCanvas::paintGL(){
 
     //draw to the framebuffer
     fbo->bind();
-        doBlur();
+        doFade();
         drawScene();
     fbo->release();
 
     drawFramebuffer();
-
+    drawHUD();
 }
 

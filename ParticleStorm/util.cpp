@@ -15,10 +15,23 @@ void Util::drawBox(double x1, double y1, double x2, double y2, bool fill, QColor
     if (clr.isValid()){ //possibly slow (http://www.vision.ee.ethz.ch/computing/sepp-irix/qt-3.0-mo/qcolor.html)
         glColor3d(clr.red(), clr.green(), clr.blue());
     }
-    glBegin(fill ? GL_QUADS : GL_LINE_LOOP);
+    if (!fill){
+        //weirdness with the LINE_LOOP
+        x1 += 1;
+        y2 -= 1;
+        glBegin(GL_LINE_LOOP);
+    }
+    else{
+        glBegin(GL_QUADS);
+    }
         glVertex2d(x1, y1);
         glVertex2d(x2, y1);
         glVertex2d(x2, y2);
         glVertex2d(x1, y2);
     glEnd();
+}
+
+void Util::drawMeter(double x1, double y1, double x2, double y2, double amt, QColor clr){
+    drawBox(x1, y1, x2, y2, false, clr); //outside
+    drawBox(x1 + 2, y1 + 2, x1 + 2 + (x2 - x1 - 4) * amt, y2 - 2, true, clr); //inside
 }

@@ -16,6 +16,7 @@ public:
 
     //drawing
     static void drawBox(double x1, double y1, double x2, double y2, bool fill, QColor clr = QColor());
+    static void drawMeter(double x1, double y1, double x2, double y2, double amt, QColor clr = QColor());
 };
 
 #endif // GLOBALS_H
