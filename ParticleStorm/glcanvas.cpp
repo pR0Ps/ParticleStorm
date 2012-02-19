@@ -16,7 +16,12 @@ GLCanvas::GLCanvas(QWidget *parent) : QGLWidget(parent){
     }
 
     //start the timer (sets off the frameloop via timerEvent)
-    startTimer(1/MAX_FPS*1000);
+    startTimer(1/(double)MAX_FPS*1000);
+
+    //FPS
+    framecnt = 0;
+    fps = 0;
+    timer.start();
 }
 
 //destructor
@@ -49,7 +54,6 @@ void GLCanvas::initializeGL(){
     format.setTextureTarget(GL_TEXTURE_2D);
     fbo = new QGLFramebufferObject(MAX_X, MAX_Y, format);
     fbo->bind();
-        glColor3i(0, 0, 0);
         glClear(GL_COLOR_BUFFER_BIT);
     fbo->release();
 }
@@ -102,9 +106,19 @@ void GLCanvas::drawScene(){
     glEnd();
 }
 
+//draws information for the player
 void GLCanvas::drawHUD(){
-    Util::drawMeter(20, MAX_Y - 35, 220, MAX_Y - 20, .75, QColor(200, 0, 0));
-    Util::drawMeter(240, MAX_Y - 35, 440, MAX_Y - 20, 1, QColor(0, 0, 200));
+    //demo bars for health + mana
+    Util::drawMeter(20, MAX_Y - 35, 220, MAX_Y - 20, .75, false, QColor(255, 0, 0));
+    Util::drawMeter(240, MAX_Y - 35, 440, MAX_Y - 20, 1, false, QColor(0, 0, 255));
+
+    //FPS - no text yet, so a bar (with red marker of target FPS) will have to do
+    Util::drawMeter(MAX_X - 35, 20, MAX_X - 20, MAX_Y - 20, fps/100.0d, true, QColor(0, 255, 0));
+    glColor3d(255, 0, 0);
+    glBegin(GL_LINES);
+        glVertex2i(MAX_X - 35, 22 + (MAX_Y - 46) * (MAX_FPS/100.0d));
+        glVertex2i(MAX_X - 20, 22 + (MAX_Y - 46) * (MAX_FPS/100.0d));
+    glEnd();
 }
 
 //update game logic - automatically called
@@ -126,15 +140,22 @@ void GLCanvas::update(){
 
 //draws everything - automatically called
 void GLCanvas::paintGL(){
+    //FPS monitoring
+    framecnt++;
+    if (framecnt > FPS_COUNT_FRAME_INTERVAL){
+        fps = framecnt/(double)(timer.restart()) * 1000;
+        framecnt = 0;
+    }
+
     /*Draw method:
-      To framebuffer (will be blurred):
+      To framebuffer:
         Old framebuffer (don't erase it)
-        Blur
+        Fade
         Stars
         Shrapnel
         Powerups
-        Player (maybe implement selective blurring)
-      To screen (no blurring):
+        Player (maybe implement selective fading)
+      To screen:
         Current framebuffer
         Particles
         Enemies
@@ -147,6 +168,7 @@ void GLCanvas::paintGL(){
         drawScene();
     fbo->release();
 
+    //draw to screen
     drawFramebuffer();
     drawHUD();
 }

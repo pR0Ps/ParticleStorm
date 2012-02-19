@@ -3,10 +3,12 @@
 
 #include <QGLWidget>
 #include <QtOpenGL>
+#include <QTime>
 
 #define MAX_X 1024
 #define MAX_Y 768
-#define MAX_FPS 60
+#define MAX_FPS 50
+#define FPS_COUNT_FRAME_INTERVAL 100
 #define LINES_PER_FADE 400
 
 class GLCanvas : public QGLWidget{
@@ -29,6 +31,11 @@ private:
     void drawScene();
     int coords[6];
     int vels[6];
+
+    //FPS stuff
+    int framecnt;
+    QTime timer;
+    double fps;
 
 protected:
     //overrides

@@ -31,7 +31,12 @@ void Util::drawBox(double x1, double y1, double x2, double y2, bool fill, QColor
     glEnd();
 }
 
-void Util::drawMeter(double x1, double y1, double x2, double y2, double amt, QColor clr){
+void Util::drawMeter(double x1, double y1, double x2, double y2, double amt, bool vert, QColor clr){
     drawBox(x1, y1, x2, y2, false, clr); //outside
-    drawBox(x1 + 2, y1 + 2, x1 + 2 + (x2 - x1 - 4) * amt, y2 - 2, true, clr); //inside
+    if (!vert){
+        drawBox(x1 + 2, y1 + 2, x1 + 2 + (x2 - x1 - 4) * amt, y2 - 2, true, clr);
+    }
+    else{
+        drawBox(x1 + 2, y1 + 2, x2 - 2, y1 + 2 + (y2 - y1 - 4) * amt, true, clr);
+    }
 }
