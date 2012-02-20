@@ -17,11 +17,10 @@ public:
     explicit GLCanvas(QWidget *parent = 0);
     ~GLCanvas();
 
+private:
     //main frameloop (update game, render frame)
     void timerEvent(QTimerEvent *){update();updateGL();}
 
-private:
-    void drawFramebuffer();
     void doFade(); //fade the previous screen every frame
     void drawHUD();
     void update(); //update the logic for all the objects
@@ -35,8 +34,17 @@ private:
 
     //FPS stuff
     long int framecnt;
-    QTime timer;
+    QTime *timer;
     double fps;
+
+    //colours
+    QColor *col_health;
+    QColor *col_mana;
+    QColor *col_white;
+    QColor *col_yellow;
+    QColor *col_red;
+    QColor *col_green;
+    QColor *col_blue;
 
     //textures
     GLuint tex_text;
