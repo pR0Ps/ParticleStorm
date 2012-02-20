@@ -9,19 +9,19 @@ GLCanvas::GLCanvas(QWidget *parent) : QGLWidget(parent){
     //pseudo-randomness
     qsrand((uint)time(NULL));
 
-    //init some values
+    //init the testing values
     for (int i = 0 ; i < 6 ; i++){
         coords[i] = qrand() % (i % 2 == 0 ? MAX_X : MAX_Y);
         vels[i] = (qrand() % 5) + 5;
     }
 
-    //start the timer (sets off the frameloop via timerEvent)
-    startTimer(1/(double)MAX_FPS*1000);
-
     //FPS
     framecnt = 0;
     fps = 0;
     timer.start();
+
+    //start the timer (sets off the frameloop via timerEvent)
+    startTimer(1/(double)MAX_FPS*1000);
 }
 
 //destructor
@@ -44,8 +44,10 @@ void GLCanvas::initializeGL(){
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
+    //unneeded OpenGL features (will renable on a per-use basis)
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_DEPTH_TEST);
+    glDisable(GL_BLEND);
 
     //init and clear the framebuffer
     QGLFramebufferObjectFormat format;
@@ -56,26 +58,9 @@ void GLCanvas::initializeGL(){
     fbo->bind();
         glClear(GL_COLOR_BUFFER_BIT);
     fbo->release();
-}
 
-//draw the contents of the framebuffer
-void GLCanvas::drawFramebuffer(){
-    glEnable(GL_TEXTURE_2D);
-    //glEnable (GL_BLEND);
-    //glBlendFunc (GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-    glBindTexture(GL_TEXTURE_2D, fbo->texture());
-    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    //glColor4d(0, 0, 0, 150);
-    glBegin(GL_QUADS);
-        glTexCoord2f(0, 0); glVertex2i(0, 0);
-        glTexCoord2f(0, 1); glVertex2i(0, MAX_Y);
-        glTexCoord2f(1, 1); glVertex2i(MAX_X, MAX_Y);
-        glTexCoord2f(1, 0); glVertex2i(MAX_X, 0);
-    glEnd();
-    glDisable(GL_TEXTURE_2D);
-    //glDisable (GL_BLEND);
+    //load textures
+    tex_text = Util::loadTextureFromFile(":/Images/font.png");
 }
 
 //fade the frame
@@ -83,11 +68,12 @@ void GLCanvas::doFade(){
     glColor3f(0, 0, 0);
 
     //outsides don't get cleared very well
-    Util::drawBox(0, 0, MAX_X, 10, true);
-    Util::drawBox(0, MAX_Y - 10, MAX_X - 10, MAX_Y, true);
-    Util::drawBox(0, 10, 10, MAX_Y - 10, true);
-    Util::drawBox(MAX_X - 10, 10, MAX_X, MAX_Y, true);
+    Util::drawBox(0, 0, MAX_X, FADE_BORDER_AMT, true);
+    Util::drawBox(0, MAX_Y - FADE_BORDER_AMT, MAX_X - FADE_BORDER_AMT, MAX_Y, true);
+    Util::drawBox(0, FADE_BORDER_AMT, FADE_BORDER_AMT, MAX_Y - FADE_BORDER_AMT, true);
+    Util::drawBox(MAX_X - FADE_BORDER_AMT, FADE_BORDER_AMT, MAX_X, MAX_Y, true);
 
+    //fade the screen
     for (int i = 0 ; i < LINES_PER_FADE ; i++){
         glBegin(GL_LINE);
             glVertex2i(qrand() % MAX_X, qrand() % MAX_Y);
@@ -98,11 +84,16 @@ void GLCanvas::doFade(){
 
 //test scene
 void GLCanvas::drawScene(){
-    //the triangle
     glBegin(GL_TRIANGLES);
         glColor3f(1, 0, 0); glVertex2i(coords[0], coords[1]);
         glColor3f(0, 1, 0); glVertex2i(coords[2], coords[3]);
         glColor3f(0, 0, 1); glVertex2i(coords[4], coords[5]);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+        glColor3f(1, 0, 0); glVertex2i(MAX_X - coords[0], MAX_Y - coords[1]);
+        glColor3f(0, 1, 0); glVertex2i(MAX_X - coords[2], MAX_Y - coords[3]);
+        glColor3f(0, 0, 1); glVertex2i(MAX_X - coords[4], MAX_Y - coords[5]);
     glEnd();
 }
 
@@ -111,14 +102,8 @@ void GLCanvas::drawHUD(){
     //demo bars for health + mana
     Util::drawMeter(20, MAX_Y - 35, 220, MAX_Y - 20, .75, false, QColor(255, 0, 0));
     Util::drawMeter(240, MAX_Y - 35, 440, MAX_Y - 20, 1, false, QColor(0, 0, 255));
-
-    //FPS - no text yet, so a bar (with red marker of target FPS) will have to do
-    Util::drawMeter(MAX_X - 35, 20, MAX_X - 20, MAX_Y - 20, fps/100.0d, true, QColor(0, 255, 0));
-    glColor3d(255, 0, 0);
-    glBegin(GL_LINES);
-        glVertex2i(MAX_X - 35, 22 + (MAX_Y - 46) * (MAX_FPS/100.0d));
-        glVertex2i(MAX_X - 20, 22 + (MAX_Y - 46) * (MAX_FPS/100.0d));
-    glEnd();
+    //FPS text
+    Util::drawString("FPS:" + Util::doubleToString(fps, 4, 1), 0, 0, tex_text);
 }
 
 //update game logic - automatically called
@@ -169,7 +154,7 @@ void GLCanvas::paintGL(){
     fbo->release();
 
     //draw to screen
-    drawFramebuffer();
+    Util::drawTexture(0, 0, MAX_X, MAX_Y, fbo->texture());
     drawHUD();
 }
 

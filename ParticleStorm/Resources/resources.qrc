@@ -1,5 +1,7 @@
 <RCC>
-  <qresource prefix="Images">
-    <file>Title.jpg</file>
-  </qresource>
+    <qresource prefix="/Images">
+        <file>Title.png</file>
+        <file>Cursor.png</file>
+        <file>font.png</file>
+    </qresource>
 </RCC>

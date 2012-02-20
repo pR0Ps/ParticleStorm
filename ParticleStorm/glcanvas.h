@@ -1,7 +1,7 @@
 #ifndef GLCANVAS_H
 #define GLCANVAS_H
 
-#include <QGLWidget>
+//#include <QGLWidget>
 #include <QtOpenGL>
 #include <QTime>
 
@@ -10,6 +10,7 @@
 #define MAX_FPS 50
 #define FPS_COUNT_FRAME_INTERVAL 100
 #define LINES_PER_FADE 400
+#define FADE_BORDER_AMT 10
 
 class GLCanvas : public QGLWidget{
 public:
@@ -36,6 +37,9 @@ private:
     int framecnt;
     QTime timer;
     double fps;
+
+    //textures
+    GLuint tex_text;
 
 protected:
     //overrides
