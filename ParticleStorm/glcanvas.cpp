@@ -116,7 +116,6 @@ void GLCanvas::drawScene(){
     //draw lightning every 3 frames
     if (framecnt % 3 == 0)
         Util::drawJaggedLine(qrand() % MAX_X, qrand() % MAX_Y, qrand() % MAX_X, qrand() % MAX_Y, 9, 15, 60, 90, col_white);
-    Util::drawJaggedLine(300, 500, 600, 500, 9, 15, 60, 90, col_white);
 
     //draw triangles
     glBegin(GL_TRIANGLES);
@@ -124,6 +123,9 @@ void GLCanvas::drawScene(){
         glColor3f(0, 1, 0); glVertex2i(coords[2], coords[3]);
         glColor3f(0, 0, 1); glVertex2i(coords[4], coords[5]);
     glEnd();
+
+    //zap the green corner of the triangle from 100, 100 with green lightning
+    Util::drawJaggedLine(100, 100, coords[2], coords[3], 9, 15, 60, 90, col_green);
 }
 
 //draws information for the player

@@ -96,8 +96,8 @@ void Util::drawJaggedLineHelper(double x1, double y1, double x2, double y2, doub
                 glVertex2d(old_x, old_y);
                 glVertex2d(tmp_x, tmp_y);
             glEnd();
-            old_x = temp_x;
-            old_y = temp_y;
+            old_x = tmp_x;
+            old_y = tmp_y;
         }
         glBegin(GL_LINE);
             glVertex2d(old_x, old_y);
