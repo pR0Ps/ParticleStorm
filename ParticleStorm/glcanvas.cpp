@@ -102,8 +102,11 @@ void GLCanvas::drawHUD(){
     //demo bars for health + mana
     Util::drawMeter(20, MAX_Y - 35, 220, MAX_Y - 20, .75, false, QColor(255, 0, 0));
     Util::drawMeter(240, MAX_Y - 35, 440, MAX_Y - 20, 1, false, QColor(0, 0, 255));
+    //Score text (frames for now)
+    Util::drawString("FRAME:", MAX_X - 260, MAX_Y - 25, tex_text, false, true);
+    Util::drawString(Util::doubleToString(framecnt, 10, 0), MAX_X - 88, MAX_Y - 25, tex_text, true, true, 1, Util::getScaleByFrame(framecnt, 25, 1, 1.5));
     //FPS text
-    Util::drawString("FPS:" + Util::doubleToString(fps, 4, 1), 0, 0, tex_text);
+    Util::drawString("FPS: " + Util::doubleToString(fps, 4, 1), 0, 0, tex_text);
 }
 
 //update game logic - automatically called
@@ -127,9 +130,8 @@ void GLCanvas::update(){
 void GLCanvas::paintGL(){
     //FPS monitoring
     framecnt++;
-    if (framecnt > FPS_COUNT_FRAME_INTERVAL){
-        fps = framecnt/(double)(timer.restart()) * 1000;
-        framecnt = 0;
+    if (framecnt % FPS_COUNT_FRAME_INTERVAL == 0){
+        fps = FPS_COUNT_FRAME_INTERVAL/(double)(timer.restart()) * 1000;
     }
 
     /*Draw method:

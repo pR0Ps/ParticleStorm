@@ -10,7 +10,7 @@
 #define MAX_FPS 50
 #define FPS_COUNT_FRAME_INTERVAL 100
 #define LINES_PER_FADE 400
-#define FADE_BORDER_AMT 10
+#define FADE_BORDER_AMT 15
 
 class GLCanvas : public QGLWidget{
 public:
@@ -34,7 +34,7 @@ private:
     int vels[6];
 
     //FPS stuff
-    int framecnt;
+    long int framecnt;
     QTime timer;
     double fps;
 
