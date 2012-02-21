@@ -39,6 +39,9 @@ GLCanvas::~GLCanvas(){
     //framebuffer
     delete fbo;
 
+    //timer
+    delete timer;
+
     //colours
     delete col_health;
     delete col_mana;
@@ -115,7 +118,7 @@ void GLCanvas::doFade(){
 void GLCanvas::drawScene(){
     //draw lightning every 3 frames
     if (framecnt % 3 == 0)
-        Util::drawJaggedLine(qrand() % MAX_X, qrand() % MAX_Y, qrand() % MAX_X, qrand() % MAX_Y, 9, 15, 60, 90, col_white);
+        Util::drawJaggedLine(qrand() % MAX_X, qrand() % MAX_Y, qrand() % MAX_X, qrand() % MAX_Y, col_white);
 
     //draw triangles
     glBegin(GL_TRIANGLES);
@@ -125,7 +128,7 @@ void GLCanvas::drawScene(){
     glEnd();
 
     //zap the green corner of the triangle from 100, 100 with green lightning
-    Util::drawJaggedLine(100, 100, coords[2], coords[3], 9, 15, 60, 90, col_green);
+    Util::drawJaggedLine(100, 100, coords[2], coords[3], col_green);
 }
 
 //draws information for the player

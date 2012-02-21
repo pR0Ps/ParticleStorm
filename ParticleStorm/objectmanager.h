@@ -7,6 +7,7 @@
 class ObjectManager{
 public:
     ObjectManager();
+    ~ObjectManager();
 
     //returns a pointer to the specified object
     GameObject* get(int n);
@@ -14,7 +15,7 @@ public:
     //add an object to the manager
     virtual void addObject(GameObject *o);
 
-    //apply to all objects individually
+    //apply to all the objects in the OM individually
     void draw();
     void pan(double x, double y);
     void update();
@@ -22,7 +23,9 @@ public:
 
     //check for unused objects
     virtual void setUnused() = 0;
-    void destroyUnused(); //remove the unused objects (non-overridable)
+
+    //remove the unused objects (non-overridable)
+    void destroyUnused();
 
     //look for a collision with other object(s) + handle result
     virtual void doCollision(ObjectManager *om) = 0;
@@ -32,6 +35,7 @@ public:
     unsigned int getNumObjects();
 
 private:
+    //holds the objects
     std::vector<GameObject*> *objects;
 };
 

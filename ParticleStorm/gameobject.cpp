@@ -1,8 +1,14 @@
 #include "gameobject.h"
 
+//basic prototype of the GameObject class
+
 GameObject::GameObject(ObjectManager *manager){
     setManager(manager);
     this->init();
+}
+
+GameObject::~GameObject(){
+    delete clr;
 }
 
 GameObject::GameObject(){
@@ -10,47 +16,26 @@ GameObject::GameObject(){
 }
 
 void GameObject::init(){
-    this->inUse = true;
+    inUse = true;
 }
 
-void GameObject::pan(double x, double y){
+void GameObject::pan(const double x, const double y){
     this->x += x;
     this->y += y;
 }
 
 void GameObject::die(){
-    this->inUse = false;
+    inUse = false;
 }
 
 //set
 void GameObject::setManager(ObjectManager *om){
-    this->manager = om;
+    manager = om;
 }
 
-void GameObject::setLife(int n, bool rel){
-    if (rel){
-        this->life += n;
-    }
-    else{
-        this->life = n;
-    }
-}
-
-//get
-bool GameObject::getInUse(){
-    return inUse;
-}
-
-bool GameObject::getLife(){
-    return this->life;
-}
-
-double GameObject::getX(){
-    return this->x;
-}
-
-double GameObject::getY(){
-    return this->y;
+void GameObject::setLife(const int n, const bool rel){
+    if (rel) life += n;
+    else life = n;
 }
 
 

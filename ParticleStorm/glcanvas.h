@@ -33,7 +33,7 @@ private:
     int vels[6];
 
     //FPS stuff
-    long int framecnt;
+    unsigned long int framecnt;
     QTime *timer;
     double fps;
 

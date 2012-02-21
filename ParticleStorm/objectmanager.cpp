@@ -1,9 +1,15 @@
 #include "objectmanager.h"
 
-ObjectManager::ObjectManager(){}
+ObjectManager::ObjectManager(){
+    objects = new std::vector<GameObject*>;
+}
 
+ObjectManager::~ObjectManager(){
+    while(!objects->empty()) delete objects->back(), objects->pop_back();
+    delete objects;
+}
 
-GameObject* ObjectManager::get(int n){
+GameObject* ObjectManager::get(const int n){
     return objects->at(n);
 }
 
@@ -22,7 +28,7 @@ void ObjectManager::draw(){
     }
 }
 
-void ObjectManager::pan(double x, double y){
+void ObjectManager::pan(const double x, const double y){
     for (unsigned int i = 0 ; i < objects->size() ; i++){
         objects->at(i)->pan(x, y);
     }
@@ -34,7 +40,7 @@ void ObjectManager::update(){
     }
 }
 
-void ObjectManager::applyForce(double x, double y, double mag){
+void ObjectManager::applyForce(const double x, const double y, const double mag){
     for (unsigned int i = 0 ; i < objects->size() ; i++){
         objects->at(i)->applyForce(x, y, mag);
     }
@@ -42,7 +48,9 @@ void ObjectManager::applyForce(double x, double y, double mag){
 
 void ObjectManager::destroyUnused(){
     for(unsigned int i = 1; i < objects->size(); i++){
-        if(!objects->at(i)->getInUse()){
+        GameObject *temp = objects->at(i);
+        if(!temp->getInUse()){
+            delete temp;
             objects->erase(objects->begin() + i);
             i--;
         }

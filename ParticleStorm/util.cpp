@@ -5,12 +5,14 @@
 Util::Util(){}
 
 //distance between 2 points
-double Util::distance(double x1, double y1, double x2, double y2){
+double Util::distance(const double x1, const double y1, const double x2, const double y2){
     return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
 }
 
-//returns the amount of scale to apply based on a frame to make the object pulse
-float Util::getScaleByFrame(int frame, int steps, float min, float max, bool cycle){
+//returns the amount of scale to apply based on the # frames elapsed to make an object pulse
+float Util::getScaleByFrame(unsigned long int frame, unsigned int steps,
+                            const float min, const float max, const bool cycle){
+
     if (cycle) steps/= 2; //scale up and down, therefore half the steps to scale to values
     if (!cycle || (frame % (steps * 2)) <= (frame % steps))
         frame = (frame % steps);
@@ -20,7 +22,7 @@ float Util::getScaleByFrame(int frame, int steps, float min, float max, bool cyc
 }
 
 //draws a box
-void Util::drawBox(double x1, double y1, double x2, double y2, bool fill, const QColor *clr){
+void Util::drawBox(double x1, const double y1, const double x2, double y2, const bool fill, const QColor *clr){
     //save current color
     if (clr != NULL){
         glPushAttrib(GL_CURRENT_BIT);
@@ -45,7 +47,12 @@ void Util::drawBox(double x1, double y1, double x2, double y2, bool fill, const 
 }
 
 //draw a jagged line from point to point
-void Util::drawJaggedLine(double x1, double y1, double x2, double y2, double var, int seg_len, double macro_var, int macro_seg_len, const QColor *clr){
+//using a macro-micro approach allows for some big jagged sections connected
+//by smaller sections, which also have some variation. This makes for a really cool effect.
+void Util::drawJaggedLine(const double x1, const double y1, const double x2, const double y2,
+                          const QColor *clr, const unsigned int var, const unsigned int seg_len,
+                          const unsigned int macro_var, const unsigned int macro_seg_len){
+    //colour stuff
     if (clr != NULL){
         glPushAttrib(GL_CURRENT_BIT);
         glColor3d(clr->red(), clr->green(), clr->blue());
@@ -58,28 +65,33 @@ void Util::drawJaggedLine(double x1, double y1, double x2, double y2, double var
         const double vy = (y2 - y1) / dist;
         double tmp_x = 0;
         double tmp_y = 0;
-        int sway_x = 0;
-        int sway_y = 0;
+        double sway_x = 0;
+        double sway_y = 0;
         int i = 1;
         while(true){
             i += qrand() % flr(macro_var/1.5) + macro_var;
-            if (i >= (dist - macro_seg_len) or (i <= 0))
-                break;
-            tmp_x = vx * i + x1 + qrand() % flr(macro_var) - macro_var/(double)2 + sway_x * (i / dist - 1);
-            tmp_y = vy * i + y1 + qrand() % flr(macro_var) - macro_var/(double)2 + sway_y * (i / dist - 1);
+            //yes, a break from an infinte loop (have to check after incrementing i)
+            if (i >= (dist - macro_seg_len) or (i <= 0)) break;
+            //draw line section
+            tmp_x = vx * i + x1 + qrand() % macro_var - macro_var/2.0d + sway_x * (i / dist - 1);
+            tmp_y = vy * i + y1 + qrand() % macro_var - macro_var/2.0d + sway_y * (i / dist - 1);
             drawJaggedLineHelper (old_x, old_y, tmp_x, tmp_y, var, seg_len);
+            //prepare for next line
             old_x = tmp_x;
             old_y = tmp_y;
-            sway_x += qrand() % flr(macro_var) - macro_var/2;
-            sway_y += qrand() % flr(macro_var) - macro_var/2;
+            sway_x += qrand() % macro_var - macro_var/2.0d;
+            sway_y += qrand() % macro_var - macro_var/2.0d;
         }
+        //draw final section
         drawJaggedLineHelper (old_x, old_y, x2, y2, var, seg_len);
     }
     if (clr != NULL) glPopAttrib();
 }
 
 //helper function (draws the micro lines of drawJaggedLine)
-void Util::drawJaggedLineHelper(double x1, double y1, double x2, double y2, double var, int seg_len){
+void Util::drawJaggedLineHelper(const double x1, const double y1, const double x2, const double y2,
+                                const unsigned int var, const unsigned int seg_len){
+
     if (x1 != x2 || y1 != y2){
         double old_x = x1;
         double old_y = y1;
@@ -90,15 +102,18 @@ void Util::drawJaggedLineHelper(double x1, double y1, double x2, double y2, doub
         double tmp_y = 0;
         //dist + 0.5 is a substitute for rounding
         for (unsigned int i = 0 ; i < dist + 0.5 ; i += seg_len){
-            tmp_x = vx * i + x1 + (qrand() % flr(var)) - var/(double)2;
-            tmp_y = vy * i + y1 + (qrand() % flr(var)) - var/(double)2;
+            //draw line section
+            tmp_x = vx * i + x1 + qrand() % var - var/2.0d;
+            tmp_y = vy * i + y1 + qrand() % var - var/2.0d;
             glBegin(GL_LINE);
                 glVertex2d(old_x, old_y);
                 glVertex2d(tmp_x, tmp_y);
             glEnd();
+            //prepare for next line
             old_x = tmp_x;
             old_y = tmp_y;
         }
+        //draw final line
         glBegin(GL_LINE);
             glVertex2d(old_x, old_y);
             glVertex2d(x2, y2);
@@ -107,7 +122,9 @@ void Util::drawJaggedLineHelper(double x1, double y1, double x2, double y2, doub
 }
 
 //draws a meter (life guage, mana gauge, etc)
-void Util::drawMeter(double x1, double y1, double x2, double y2, float amt, bool vert, const QColor *clr){
+void Util::drawMeter(const double x1, const double y1, const double x2, const double y2,
+                     const float amt, const bool vert, const QColor *clr){
+
     drawBox(x1, y1, x2, y2, false, clr); //outside
     //inside
     if (!vert) drawBox(x1 + 2, y1 + 2, x1 + 2 + (x2 - x1 - 4) * amt, y2 - 2, true, clr);
@@ -116,7 +133,9 @@ void Util::drawMeter(double x1, double y1, double x2, double y2, float amt, bool
 
 //draw a string to the screen
 //note that newlines will screw with the output when it's centered (best just to use 2 calls)
-void Util::drawString(std::string s, double x, double y, const GLuint tex, bool center_x, bool center_y, float scale_x, float scale_y, bool useAlpha){
+void Util::drawString(const std::string &s, double x, double y, const GLuint tex, const bool center_x,
+                      const bool center_y, const float scale_x, const float scale_y, const bool useAlpha){
+
     //push the current matrix to the stack and load a new one
     glPushMatrix();
     glLoadIdentity();
@@ -159,7 +178,7 @@ void Util::drawString(std::string s, double x, double y, const GLuint tex, bool 
 }
 
 //draws a character to the screen (call drawString instead, this is just a helper)
-void Util::drawChar(char c, double x, double y, const GLuint tex){
+void Util::drawChar(const char c, const double x, const double y, const GLuint tex){
     const int col = c % FONT_IMG_DIMENSION_X;
     const int row = FONT_IMG_DIMENSION_Y - 1 - (c / FONT_IMG_DIMENSION_Y);
     const float dim_x = FONT_CHAR_DIMENSION_X * FONT_IMG_DIMENSION_X;
@@ -179,7 +198,9 @@ void Util::drawChar(char c, double x, double y, const GLuint tex){
 
 //Draws a texture to the screen.
 //Note that the texture coords are in percents of the total texture size, not hard values
-void Util::drawTexture(double x1, double y1, double x2, double y2, const GLuint tex, float x1_tex, float y1_tex, float x2_tex, float y2_tex){
+void Util::drawTexture(const double x1, const double y1, const double x2, const double y2, const GLuint tex,
+                       const float x1_tex, const float y1_tex, const float x2_tex, const float y2_tex){
+
     //save settings
     glPushAttrib(GL_ENABLE_BIT);
     glEnable(GL_TEXTURE_2D);
@@ -200,7 +221,7 @@ void Util::drawTexture(double x1, double y1, double x2, double y2, const GLuint 
 }
 
 //converts a double to a string (because it's apparently too hard for C++)
-std::string Util::doubleToString(double d, unsigned int width, unsigned int precision){
+std::string Util::doubleToString(const double d, const unsigned int width, const unsigned int precision){
     std::stringstream ss;
     ss.precision(precision);
     ss.setf(std::ios::fixed,std::ios::floatfield);
@@ -214,6 +235,10 @@ GLuint Util::loadTextureFromFile(const char* c){
     GLuint ret;
     QImage tex;
     tex = QGLWidget::convertToGLFormat(QImage(c));
+    if (tex.isNull()){
+        qDebug() << "Error loading texture" << c;
+        return 0;
+    }
     //save settings
     glPushAttrib(GL_ENABLE_BIT);
     glEnable(GL_TEXTURE_2D);

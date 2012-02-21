@@ -9,6 +9,7 @@ class GameObject {
 public:
     GameObject(ObjectManager *manager);
     GameObject();
+    ~GameObject();
 
     //draw the object
     virtual void draw() = 0;
@@ -33,20 +34,20 @@ public:
     void setLife(int n, bool rel);
 
     //get
-    bool getInUse();
-    bool getLife();
-    double getX();
-    double getY();
+    bool getInUse(){return inUse;}
+    bool getLife(){return life;}
+    double getX(){return x;}
+    double getY(){return y;}
 
 private:
-    //functions
-    void init();
+    //only called via the constructor
+    virtual void init();
 
     //properties
     double x, y;
     double x_vel, y_vel;
     int life;
-    QColor clr;
+    QColor *clr;
     bool inUse;
     ObjectManager *manager;
 };
