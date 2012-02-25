@@ -1,8 +1,8 @@
 #ifndef GLCANVAS_H
 #define GLCANVAS_H
 
-//#include <QGLWidget>
 #include <QtOpenGL>
+#include <GL/glu.h>
 #include <QTime>
 
 #define MAX_X 1024

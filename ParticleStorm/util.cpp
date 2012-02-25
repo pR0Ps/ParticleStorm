@@ -73,14 +73,14 @@ void Util::drawJaggedLine(const double x1, const double y1, const double x2, con
             //yes, a break from an infinte loop (have to check after incrementing i)
             if (i >= (dist - macro_seg_len) or (i <= 0)) break;
             //draw line section
-            tmp_x = vx * i + x1 + qrand() % macro_var - macro_var/2.0d + sway_x * (i / dist - 1);
-            tmp_y = vy * i + y1 + qrand() % macro_var - macro_var/2.0d + sway_y * (i / dist - 1);
+            tmp_x = vx * i + x1 + qrand() % macro_var - macro_var/2.0 + sway_x * (i / dist - 1);
+            tmp_y = vy * i + y1 + qrand() % macro_var - macro_var/2.0 + sway_y * (i / dist - 1);
             drawJaggedLineHelper (old_x, old_y, tmp_x, tmp_y, var, seg_len);
             //prepare for next line
             old_x = tmp_x;
             old_y = tmp_y;
-            sway_x += qrand() % macro_var - macro_var/2.0d;
-            sway_y += qrand() % macro_var - macro_var/2.0d;
+            sway_x += qrand() % macro_var - macro_var/2.0;
+            sway_y += qrand() % macro_var - macro_var/2.0;
         }
         //draw final section
         drawJaggedLineHelper (old_x, old_y, x2, y2, var, seg_len);
@@ -103,9 +103,9 @@ void Util::drawJaggedLineHelper(const double x1, const double y1, const double x
         //dist + 0.5 is a substitute for rounding
         for (unsigned int i = 0 ; i < dist + 0.5 ; i += seg_len){
             //draw line section
-            tmp_x = vx * i + x1 + qrand() % var - var/2.0d;
-            tmp_y = vy * i + y1 + qrand() % var - var/2.0d;
-            glBegin(GL_LINE);
+            tmp_x = vx * i + x1 + qrand() % var - var/2.0;
+            tmp_y = vy * i + y1 + qrand() % var - var/2.0;
+            glBegin(GL_LINES);
                 glVertex2d(old_x, old_y);
                 glVertex2d(tmp_x, tmp_y);
             glEnd();
@@ -114,7 +114,7 @@ void Util::drawJaggedLineHelper(const double x1, const double y1, const double x
             old_y = tmp_y;
         }
         //draw final line
-        glBegin(GL_LINE);
+        glBegin(GL_LINES);
             glVertex2d(old_x, old_y);
             glVertex2d(x2, y2);
         glEnd();

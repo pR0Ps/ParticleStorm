@@ -107,7 +107,7 @@ void GLCanvas::doFade(){
 
     //fade the screen
     for (int i = 0 ; i < LINES_PER_FADE ; i++){
-        glBegin(GL_LINE);
+        glBegin(GL_LINES);
             glVertex2i(qrand() % MAX_X, qrand() % MAX_Y);
             glVertex2i(qrand() % MAX_X, qrand() % MAX_Y);
         glEnd();

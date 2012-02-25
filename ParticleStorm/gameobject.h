@@ -21,6 +21,8 @@ public:
     virtual void update() = 0;
 
     //apply force to the object
+    //x, y is the point that the force originated from
+    //mag is the magnitude of the force
     virtual void applyForce(double x, double y, double mag) = 0;
 
     //kill the object (make sure to set inUse = false so it gets removed)

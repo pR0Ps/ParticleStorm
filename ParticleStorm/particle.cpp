@@ -8,17 +8,17 @@ Particle::Particle():GameObject(){
 
 }
 
-Particle::update(const double dt) {
+void Particle::update() {
     //update positions
-    x += xVel*dt;
-    y += yVel*dt;
+    x += xVel;//*dt;
+    y += yVel;//*dt;
 
     //update tail length?
 
 
 }
 
-Particle::init() {
+void Particle::init() {
     mass = 1;
     xVel = 0;
     yVel = 0;
@@ -26,6 +26,6 @@ Particle::init() {
     updateColour();
 }
 
-Particle::updateColour() {
+void Particle::updateColour() {
     //set a new colour based on the new speed
 }
