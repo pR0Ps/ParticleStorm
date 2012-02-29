@@ -6,7 +6,22 @@
 class Enemy : public GameObject
 {
 public:
-    Enemy();
+	Enemy();
+
+    //initialize an instance of an enemy
+	void initialize(double hlth, double spd, double dmg);
+
+    //move from current position to given position
+    void moveLine(double x, double y);
+
+    //for every hit/heal to the enemy
+    void decHealth(double dam);
+    void incHealth(double heal);
+
+private:
+    double health;
+    double speed;
+    double damage;
 };
 
 #endif // ENEMY_H
