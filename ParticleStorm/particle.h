@@ -19,11 +19,9 @@ public:
     void startParticle(double x, double y, double x_vel, double y_vel, const QColor *clr = NULL);
 
 
-
 private:
     //internally change the particle's colour to match its speed
     void setColour();
-    const QColor *clr; //never need to modify it, just switch pointers
 };
 
 #endif // PARTICLE_H

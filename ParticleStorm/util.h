@@ -25,7 +25,7 @@ public:
     //calculations:
     static double distance(double x1, double y1, double x2, double y2);
     static double magnitude(double x, double y) {return distance(0, 0, x, y);}
-    //
+    //degree versions of cos and sin
     static double cosd (double x){return cos(x * (180 / PI));}
     static double sind (double x){return sin(x * (180 / PI));}
 

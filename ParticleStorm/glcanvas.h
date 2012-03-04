@@ -30,7 +30,7 @@ private:
     void update(); //update the logic for all the objects
 
     QGLFramebufferObject *fbo; //offscreen framebuffer
-    ObjectManager *objectManager; //manages all the objects in the game
+    const ObjectManager *objectManager; //manages all the objects in the game
 
     //testing stuff
     void drawScene();
@@ -40,14 +40,14 @@ private:
     //FPS stuff
     unsigned long int framecnt;
     QTime *timer;
-    double fps;
+    float fps;
 
     //colours
-    QColor *col_white;
-    QColor *col_yellow;
-    QColor *col_red;
-    QColor *col_green;
-    QColor *col_blue;
+    const QColor *col_white;
+    const QColor *col_yellow;
+    const QColor *col_red;
+    const QColor *col_green;
+    const QColor *col_blue;
 
     //textures
     GLuint tex_text;

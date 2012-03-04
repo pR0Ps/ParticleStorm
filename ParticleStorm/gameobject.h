@@ -49,7 +49,7 @@ protected:
     double x, y;
     double x_vel, y_vel;
     int life, maxLife;
-    QColor *clr;
+    const QColor *clr; //never need to modify it, just switch pointers
     bool inUse;
 };
 

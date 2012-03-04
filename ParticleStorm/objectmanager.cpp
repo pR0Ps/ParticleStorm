@@ -20,11 +20,11 @@ ObjectManager::ObjectManager(){
     stars = new std::vector<Star*>;
 
     //init objects
-    init(PARTICLE, MAX_PARTICLES);
-    init(ENEMY, MAX_ENEMIES);
-    init(POWERUP, MAX_POWERUPS);
-    init(SHRAPNEL, MAX_SHRAPNEL);
-    init(STAR, MAX_STARS);
+    initPool(PARTICLE, MAX_PARTICLES);
+    initPool(ENEMY, MAX_ENEMIES);
+    initPool(POWERUP, MAX_POWERUPS);
+    initPool(SHRAPNEL, MAX_SHRAPNEL);
+    initPool(STAR, MAX_STARS);
 
     //init colour arrays
     particleCol = new std::vector<const QColor*>;
@@ -221,7 +221,7 @@ void ObjectManager::applyForce(const ObjectType t, const double x, const double 
 
 //allocate memory and add the required number of objects
 //never need to allocate any more, just reuse the previous ones
-void ObjectManager::init(ObjectType t, const unsigned int numObjects){
+void ObjectManager::initPool(ObjectType t, const unsigned int numObjects){
     if (t == PARTICLE){
         for (unsigned int i = 0 ; i < numObjects ; i++){
             particles->push_back(new Particle());

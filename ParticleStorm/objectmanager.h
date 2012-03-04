@@ -58,7 +58,7 @@ public:
     void applyForce(ObjectType t, double x, double y, double mag);
 
     //initilize the object pool of type t;
-    void init(ObjectType t, unsigned int numObjects);
+    void initPool(ObjectType t, unsigned int numObjects);
 
     //get number of objects
     unsigned int getNumObjects(ObjectType t);
