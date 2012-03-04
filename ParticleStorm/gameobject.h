@@ -41,17 +41,18 @@ public:
     double getX(){return x;}
     double getY(){return y;}
 
-private:
-    //only called via the constructor
-    virtual void init();
-
+protected:
     //properties
     double x, y;
     double x_vel, y_vel;
     int life;
-    QColor *clr;
+    QColor *colour;
     bool inUse;
     ObjectManager *manager;
+
+private:
+    //only called via the constructor
+    virtual void init();
 };
 
 #endif // GAMEOBJECT_H

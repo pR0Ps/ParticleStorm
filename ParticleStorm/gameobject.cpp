@@ -8,7 +8,7 @@ GameObject::GameObject(ObjectManager *manager){
 }
 
 GameObject::~GameObject(){
-    delete clr;
+    delete colour;
 }
 
 GameObject::GameObject(){
