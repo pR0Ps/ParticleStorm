@@ -1,0 +1,127 @@
+Version 1.0
+13/02/2012
+Team Opal
+
+
+Objects:
+	ObjectManager:
+		A singleton class that keeps track of all the objects in the game.
+		This class is used to store and manipulate all objects.
+		Accessable from everywhere via the static getObjectManager method
+		Properties:
+			vectors of pointers for all objects (vector<Particle*> *particles)
+			vectors of colours (for all objects, make them once, use them multiple times)
+		Gets:
+			int numObjects(type)
+			GameObject* getUnused(type) //returns first unused object for reuse
+			static ObjectManager* getObjectManager() //returns an instance of itself 
+		Methods:
+			draw, pan, update, applyforce //need to specify what type
+			init (type, number) //creates the initial batch of objects to use for the entire game
+			collisions (enemy-particle, player-enemy, player-powerup)
+			spawning (particle, powerup, enemy, shrapnel
+			getClosestEnemy (x, y) //return the closest enemy to the coords 
+	
+	GameObject
+		A superclass that encompasses every object in the game
+		Properties that are not used are left uninitilized/NULL/0
+		Properties:
+			x, y : qreal
+			x_vel, y_vel : qreal
+			life, maxLife : int
+			clr : QColor
+		Gets: inUse, life, maxLife, x, y
+		Sets: inUse, life, maxLife, x, y, vel_x, vel_y
+		Methods:
+			virtual void draw ()
+			virtual void pan(x, y)
+			virtual void update ()
+			virtual void applyForce (x, y, mag)
+			virtual void die ()
+			
+	GameEngine		
+		Handles all graphics
+		Has misc. draw methods that can be called from anywhere
+		Holds data for all game objects as private variables
+		
+		Main frameloop:
+			Draw buffer saved in last frame (without enemies, stars, player, HUD)
+			Blur last frame by drawing lines/dots
+			
+			Get input
+				Move to current mouse position
+				Init particles/Exert force
+			Run player abilities (if not exerting force or creating particles)
+				Init particles + Drain mana + Exert force
+				Draw blurred effects (lightning, repulse aura, etc)
+			Pan everything (change x + y coords only, don't draw)
+			Update and draw particles
+			Collision detection + aftereffect
+				particle/enemy (spawn powerup)
+				powerup/player (remove powerup)
+				enemy/player (hit animation)
+			Update and draw powerups
+			Update and draw shrapnel
+			Draw killing spree effects (lightning, screen clr, etc)
+			
+			Save current buffer (everything after this will not be blurred)
+			
+			Draw stars
+			Draw player
+			Update and draw enemy
+			Draw HUD
+				Offscreen enemy bubbles
+				heath, mana, FPS, score
+		
+	Player:GameObject
+		Properties:
+			x2, y2, cur_ability, mana
+		Methods:
+			void modMana (amount)
+			void useAbility()
+			void changeAbility()
+		
+	Star:GameObject
+		Properties:
+			x2, y2, dist
+		Methods:
+			pan (override)
+			
+	Particle:GameObject
+		Properties:
+			speed
+		Methods:
+			setColor () //modifies the clr based on speed
+			spawnParticle(x1, y1, [x_vel, y_vel, clr])
+		
+	Powerup:GameObject
+		Properties:
+			angle, spin_speed, type (mana vs health vs whatever else), value
+			spawnPowerup(x, y, x_vel, y_vel, type, value)
+
+	Enemy:GameObject
+		Constants (by type):
+			size, spin_speed, sides, sidelengths
+		Properties:
+			x_tar, y_tar, angle, maxlife, damage, type, timer
+		Methods:
+			setColor () //modifies the clr based on health
+			doHealing() //if enemy type is healer, find the closest enemy and heal them
+					
+	Shrapnel:GameObject
+		Properties:
+			angle, spin_speed, size	
+		
+		
+Things to note:
+	-Inherited methods, functions, properties, and get methods are not shown, they are implied
+	-Particles + enemies are killed off after exiting the area 2x the size of the screen
+	-All objects will be kept in a fixed-length array. When adding a new object, it will replace an inactive object in the array. This avoids memory issues. In addition, it can be optimized so that when an object is set to inactive, it is switched with the last non-inactive particle. This speeds up operations on the objects as the loop can stop when it encounters the first inactive object.
+	-All object types have their own array of objects
+	-Abilities are only active if there is no regular force being exerted
+	-Before the Update procedures are called, only the velocities of objects get updated (except for panning). The update procedures take the velocity and apply it to the objects, updating the position, speed, colour, etc.
+	-The panning procedures will also take care of shaking the screen on player getting hit (if implemented)
+	-QGLWidget is the Qt OpenGL canvas. We want a double buffered window to draw everything to so at the end of the frameloop we can tell it to update the screen.
+	-Qt calls the main frameloop method at a regular interval of our choosing. The game should run fine at 30 FPS on all systems, if we want to remove the limit on the framerate, we'll have to introduce a delta-t system for the update methods to keep the game running smoothly.
+	-The only pint that you can draw is in the draw function. Everywhere else will not work.
+	-The ObjectManager singleton class will manage the brunt of the operations, everything else will be in the derivitives of the GameObject classes.
