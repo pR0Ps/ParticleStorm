@@ -53,6 +53,11 @@ public:
      */
     Player();
 
+    /*
+     * Destructor
+     */
+    ~Player();
+
     // Pure virtual functions to override. These are analogous to abstract
     // methods in Java.
     // Note: do not use the virutal keyword in the implementation of these
@@ -104,6 +109,8 @@ private:
      * this case since it's a private member function.
      */
     void updateSize();
+
+    void updateColour();
 
     /*
      *

@@ -6,10 +6,14 @@
 class Enemy : public GameObject
 {
 public:
-	Enemy();
+    Enemy();
+
+    void draw() const;
+    void update();
+    void applyForce(double x, double y, double mag);
 
     //initialize an instance of an enemy
-	void initialize(double hlth, double spd, double dmg);
+    void initialize(double hlth, double spd, double dmg);
 
     //move from current position to given position
     void moveLine(double x, double y);

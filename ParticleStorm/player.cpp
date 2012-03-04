@@ -38,14 +38,19 @@ Player::Player():
     // if this information is available when the screen is first drawn.
     // may need to change this later to take the avatar's size into
     // consideration
-    x = MAX_X / 2;
-    y = MAX_Y / 2;
+    x = GLCanvas::MAX_X / 2;
+    y = GLCanvas::MAX_Y / 2;
     // Dummy values for the previous position of the avatar on the last call to
     // update. This will be initialized to the correct value on the first call
     // to update.
     x2 = x;
     y2 = y;
-    *colour = QColor(AVATAR_COLOUR); // does this need to be a pointer?
+    updateColour();
+}
+
+//free up allocated objects
+Player::~Player(){
+
 }
 
 
@@ -94,6 +99,10 @@ void Player::modMana(int amount) {
 inline void Player::updateSize() {
     // Should use descriptive constants here instead of literal values.
     size = BASE_SIZE + life / 2 * 1;
+}
+
+void Player::updateColour(){
+    clr = new QColor(AVATAR_COLOUR);
 }
 
 void Player::useAbility() const {

@@ -16,8 +16,6 @@ GLCanvas::GLCanvas(QWidget *parent) : QGLWidget(parent){
     }
 
     //init colours
-    col_health = new QColor(255, 0, 0);
-    col_mana = new QColor (0, 0, 255);
     col_white = new QColor (255, 255, 255);
     col_yellow = new QColor(255, 255, 0);
     col_red = new QColor(255, 0, 0);
@@ -29,6 +27,9 @@ GLCanvas::GLCanvas(QWidget *parent) : QGLWidget(parent){
     fps = 0;
     timer = new QTime();
     timer->start();
+
+    //Object manager
+    objectManager = new ObjectManager();
 
     //start the timer (sets off the frameloop via timerEvent)
     startTimer(1/(double)MAX_FPS*1000);
@@ -42,9 +43,10 @@ GLCanvas::~GLCanvas(){
     //timer
     delete timer;
 
+    //object manager
+    delete objectManager;
+
     //colours
-    delete col_health;
-    delete col_mana;
     delete col_white;
     delete col_yellow;
     delete col_red;
@@ -134,8 +136,8 @@ void GLCanvas::drawScene(){
 //draws information for the player
 void GLCanvas::drawHUD(){
     //demo bars for health + mana
-    Util::drawMeter(20, MAX_Y - 35, 220, MAX_Y - 20, .75, false, col_health);
-    Util::drawMeter(240, MAX_Y - 35, 440, MAX_Y - 20, 1, false, col_mana);
+    Util::drawMeter(20, MAX_Y - 35, 220, MAX_Y - 20, .75, false, col_red);
+    Util::drawMeter(240, MAX_Y - 35, 440, MAX_Y - 20, 1, false, col_blue);
     //Score text (frames for now)
     Util::drawString("FRAME:", MAX_X - 260, MAX_Y - 25, tex_text, false, true);
     Util::drawString(Util::doubleToString(framecnt, 10, 0), MAX_X - 90, MAX_Y - 25, tex_text, true, true, 1, Util::getScaleByFrame(framecnt, 25, 1, 2));

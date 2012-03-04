@@ -2,41 +2,112 @@
 #define OBJECTMANAGER_H
 
 #include "gameobject.h"
+#include "util.h"
+#include "enemy.h"
+#include "particle.h"
+#include "player.h"
+#include "powerup.h"
+#include "shrapnel.h"
+#include "star.h"
+
 #include <vector>
 
+class ObjectManager;
 class ObjectManager{
 public:
     ObjectManager();
     ~ObjectManager();
 
-    //returns a pointer to the specified object
-    GameObject* get(int n);
+    //constants
+    static const int MAX_PARTICLES = 200;
+    static const int MAX_ENEMIES = 20;
+    static const int MAX_POWERUPS = 20;
+    static const int MAX_SHRAPNEL = 40;
+    static const int MAX_STARS = 250;
+    static const int NUM_PARTICLE_COLOURS = 10;
 
-    //add an object to the manager
-    virtual void addObject(GameObject *o);
+
+    //object types
+    enum ObjectType{
+        PLAYER,
+        PARTICLE,
+        ENEMY,
+        POWERUP,
+        SHRAPNEL,
+        STAR
+    };
+    //enemy types
+    enum EnemyType{
+        GRUNT,
+        HEALER,
+        TANK,
+        SPRINTER,
+        SHOOTER,
+        BULLET
+    };
+    //powerup types
+    enum PowerupType{
+        HEALTH,
+        MANA
+    };
 
     //apply to all the objects in the OM individually
-    void draw();
-    void pan(double x, double y);
-    void update();
-    void applyForce(double x, double y, double mag);
+    void draw(ObjectType t);
+    void pan(ObjectType t, double x, double y);
+    void update(ObjectType t);
+    void applyForce(ObjectType t, double x, double y, double mag);
 
-    //check for unused objects
-    virtual void setUnused() = 0;
+    //initilize the object pool of type t;
+    void init(ObjectType t, unsigned int numObjects);
 
-    //remove the unused objects (non-overridable)
-    void destroyUnused();
+    //get number of objects
+    unsigned int getNumObjects(ObjectType t);
 
-    //look for a collision with other object(s) + handle result
-    virtual void doCollision(ObjectManager *om) = 0;
-    virtual void doCollision(GameObject *o) = 0;
+    //get unused object to modify
+    GameObject* getUnused(ObjectType t);
 
-    //get
-    unsigned int getNumObjects();
+    //do collisions
+    void doEnemyParticleCollisions();
+    void doPlayerEnemyCollisions();
+    void doPlayerPowerupCollisions();
+
+    //spawning stuff
+    void spawnParticle(double x, double y, double x_vel, double y_vel);
+    void spawnParticle(double x, double y);
+    void spawnPowerup (PowerupType t, double x, double y, double x_vel = 0, double y_vel = 0);
+    void spawnEnemy(EnemyType t, double x, double y, double x_tar = 0, double y_tar = 0);
+    void spawnShrapnel (double x, double y, double x_vel, double y_vel, double len, const QColor *clr);
+
+    //enemy stuff
+    Enemy* getClosestEnemy(double x, double y, double min_dist = 1);
+
+    //get the object manager instance
+    static ObjectManager* getInstance(){return instance;}
+
+    //colours
+    const QColor* getParticleCol(float f);
+
 
 private:
-    //holds the objects
-    std::vector<GameObject*> *objects;
+    //holds the colours
+    std::vector<const QColor*> *particleCol;
+
+    //holds all the objects
+    Player *player;
+    std::vector<Particle*> *particles;
+    std::vector<Enemy*> *enemies;
+    std::vector<Powerup*> *powerups;
+    std::vector<Shrapnel*> *shrapnel;
+    std::vector<Star*> *stars;
+
+    //self-reference
+    static ObjectManager* instance;
+
+    //particle number
+    //want to create in sequential order always
+    unsigned int cur_particle;
+
+    //std::vector<GameObject*>& getVector(ObjectTypes t);
 };
 
 #endif // OBJECTMANAGER_H

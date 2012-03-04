@@ -2,21 +2,14 @@
 
 //basic prototype of the GameObject class
 
-GameObject::GameObject(ObjectManager *manager){
-    setManager(manager);
-    this->init();
+GameObject::GameObject(){
+    inUse = false;
+    x = y = x_vel = y_vel = life = maxLife = 0;
+    clr = NULL;
 }
 
 GameObject::~GameObject(){
-    delete colour;
-}
-
-GameObject::GameObject(){
-    this->init();
-}
-
-void GameObject::init(){
-    inUse = true;
+    delete clr;
 }
 
 void GameObject::pan(const double x, const double y){
@@ -28,14 +21,9 @@ void GameObject::die(){
     inUse = false;
 }
 
-//set
-void GameObject::setManager(ObjectManager *om){
-    manager = om;
-}
-
 void GameObject::setLife(const int n, const bool rel){
-    if (rel) life += n;
-    else life = n;
+    if (rel)
+        life = std::max(0, std::min (life + n, maxLife));
+    else
+        life = std::max(0, std::min (n, maxLife));
 }
-
-

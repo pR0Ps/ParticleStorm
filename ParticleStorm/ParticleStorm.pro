@@ -21,11 +21,6 @@ SOURCES += main.cpp\
     powerup.cpp \
     enemy.cpp \
     shrapnel.cpp \
-    starmanager.cpp \
-    particlemanager.cpp \
-    powerupmanager.cpp \
-    enemymanager.cpp \
-    shrapnelmanager.cpp \
     util.cpp
 
 HEADERS  += mainwindow.h \
@@ -38,11 +33,6 @@ HEADERS  += mainwindow.h \
     powerup.h \
     enemy.h \
     shrapnel.h \
-    starmanager.h \
-    particlemanager.h \
-    powerupmanager.h \
-    enemymanager.h \
-    shrapnelmanager.h \
     util.h
 
 FORMS    += mainwindow.ui

@@ -5,11 +5,6 @@
 #include <QColor>
 #include <math.h>
 
-#define FONT_IMG_DIMENSION_X 16
-#define FONT_IMG_DIMENSION_Y 16
-#define FONT_CHAR_DIMENSION_X 16
-#define FONT_CHAR_DIMENSION_Y 16
-
 //utility class that provides static functions for calculations,
 //drawing methods, and more.
 
@@ -20,9 +15,19 @@ class Util{
 private:
     Util();
 public:
+    //constants
+    static const int FONT_IMG_DIMENSION_X = 16;
+    static const int FONT_IMG_DIMENSION_Y = 16;
+    static const int FONT_CHAR_DIMENSION_X = 16;
+    static const int FONT_CHAR_DIMENSION_Y = 16;
+    static const double PI = 3.141592654;
+
     //calculations:
     static double distance(double x1, double y1, double x2, double y2);
     static double magnitude(double x, double y) {return distance(0, 0, x, y);}
+    //
+    static double cosd (double x){return cos(x * (180 / PI));}
+    static double sind (double x){return sin(x * (180 / PI));}
 
     //because floor doesn't actually return an int (WRYYY?)
     static int flr (double d){return static_cast<int>(floor(d));}

@@ -3,19 +3,23 @@
 
 #include <QtOpenGL>
 #include <GL/glu.h>
+#include <GL/gl.h>
 #include <QTime>
 
-#define MAX_X 1024
-#define MAX_Y 768
-#define MAX_FPS 50
-#define FPS_COUNT_FRAME_INTERVAL 100
-#define LINES_PER_FADE 400
-#define FADE_BORDER_AMT 15
+#include "objectmanager.h"
 
 class GLCanvas : public QGLWidget{
 public:
     explicit GLCanvas(QWidget *parent = 0);
     ~GLCanvas();
+
+    //constants
+    static const int MAX_X = 1024;
+    static const int MAX_Y = 768;
+    static const int MAX_FPS = 50;
+    static const int FPS_COUNT_FRAME_INTERVAL = 100;
+    static const int LINES_PER_FADE = 400;
+    static const int FADE_BORDER_AMT = 15;
 
 private:
     //main frameloop (update game, render frame)
@@ -26,6 +30,7 @@ private:
     void update(); //update the logic for all the objects
 
     QGLFramebufferObject *fbo; //offscreen framebuffer
+    ObjectManager *objectManager; //manages all the objects in the game
 
     //testing stuff
     void drawScene();
@@ -38,8 +43,6 @@ private:
     double fps;
 
     //colours
-    QColor *col_health;
-    QColor *col_mana;
     QColor *col_white;
     QColor *col_yellow;
     QColor *col_red;
