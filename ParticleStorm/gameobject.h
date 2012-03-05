@@ -43,6 +43,8 @@ public:
     bool getMaxLife(){return maxLife;}
     double getX(){return x;}
     double getY(){return y;}
+    double getXVel(){return x_vel;}
+    double getYVel(){return y_vel;}
 
 protected:
     //properties

@@ -1,5 +1,5 @@
-#ifndef GLCANVAS_H
-#define GLCANVAS_H
+#ifndef GAMEENGINE_H
+#define GAMEENGINE_H
 
 #include <QtOpenGL>
 #include <GL/glu.h>
@@ -9,10 +9,10 @@
 #include "objectmanager.h"
 #include "texturemanager.h"
 
-class GLCanvas : public QGLWidget{
+class GameEngine : public QGLWidget{
 public:
-    explicit GLCanvas(QWidget *parent = 0);
-    ~GLCanvas();
+    explicit GameEngine(QWidget *parent = 0);
+    ~GameEngine();
 
     //constants
     static const int MAX_X = 1024;
@@ -57,4 +57,4 @@ protected:
     void paintGL();
 };
 
-#endif // GLCANVAS_H
+#endif // GAMEENGINE_H

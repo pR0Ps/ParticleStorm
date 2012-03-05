@@ -6,7 +6,7 @@
  */
 
 #include "player.h"
-#include "glcanvas.h"
+#include "gameengine.h"
 #include "mainwindow.h"
 
 
@@ -36,8 +36,8 @@ Player::Player():
     // if this information is available when the screen is first drawn.
     // may need to change this later to take the avatar's size into
     // consideration
-    x = GLCanvas::MAX_X / 2;
-    y = GLCanvas::MAX_Y / 2;
+    x = GameEngine::MAX_X / 2;
+    y = GameEngine::MAX_Y / 2;
     // Dummy values for the previous position of the avatar on the last call to
     // update. This will be initialized to the correct value on the first call
     // to update.
@@ -129,8 +129,8 @@ void Player::updateColour(){
 
 bool Player::isValidMousePos(const QPoint& pos) {
     int mouseX(pos.x()), mouseY(pos.y());
-    return (mouseX >= 0 && mouseX <= GLCanvas::MAX_X) &&
-            (mouseY >= 0 && mouseY <= GLCanvas::MAX_Y);
+    return (mouseX >= 0 && mouseX <= GameEngine::MAX_X) &&
+            (mouseY >= 0 && mouseY <= GameEngine::MAX_Y);
 }
 
 void Player::useAbility() const {

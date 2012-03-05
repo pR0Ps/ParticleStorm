@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "glcanvas.h"
+#include "gameengine.h"
 
 namespace Ui {
     class MainWindow;
@@ -35,7 +35,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    static GLCanvas *canvas;
+    static GameEngine *canvas;
 };
 
 #endif // MAINWINDOW_H

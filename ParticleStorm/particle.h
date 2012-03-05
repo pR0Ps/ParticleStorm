@@ -17,7 +17,6 @@ public:
     void update();
     void applyForce(double, double, double);
     void die();
-    void draw() const;
     void startParticle(double, double, double, double); //initializes a new particle, specifying the position
 
 private:
@@ -26,11 +25,6 @@ private:
     void updateColour();
 
     double dt;
-    double x,y;
-    double xVel,yVel;
-    double xtail,ytail;
-    QColor clr;
-
 };
 
 #endif // PARTICLE_H

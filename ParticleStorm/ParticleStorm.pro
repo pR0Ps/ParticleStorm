@@ -12,7 +12,6 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    glcanvas.cpp \
     objectmanager.cpp \
     gameobject.cpp \
     player.cpp \
@@ -22,10 +21,10 @@ SOURCES += main.cpp\
     enemy.cpp \
     shrapnel.cpp \
     util.cpp \
-    texturemanager.cpp
+    texturemanager.cpp \
+    gameengine.cpp
 
 HEADERS  += mainwindow.h \
-    glcanvas.h \
     objectmanager.h \
     gameobject.h \
     player.h \
@@ -35,7 +34,8 @@ HEADERS  += mainwindow.h \
     enemy.h \
     shrapnel.h \
     util.h \
-    texturemanager.h
+    texturemanager.h \
+    gameengine.h
 
 FORMS    += mainwindow.ui
 

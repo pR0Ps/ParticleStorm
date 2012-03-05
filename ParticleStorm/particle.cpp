@@ -15,15 +15,16 @@ Particle::Particle():GameObject(){
 void Particle::update() {
     //update positions
 
-    x += xVel*dt;
-    y += yVel*dt;
+    x += x_vel * dt;
+    y += y_vel * dt;
 
     //update tail length?
 }
 
 void Particle::draw() const{
-    if(inUse)
-        Util::drawJaggedLine(x,y,xTail,yTail,colour);
+    double lastx = 0;
+    double lasty = 0;
+    Util::drawJaggedLine(x, y, lastx, lasty, clr);
 }
 
 void Particle::applyForce(double x, double y, double mag){
@@ -34,12 +35,12 @@ void Particle::die() {
 }
 
 void Particle::startParticle(double x1, double y1, double x2, double y2) {
-    x = x1;
-    y = y2;
-    xVel = (x2-x1)/dt;
-    yVel = (y2-y1)/dt;
+    this->x = x1;
+    this->y = y1;
+    this->x_vel = (x1 - x2) / dt;
+    this->y_vel = (y1 - y2) / dt;
     this->inUse = true;
-    }
+}
 
 void Particle::updateColour() {
 

@@ -1,10 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "glcanvas.h"
+#include "gameengine.h"
 
 // This must be re-declared here, outside of the header file, since it's a static
 // data member.
-GLCanvas *MainWindow::canvas;
+GameEngine *MainWindow::canvas;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -34,6 +34,6 @@ void MainWindow::on_actionQuit_triggered()
 void MainWindow::on_actionStart_triggered()
 {
     this->hide();
-    canvas = new GLCanvas();
+    canvas = new GameEngine();
     canvas -> setVisible(true);
 }

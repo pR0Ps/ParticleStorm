@@ -1,5 +1,5 @@
-Version 1.5
-02/03/2012
+Version 1.6
+05/03/2012
 Team Opal
 
 
@@ -7,7 +7,7 @@ Objects:
 	ObjectManager:
 		A singleton class that keeps track of all the objects in the game.
 		This class is used to store and manipulate all objects.
-		Accessable from everywhere via the static getObjectManager method
+		Accessable from everywhere via the static getInstance method
 		Properties:
 			vectors of pointers for all objects (vector<Particle*> *particles)
 			vectors of colours (for all objects, make them once, use them multiple times)
@@ -21,6 +21,16 @@ Objects:
 			collisions (enemy-particle, player-enemy, player-powerup)
 			spawning (particle, powerup, enemy, shrapnel
 			getClosestEnemy (x, y) //return the closest enemy to the coords 
+
+	TextureManager
+		A singleton class that takes core of loading and storing textures used in the game.
+		Accessable from everywhere via the static getInstance() method
+		Properties:
+			vector of GLuints that are pointers to GL textures
+			array of const char* the holds the texture filenames to load
+		Gets:
+			getInstance() //returns the texture manager instance
+			getTexture(Texture)) //returns the GLuint that points to the given texture 
 
 	GameObject
 		A superclass that encompasses every object in the game

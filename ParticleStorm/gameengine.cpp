@@ -1,14 +1,14 @@
-#include "glcanvas.h"
+#include "gameengine.h"
 #include "util.h"
 #include <time.h>
 
 // Re-declaration of class constants. This must be present in the implementation
 // file since they are static data members and will be undefined references
 // otherwise.
-const int GLCanvas::MAX_X;
-const int GLCanvas::MAX_Y;
+const int GameEngine::MAX_X;
+const int GameEngine::MAX_Y;
 
-GLCanvas::GLCanvas(QWidget *parent) : QGLWidget(parent){
+GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
     setFixedSize(MAX_X, MAX_Y);
     setAutoFillBackground(false);
 
@@ -42,7 +42,7 @@ GLCanvas::GLCanvas(QWidget *parent) : QGLWidget(parent){
 }
 
 //destructor
-GLCanvas::~GLCanvas(){
+GameEngine::~GameEngine(){
     //framebuffer
     delete fbo;
 
@@ -60,7 +60,7 @@ GLCanvas::~GLCanvas(){
     delete col_blue;
 }
 
-void GLCanvas::initializeGL(){
+void GameEngine::initializeGL(){
     //get current OpenGL context
     makeCurrent();
 
@@ -104,7 +104,7 @@ void GLCanvas::initializeGL(){
 }
 
 //fade the frame
-void GLCanvas::doFade(){
+void GameEngine::doFade(){
     glColor3f(0, 0, 0);
 
     //outsides don't get cleared very well
@@ -123,7 +123,7 @@ void GLCanvas::doFade(){
 }
 
 //test scene
-void GLCanvas::drawScene(){
+void GameEngine::drawScene(){
     //draw lightning every 3 frames
     if (framecnt % 3 == 0)
         Util::drawJaggedLine(qrand() % MAX_X, qrand() % MAX_Y, qrand() % MAX_X, qrand() % MAX_Y, col_white);
@@ -140,7 +140,7 @@ void GLCanvas::drawScene(){
 }
 
 //draws information for the player
-void GLCanvas::drawHUD(){
+void GameEngine::drawHUD(){
     //demo bars for health + mana
     Util::drawMeter(20, MAX_Y - 35, 220, MAX_Y - 20, .75, false, col_red);
     Util::drawMeter(240, MAX_Y - 35, 440, MAX_Y - 20, 1, false, col_blue);
@@ -152,7 +152,7 @@ void GLCanvas::drawHUD(){
 }
 
 //update game logic - automatically called
-void GLCanvas::update(){
+void GameEngine::update(){
     //basic bounds
     for (int i = 0 ; i < 6 ; i++){
         if (coords[i] > (i % 2 == 0 ? MAX_X : MAX_Y)){
@@ -169,7 +169,7 @@ void GLCanvas::update(){
 }
 
 //draws everything - automatically called
-void GLCanvas::paintGL(){
+void GameEngine::paintGL(){
     //FPS monitoring
     framecnt++;
     if (framecnt % FPS_COUNT_FRAME_INTERVAL == 0){
