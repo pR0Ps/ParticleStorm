@@ -7,6 +7,7 @@
 #include <QTime>
 
 #include "objectmanager.h"
+#include "texturemanager.h"
 
 class GLCanvas : public QGLWidget{
 public:
@@ -31,6 +32,7 @@ private:
 
     QGLFramebufferObject *fbo; //offscreen framebuffer
     ObjectManager *objectManager; //manages all the objects in the game
+    TextureManager *textureManager;
 
     //testing stuff
     void drawScene();
@@ -48,9 +50,6 @@ private:
     const QColor *col_red;
     const QColor *col_green;
     const QColor *col_blue;
-
-    //textures
-    GLuint tex_text;
 
 protected:
     //overrides

@@ -83,7 +83,7 @@ void Player::update() {
 }
 
 void Player::draw() const {
-
+    Util::drawTexture(x-10, y-10, x+10, y+10, TextureManager::getInstance()->getTexture(TextureManager::PLAYER));
 }
 
 void Player::doCollision(GameObject* other) {

@@ -3,5 +3,6 @@
         <file>Title.png</file>
         <file>Cursor.png</file>
         <file>font.png</file>
+        <file>Player.png</file>
     </qresource>
 </RCC>

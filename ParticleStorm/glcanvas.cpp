@@ -100,7 +100,7 @@ void GLCanvas::initializeGL(){
     fbo->release();
 
     //load textures
-    tex_text = Util::loadTextureFromFile(":/Images/font.png");
+    textureManager = new TextureManager();
 }
 
 //fade the frame
@@ -145,10 +145,10 @@ void GLCanvas::drawHUD(){
     Util::drawMeter(20, MAX_Y - 35, 220, MAX_Y - 20, .75, false, col_red);
     Util::drawMeter(240, MAX_Y - 35, 440, MAX_Y - 20, 1, false, col_blue);
     //Score text (frames for now)
-    Util::drawString("FRAME:", MAX_X - 260, MAX_Y - 25, tex_text, false, true);
-    Util::drawString(Util::doubleToString(framecnt, 10, 0), MAX_X - 90, MAX_Y - 25, tex_text, true, true, 1, Util::getScaleByFrame(framecnt, 25, 1, 2));
+    Util::drawString("FRAME:", MAX_X - 260, MAX_Y - 25, textureManager->getTexture(TextureManager::TEXT), false, true);
+    Util::drawString(Util::doubleToString(framecnt, 10, 0), MAX_X - 90, MAX_Y - 25, textureManager->getTexture(TextureManager::TEXT), true, true, 1, Util::getScaleByFrame(framecnt, 25, 1, 2));
     //FPS text
-    Util::drawString("FPS: " + Util::doubleToString(fps, 4, 1), 0, 0, tex_text);
+    Util::drawString("FPS: " + Util::doubleToString(fps, 4, 1), 0, 0, textureManager->getTexture(TextureManager::TEXT));
 }
 
 //update game logic - automatically called

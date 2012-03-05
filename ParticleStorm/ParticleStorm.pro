@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     powerup.cpp \
     enemy.cpp \
     shrapnel.cpp \
-    util.cpp
+    util.cpp \
+    texturemanager.cpp
 
 HEADERS  += mainwindow.h \
     glcanvas.h \
@@ -33,7 +34,8 @@ HEADERS  += mainwindow.h \
     powerup.h \
     enemy.h \
     shrapnel.h \
-    util.h
+    util.h \
+    texturemanager.h
 
 FORMS    += mainwindow.ui
 
