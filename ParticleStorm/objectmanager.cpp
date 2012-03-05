@@ -29,7 +29,7 @@ ObjectManager::ObjectManager(){
     //init colour arrays
     particleCol = new std::vector<const QColor*>;
     float per;
-    for (unsigned int i = 0 ; i < NUM_PARTICLE_COLOURS ; i++){
+    for (int i = 0 ; i < NUM_PARTICLE_COLOURS ; i++){
         //(gradiant from blue -> green -> red, like UI mockup)
         per = i/(float)NUM_PARTICLE_COLOURS;
         //hard one-liner is hard
