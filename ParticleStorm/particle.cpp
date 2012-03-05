@@ -1,45 +1,47 @@
 #include "particle.h"
 #include "objectmanager.h"
-#include "util.h"
-
 #include "qmath.h"
+#include <QColor>
+#include "util.h"
 
 
 Particle::Particle():GameObject(){
 
-}
-
-void Particle::draw() const{
+    QColor colour(0,0,0);
+    double dt(1/30);
 
 }
 
 void Particle::update() {
     //update positions
-    x += x_vel;//*dt;
-    y += y_vel;//*dt;
+
+    x += xVel*dt;
+    y += yVel*dt;
 
     //update tail length?
 }
 
+void Particle::draw() const{
+    if(inUse)
+        Util::drawJaggedLine(x,y,xTail,yTail,colour);
+}
+
 void Particle::applyForce(double x, double y, double mag){
-
 }
 
-void Particle::startParticle(const double x, const double y, const double x_vel, const double y_vel, const QColor *clr){
-    this->x = x;
-    this->y = y;
-    this->x_vel = x_vel;
-    this->y_vel = y_vel;
+void Particle::die() {
+    inUse = false;
+}
 
-    if (clr != NULL)
-        this->clr = clr;
-    else
-        this->setColour();
-
+void Particle::startParticle(double x1, double y1, double x2, double y2) {
+    x = x1;
+    y = y2;
+    xVel = (x2-x1)/dt;
+    yVel = (y2-y1)/dt;
     this->inUse = true;
-}
+    }
 
-void Particle::setColour() {
-    //set a new colour based on the speed
+void Particle::updateColour() {
+
     clr = ObjectManager::getInstance()->getParticleCol(Util::magnitude(x_vel, y_vel)/(double)MAX_PARTICLE_SPEED);
 }

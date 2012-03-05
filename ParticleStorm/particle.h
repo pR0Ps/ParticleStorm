@@ -2,6 +2,8 @@
 #define PARTICLE_H
 
 #include "gameobject.h"
+#include <QColor>
+#include "util.h"
 
 class Particle : public GameObject
 {
@@ -13,15 +15,22 @@ public:
 
     void draw() const;
     void update();
-    void applyForce(double x, double y, double mag);
-
-    //sets the needed information and starts the particle
-    void startParticle(double x, double y, double x_vel, double y_vel, const QColor *clr = NULL);
-
+    void applyForce(double, double, double);
+    void die();
+    void draw() const;
+    void startParticle(double, double, double, double); //initializes a new particle, specifying the position
 
 private:
     //internally change the particle's colour to match its speed
-    void setColour();
+
+    void updateColour();
+
+    double dt;
+    double x,y;
+    double xVel,yVel;
+    double xtail,ytail;
+    QColor clr;
+
 };
 
 #endif // PARTICLE_H
