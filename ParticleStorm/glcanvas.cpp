@@ -2,6 +2,12 @@
 #include "util.h"
 #include <time.h>
 
+// Re-declaration of class constants. This must be present in the implementation
+// file since they are static data members and will be undefined references
+// otherwise.
+const int GLCanvas::MAX_X;
+const int GLCanvas::MAX_Y;
+
 GLCanvas::GLCanvas(QWidget *parent) : QGLWidget(parent){
     setFixedSize(MAX_X, MAX_Y);
     setAutoFillBackground(false);

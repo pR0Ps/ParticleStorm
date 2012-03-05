@@ -5,7 +5,7 @@
  * Last modified on: March 4, 2012
  *
  * Notes:
- * - will add more documentation as I implement methods
+ * - will add more documentation as I implement functions
  *
  * Todo:
  * - implement draw and update to get a basic prototype up and running
@@ -27,6 +27,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include <QPoint>
 #include "gameobject.h"
 
 class Player : public GameObject {
@@ -46,15 +47,14 @@ public:
     // value so that the colour is more unique.
     static const Qt::GlobalColor AVATAR_COLOUR;
 
-    // Constructors. Probably won't need a constructor that takes an object
-    // manager as a parameter.
+    // Constructor/destructor.
     /*
      * Default constructor.
      */
     Player();
 
     /*
-     * Destructor
+     * Destructor.
      */
     ~Player();
 
@@ -110,7 +110,30 @@ private:
      */
     void updateSize();
 
+    /*
+     * Updates the colour of the player's avatar. For now at least, this is only
+     * called in the constructor. (May want to change the avatar's colour
+     * dynamically later on.)
+     *
+     * Note: the colour is allocated on the heap, so this needs to be freed
+     * later on.
+     */
     void updateColour();
+
+    /*
+     * Determines if the given mouse position is within the bounds of the OpenGL
+     * canvas. Used to determine if the current location of the player's mouse
+     * should be used to update the location of the avatar.
+     *
+     * Parameter: the position of the player's mouse, stored as a QPoint. This
+     * should be given relative to the canvas widget, as opposed to in absolute
+     * screen coordinates.
+     *
+     * Note: may need to take the size of the player's avatar into consideration
+     * as well, at least until the player's movements can be used to move the
+     * entire environment.
+     */
+    static bool isValidMousePos(const QPoint& pos);
 
     /*
      *

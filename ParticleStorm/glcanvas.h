@@ -30,7 +30,7 @@ private:
     void update(); //update the logic for all the objects
 
     QGLFramebufferObject *fbo; //offscreen framebuffer
-    const ObjectManager *objectManager; //manages all the objects in the game
+    ObjectManager *objectManager; //manages all the objects in the game
 
     //testing stuff
     void drawScene();

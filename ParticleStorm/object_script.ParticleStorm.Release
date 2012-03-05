@@ -1,0 +1,16 @@
+INPUT(
+./release\main.o
+./release\mainwindow.o
+./release\glcanvas.o
+./release\objectmanager.o
+./release\gameobject.o
+./release\player.o
+./release\star.o
+./release\particle.o
+./release\powerup.o
+./release\enemy.o
+./release\shrapnel.o
+./release\util.o
+./release\moc_mainwindow.o
+./release\qrc_resources.o
+);

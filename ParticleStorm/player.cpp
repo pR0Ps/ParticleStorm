@@ -7,6 +7,8 @@
 
 #include "player.h"
 #include "glcanvas.h"
+#include "mainwindow.h"
+
 
 // Declaration of constants. Some of these can be modified to alter the
 // difficulty of the gameplay.
@@ -16,13 +18,11 @@ const int Player::BASE_SIZE(50);
 const Qt::GlobalColor Player::AVATAR_COLOUR(Qt::red);
 
 
-// Implementation of constructors.
+// Implementation of constructor and destructor.
 
 // Some data members of the Player class do not need to initialized:
 // - x_vel and y_vel -> the avatar's velocity is determined entirely by the
 // player's mouse movements, so these are not needed
-// manager -> the Player object will likely not need an ObjectManager, and this
-// data member may be removed from the GameObject class anyways
 Player::Player():
     GameObject(), // call parent class constructor - initializes inUse to true
     mana(MAX_MANA) {
@@ -32,9 +32,7 @@ Player::Player():
     life = MAX_LIFE;
     updateSize(); // initialize the size of the player's avatar
 
-    // Initialize the player's position to the middle of the screen. MAX_X and
-    // MAX_Y are defined in glcanvas.h.
-    // *Actually, may want to intialize this to the coordinates of the mouse,
+    // Actually, may want to intialize this to the coordinates of the mouse,
     // if this information is available when the screen is first drawn.
     // may need to change this later to take the avatar's size into
     // consideration
@@ -48,16 +46,40 @@ Player::Player():
     updateColour();
 }
 
-//free up allocated objects
-Player::~Player(){
-
+Player::~Player() {
+    // Base class destructors are automatically called, so this does not need to
+    // be explicitly called here.
+    // may need to delete more data members here
 }
 
 
 // Implementation of pure virtual functions.
 
 void Player::update() {
+    // First update the size of the player's avatar, since this may be needed to
+    // determine if the mouse's position should be used to update the location
+    // of the avatar.
+    // Note: the avatar's size may actually lag a frame behind, since the update
+    // function will likely be called before collision detection is carried out.
+    // So the current size of the avatar may not be accurate in relation to the
+    // player's remaining life until the next time update is called, but this
+    // probably isn't a big deal.
+    updateSize();
 
+    // Update the previous coordinates of the avatar with the current
+    // coordinates.
+    x2 = x;
+    y2 = y;
+
+    // Now get the current position of the player's mouse and check it for
+    // validity.
+    QPoint mousePos(MainWindow::getMousePos());
+    if (isValidMousePos(mousePos)) {
+        // then update the avatar's position with the current mouse coordinates
+        x = mousePos.x();
+        y = mousePos.y();
+    }
+    // otherwise leave the avatar's position unchanged
 }
 
 void Player::draw() const {
@@ -103,6 +125,12 @@ inline void Player::updateSize() {
 
 void Player::updateColour(){
     clr = new QColor(AVATAR_COLOUR);
+}
+
+bool Player::isValidMousePos(const QPoint& pos) {
+    int mouseX(pos.x()), mouseY(pos.y());
+    return (mouseX >= 0 && mouseX <= GLCanvas::MAX_X) &&
+            (mouseY >= 0 && mouseY <= GLCanvas::MAX_Y);
 }
 
 void Player::useAbility() const {
