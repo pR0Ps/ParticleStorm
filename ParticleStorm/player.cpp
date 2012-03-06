@@ -105,8 +105,8 @@ void Player::update() {
 //draw the player
 void Player::draw() const {
     //draw concentric octagons that represent health
-    for (unsigned int i = 0 ; i < 7 * getLifePercent() ; i++){
-        Util::drawOctagon(x, y, 2 + (i + 1) * 4, ResourceManager::getInstance()->getColour(1 - (i/6.0f)));
+    for (int i = floor(6 * getLifePercent()); i >= 0 ; i--){
+        Util::drawOctagon(x, y, 2 + (i + 1) * 4, true, ResourceManager::getInstance()->getColour(1 - (i/5.0f)));
     }
     //Util::drawTexture(x - size/2.0, y - size/2.0, x + size/2.0, y + size/2.0, ResourceManager::getInstance()->getTexture(ResourceManager::PLAYER));
 }

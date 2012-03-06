@@ -131,7 +131,7 @@ void Util::drawMeter(const double x1, const double y1, const double x2, const do
     else drawBox(x1 + 2, y1 + 2, x2 - 2, y1 + 2 + (y2 - y1 - 4) * amt, true, clr);
 }
 
-void Util::drawOctagon(const double x, const double y, double size, const QColor *clr){
+void Util::drawOctagon(double x, double y, double size, const bool fill, const QColor *clr){
     //colour stuff
     if (clr != NULL){
         glPushAttrib(GL_CURRENT_BIT);
@@ -142,7 +142,14 @@ void Util::drawOctagon(const double x, const double y, double size, const QColor
 
     const double temp = magnitude(size, size) - size;
 
-    glBegin(GL_LINE_LOOP);
+    if (!fill){
+        //weirdness with the LINE_LOOP
+        x += 1;
+        y -= 1;
+        glBegin(GL_LINE_LOOP);
+    }
+    else glBegin(GL_POLYGON);
+    //start drawing
         glVertex2d(x - temp, y - size);
         glVertex2d(x + temp, y - size);
         glVertex2d(x + size, y - temp);
