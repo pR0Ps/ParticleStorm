@@ -38,14 +38,11 @@ public:
     // accessible to the whole class. Also, may want to move these definitions
     // into private access space if they shouldn't be accessible by other
     // classes.
-    static const int MAX_LIFE;
-    static const int MAX_MANA;
+    static const int MAX_LIFE = 100;
+    static const int MAX_MANA = 100;
     // The smallest possible size of the player's avatar, when not modified by
     // their current life. Represented in pixels.
-    static const int BASE_SIZE; // may want to store this in a double
-    // The colour of the player's avatar. It may be better to specify an RGB
-    // value so that the colour is more unique.
-    static const Qt::GlobalColor AVATAR_COLOUR;
+    static const int BASE_SIZE = 50; // may want to store this in a double
 
     // Constructor/destructor.
     /*

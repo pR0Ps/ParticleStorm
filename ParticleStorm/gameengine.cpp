@@ -3,8 +3,18 @@
 #include "util.h"
 #include <time.h>
 
+//ick, redundancy
+const int GameEngine::MAX_X;
+const int GameEngine::MAX_Y;
+const int GameEngine::MAX_FPS;
+const int GameEngine::FPS_COUNT_FRAME_INTERVAL;
+const int GameEngine::LINES_PER_FADE;
+const int GameEngine::FADE_BORDER_AMT;
+const int GameEngine::GAME_OVER_FRAMES;
+
 GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
     setFixedSize(MAX_X, MAX_Y);
+    setWindowTitle("Particle Storm");
     setAutoFillBackground(false);
 
     //pseudo-randomness
@@ -23,6 +33,9 @@ GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
 
     //Object manager
     objectManager = new ObjectManager();
+
+    //initial garbage value for gameClock
+    gameClock = 0;
 }
 
 //destructor
@@ -101,10 +114,14 @@ void GameEngine::initializeGL(){
 
 //resets the game
 void GameEngine::reset(){
-    killTimer(gameClock);
+    if (gameClock != 0){
+        killTimer(gameClock);
+    }
 
     //resets all the game objects
     objectManager->reset();
+
+    qDebug() << "GameEngine reset";
 }
 
 //starts a game
@@ -182,7 +199,24 @@ void GameEngine::drawHUD(){
 
 //update game logic - automatically called
 void GameEngine::update(){
-    //basic bounds
+    //FPS monitoring
+    framecnt++;
+    if (framecnt % FPS_COUNT_FRAME_INTERVAL == 0){
+        fps = FPS_COUNT_FRAME_INTERVAL/(double)(timer->restart()) * 1000;
+    }
+
+    //game over
+    if (gameOverFrames > 0 || objectManager->getPlayer()->getLife() == 0){
+        gameOverFrames++;
+        if (gameOverFrames > GAME_OVER_FRAMES){
+            paused = true;
+            MainWindow::getInstance()->doneGame(objectManager->getPlayer()->getScore());
+        }
+        //don't bother updating anything else
+        return;
+    }
+
+    //testing stuff - basic bounds
     for (int i = 0 ; i < 6 ; i++){
         if (coords[i] > (i % 2 == 0 ? MAX_X : MAX_Y)){
             vels[i] *= -1;
@@ -195,28 +229,20 @@ void GameEngine::update(){
         //apply velocity
         coords[i] += vels[i];
     }
+
+    //game stuff
+    objectManager->update(ObjectManager::PLAYER);
+    objectManager->update(ObjectManager::PARTICLE);
+
+    //testing game stuff
+    objectManager->modPlayerScore(1);
+    objectManager->modPlayerLife(-1);
 }
 
 //draws everything - automatically called
 void GameEngine::paintGL(){
-    //FPS monitoring
-    framecnt++;
-    if (framecnt % FPS_COUNT_FRAME_INTERVAL == 0){
-        fps = FPS_COUNT_FRAME_INTERVAL/(double)(timer->restart()) * 1000;
-    }
-
-    //check game over
-    if (gameOverFrames > 0 || objectManager->getPlayer()->getLife() == 0){
-        gameOverFrames++;
-        Util::drawString("Game Over", MAX_X/2, MAX_Y/2, resourceManager->getTexture(ResourceManager::TEXT), true, true, 5, 5);
-        //fade screen (or other game-overy stuff) for GAME_OVER_FRAMES frames
-        if (gameOverFrames > GAME_OVER_FRAMES){
-            paused = true;
-            MainWindow::getInstance()->doneGame(objectManager->getPlayer()->getScore());
-        }
-    }
-    else{
-        //play the game
+    if (gameOverFrames == 0){
+        //draw the game
 
         /*Draw method:
           To framebuffer:
@@ -238,9 +264,6 @@ void GameEngine::paintGL(){
         doFade();
         drawScene();
 
-        objectManager->update(ObjectManager::PLAYER);
-        objectManager->update(ObjectManager::PARTICLE);
-
         objectManager->draw(ObjectManager::PARTICLE);
 
         fbo->release();
@@ -252,12 +275,13 @@ void GameEngine::paintGL(){
 
         objectManager->draw(ObjectManager::PLAYER);
 
-        //testing
-        objectManager->modPlayerScore(1);
-        if (framecnt % 5 == 0)
-            objectManager->modPlayerLife(-1);
-
         drawHUD();
+    }
+    else{
+        //draw the game over sequence
+
+        //fade screen (or other game-overy stuff) for GAME_OVER_FRAMES frames
+        Util::drawString("Game Over", MAX_X/2, MAX_Y/2, resourceManager->getTexture(ResourceManager::TEXT), true, true, 5, 5);
     }
 }
 

@@ -4,6 +4,8 @@
 
 ResourceManager* ResourceManager::instance = NULL;
 
+const int ResourceManager::NUM_COLOURS;
+
 ResourceManager::ResourceManager()
 {
     if(instance){

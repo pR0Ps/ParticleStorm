@@ -5,6 +5,12 @@
 
 ObjectManager* ObjectManager::instance = NULL;
 
+const int ObjectManager::MAX_PARTICLES;
+const int ObjectManager::MAX_ENEMIES;
+const int ObjectManager::MAX_POWERUPS;
+const int ObjectManager::MAX_SHRAPNEL;
+const int ObjectManager::MAX_STARS;
+
 ObjectManager::ObjectManager(){
     if (instance){
         qDebug() << "Can't use more than one ObjectManager";

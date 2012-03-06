@@ -4,11 +4,9 @@
 
 MainWindow* MainWindow::instance = NULL;
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
-{
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow){
     ui->setupUi(this);
+    setWindowTitle("Particle Storm");
 
     //set up the game engine
     engine = new GameEngine();
@@ -29,8 +27,8 @@ QPoint MainWindow::getMousePos(){
 }
 
 void MainWindow::doneGame(const unsigned int score){
-    engine->hide();
-    this->show();
+    engine->setVisible(false);
+    instance->setVisible(true);
     engine->reset();
     qDebug() << "Final score was " << score;
     //highscores(score)
@@ -41,7 +39,7 @@ void MainWindow::on_actionQuit_triggered(){
 }
 
 void MainWindow::on_actionStart_triggered(){
-    this->hide();
+    instance->setVisible(false);
     engine->setVisible(true);
     engine->start();
 }

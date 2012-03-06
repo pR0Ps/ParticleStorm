@@ -15,7 +15,7 @@ class Util{
 private:
     Util();
 public:
-    //constants
+    //constants (redeclare in implementation)
     static const int FONT_IMG_DIMENSION_X = 16;
     static const int FONT_IMG_DIMENSION_Y = 16;
     static const int FONT_CHAR_DIMENSION_X = 16;

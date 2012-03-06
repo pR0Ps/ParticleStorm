@@ -12,11 +12,9 @@
 
 // Declaration of constants. Some of these can be modified to alter the
 // difficulty of the gameplay.
-const int Player::MAX_LIFE(100);
-const int Player::MAX_MANA(100);
-const int Player::BASE_SIZE(50);
-const Qt::GlobalColor Player::AVATAR_COLOUR(Qt::red);
-
+const int Player::MAX_LIFE;
+const int Player::MAX_MANA;
+const int Player::BASE_SIZE;
 
 // Implementation of constructor and destructor.
 
@@ -62,8 +60,7 @@ void Player::reset(){
     //set initial score;
     score = 0;
 
-    //initialize the colour + size
-    updateColour();
+    //initialize the size
     updateSize();
 }
 
@@ -140,11 +137,8 @@ void Player::modMana(int amt, bool rel) {
 // has 1 life left.
 inline void Player::updateSize() {
     // Should use descriptive constants here instead of literal values.
+    //TODO: change calculation to match displyed avatar
     size = BASE_SIZE + life / 2 * 1;
-}
-
-void Player::updateColour(){
-    clr = new QColor(AVATAR_COLOUR);
 }
 
 bool Player::isValidMousePos(const QPoint& pos) {

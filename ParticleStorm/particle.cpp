@@ -6,6 +6,9 @@
 #include "qmath.h"
 #include <QColor>
 
+const int Particle::MAX_PARTICLE_SPEED;
+const float Particle::SPEED_MULTIPLIER;
+const float Particle::AIR_RESIST;
 
 Particle::Particle():GameObject(){
 
@@ -16,7 +19,7 @@ void Particle::update() {
     dt = (1/(double)GameEngine::MAX_FPS);
 
     //apply air resistance
-    x_vel += (x_vel < 0) ? AIR_RESIST : -AIR_RESIST;
+    x_vel += ((x_vel < 0) ? AIR_RESIST : -AIR_RESIST);
     y_vel += (y_vel < 0) ? AIR_RESIST : -AIR_RESIST;
 
     //update positions

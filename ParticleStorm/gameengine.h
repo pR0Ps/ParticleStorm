@@ -14,7 +14,7 @@ public:
     explicit GameEngine(QWidget *parent = 0);
     ~GameEngine();
 
-    //constants
+    //constants (redeclare in implementation)
     static const int MAX_X = 1024;
     static const int MAX_Y = 768;
     static const int MAX_FPS = 50;
