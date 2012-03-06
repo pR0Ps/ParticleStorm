@@ -26,23 +26,10 @@ ObjectManager::ObjectManager(){
     initPool(SHRAPNEL, MAX_SHRAPNEL);
     initPool(STAR, MAX_STARS);
 
-    //init colour arrays
-    particleCol = new std::vector<const QColor*>;
-    float per;
-    for (int i = 0 ; i < NUM_PARTICLE_COLOURS ; i++){
-        //(gradiant from blue -> green -> red, like UI mockup)
-        per = i/(float)NUM_PARTICLE_COLOURS;
-        //hard one-liner is hard
-        particleCol->push_back(new QColor(
-            (per <= .1) ? ((255/2.0)-(per/.1)*(255/2.0)) : ((per < .5) ? (0) : ((per <= .7) ? (((per-.5)/.2)*255) : (255))),
-            (per <= .1) ? (0) : ((per <= .3) ? (((per-.1)/(.2))*255) : ((per <= .7) ? (255) : (255-((per-.7)/(.3))*255))),
-            (per <= .3) ? (255) : (per <= .5) ? (255-((per-.3)/(.2))*255) : (0)
-        ));
-    }
-
     //set initial particle
     cur_particle = 0;
 
+    //set self-reference
     instance = this;
 }
 
@@ -61,10 +48,19 @@ ObjectManager::~ObjectManager(){
     delete shrapnel;
     while(!stars->empty()) delete stars->back(), stars->pop_back();
     delete stars;
+}
 
-    //colours
-    while(!particleCol->empty()) delete particleCol->back(), particleCol->pop_back();
-    delete particleCol;
+//resets the object manager
+void ObjectManager::reset(){
+    //reset the player
+    player->reset();
+
+    //reset the objects
+    deactivateAll(PARTICLE);
+    deactivateAll(ENEMY);
+    deactivateAll(POWERUP);
+    deactivateAll(SHRAPNEL);
+    deactivateAll(STAR);
 }
 
 //returns the correct vector to operate on based on object type
@@ -174,6 +170,20 @@ void ObjectManager::initPool(ObjectType t, const unsigned int numObjects){
     }
 }
 
+//sets all the items as inactive
+void ObjectManager::deactivateAll(ObjectType t){
+    if (t == PLAYER){
+        //player cannot be set as inactive
+        return;
+    }
+    else{
+        std::vector<GameObject*> temp = getVector(t);
+        for (unsigned int i = 0 ; i < temp.size() ; i++){
+            temp.at(i)->setInUse(false);
+        }
+    }
+}
+
 unsigned int ObjectManager::getNumObjects(ObjectType t){
     /*
     //fix this to return number of active things
@@ -250,11 +260,6 @@ void ObjectManager::spawnEnemy(EnemyType t, const double x, const double y, cons
 
 void ObjectManager::spawnShrapnel(const double x, const double y, const double x_vel, const double y_vel, const double len, const QColor *clr){
 
-}
-
-//return the proper colour of the particle based on a percentage of its max speed
-const QColor* ObjectManager::getParticleCol(const float f){
-    return particleCol->at(Util::flr(f * NUM_PARTICLE_COLOURS));
 }
 
 Enemy* ObjectManager::getClosestEnemy(const double x, const double y, const double min_dist){

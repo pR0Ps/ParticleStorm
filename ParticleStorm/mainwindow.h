@@ -8,8 +8,7 @@ namespace Ui {
     class MainWindow;
 }
 
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow{
     Q_OBJECT
 
 public:
@@ -26,7 +25,12 @@ public:
      * static so that the Player class does not need a specific reference to get
      * the location of the player's mouse cursor.
      */
-    static QPoint getMousePos();
+    QPoint getMousePos();
+
+    //get this instance
+    static MainWindow* getInstance(){return instance;}
+
+    void doneGame(unsigned int score);
 
 private slots:
     void on_actionQuit_triggered();
@@ -35,7 +39,9 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    static GameEngine *canvas;
+    GameEngine *engine;
+
+    static MainWindow *instance;
 };
 
 #endif // MAINWINDOW_H

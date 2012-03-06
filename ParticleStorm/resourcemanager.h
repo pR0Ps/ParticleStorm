@@ -1,14 +1,17 @@
-#ifndef TEXTUREMANAGER_H
-#define TEXTUREMANAGER_H
+#ifndef RESOURCEMANAGER_H
+#define RESOURCEMANAGER_H
 
 #include <QtOpenGL/QGLWidget>
 #include <QImage>
 
-class TextureManager
+class ResourceManager
 {
 public:
-    TextureManager();
-    ~TextureManager();
+    ResourceManager();
+    ~ResourceManager();
+
+    //number of colours to generate
+    static const int NUM_COLOURS = 10;
 
     //textures to load (KEEP IN SYNC WITH FILES)
     enum Texture{
@@ -17,10 +20,13 @@ public:
     };
 
     //get instance
-    static TextureManager* getInstance(){return instance;}
+    static ResourceManager* getInstance(){return instance;}
 
     //get a texture
     GLuint getTexture(Texture t);
+
+    //get colours
+    const QColor* getColour(float f);
 
 private:
     //the files to load textures from
@@ -29,11 +35,14 @@ private:
     //the array of textures
     std::vector<GLuint> *textures;
 
+    //holds array of colours
+    std::vector<const QColor*> *colours;
+
     //self-reference
-    static TextureManager* instance;
+    static ResourceManager* instance;
 
     //loads a texture:
     GLuint loadTextureFromFile(const char* c);
 };
 
-#endif // TEXTUREMANAGER_H
+#endif // RESOURCEMANAGER_H

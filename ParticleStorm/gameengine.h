@@ -7,7 +7,7 @@
 #include <QTime>
 
 #include "objectmanager.h"
-#include "texturemanager.h"
+#include "resourcemanager.h"
 
 class GameEngine : public QGLWidget{
 public:
@@ -21,10 +21,15 @@ public:
     static const int FPS_COUNT_FRAME_INTERVAL = 100;
     static const int LINES_PER_FADE = 400;
     static const int FADE_BORDER_AMT = 15;
+    static const int GAME_OVER_FRAMES = 200;
+
+    //control the game engine
+    void reset();
+    void start();
 
 private:
-    //main frameloop (update game, render frame)
-    void timerEvent(QTimerEvent *){update();updateGL();}
+    //call the main frameloop
+    void timerEvent(QTimerEvent *);
 
     void doFade(); //fade the previous screen every frame
     void drawHUD();
@@ -32,7 +37,7 @@ private:
 
     QGLFramebufferObject *fbo; //offscreen framebuffer
     ObjectManager *objectManager; //manages all the objects in the game
-    TextureManager *textureManager;
+    ResourceManager *resourceManager;
 
     //testing stuff
     void drawScene();
@@ -44,12 +49,20 @@ private:
     QTime *timer;
     float fps;
 
+    //game clock
+    int gameClock;
+
+    //game modifiers
+    bool paused;
+    unsigned int gameOverFrames;
+
     //colours
     const QColor *col_white;
     const QColor *col_yellow;
     const QColor *col_red;
     const QColor *col_green;
     const QColor *col_blue;
+    const QColor *col_black;
 
 protected:
     //overrides

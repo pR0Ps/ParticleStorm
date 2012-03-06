@@ -58,15 +58,28 @@ public:
      */
     ~Player();
 
+    //resets the player
+    void reset();
+
     // Pure virtual functions to override. These are analogous to abstract
     // methods in Java.
     // Note: do not use the virutal keyword in the implementation of these
     // functions.
-    virtual void update();
-    virtual void draw() const;
-    virtual void doCollision(GameObject* other);
-    virtual void applyForce(double x, double y, double mag);
-    virtual void die(); // may or may not need to override this
+    void update();
+    void draw() const;
+
+    //shouldn't do anything but have to override it anyway
+    void applyForce(double x, double y, double mag){}
+    void die(); // may or may not need to override this
+
+    //get player properties
+    int getMana() const {return mana;}
+    int getMaxMana() const {return MAX_MANA;}
+    float getManaPercent() const {return mana/(float)MAX_MANA;}
+
+    //score stuff
+    unsigned long int getScore() const {return score;}
+    void modScore(int amt, bool rel);
 
 private:
     // Data members.
@@ -85,6 +98,9 @@ private:
     // on the player's life.
     int size;
 
+    //player score
+    unsigned long int score;
+
     // Private member functions. The init function does not need to be
     // overridden and will likely be removed.
     /*
@@ -93,8 +109,9 @@ private:
      * a negative value to this function.
      *
      * Parameter: the amount to add to the player's mana.
+     * Parameter: amount is reletive to current mana or not (set vs mod)
      */
-    void modMana(int amount);
+    void modMana(int amount, bool rel = true);
 
     /*
      * Updates the size of the player's avatar, based upon the player's

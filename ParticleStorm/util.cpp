@@ -131,6 +131,32 @@ void Util::drawMeter(const double x1, const double y1, const double x2, const do
     else drawBox(x1 + 2, y1 + 2, x2 - 2, y1 + 2 + (y2 - y1 - 4) * amt, true, clr);
 }
 
+void Util::drawOctagon(const double x, const double y, double size, const QColor *clr){
+    //colour stuff
+    if (clr != NULL){
+        glPushAttrib(GL_CURRENT_BIT);
+        glColor3d(clr->red(), clr->green(), clr->blue());
+    }
+
+    size /=2.0;
+
+    const double temp = magnitude(size, size) - size;
+
+    glBegin(GL_LINE_LOOP);
+        glVertex2d(x - temp, y - size);
+        glVertex2d(x + temp, y - size);
+        glVertex2d(x + size, y - temp);
+        glVertex2d(x + size, y + temp);
+        glVertex2d(x + temp, y + size);
+        glVertex2d(x - temp, y + size);
+        glVertex2d(x - size, y + temp);
+        glVertex2d(x - size, y - temp);
+    glEnd();
+
+    //restore old color
+    if (clr != NULL) glPopAttrib();
+}
+
 //draw a string to the screen
 //note that newlines will screw with the output when it's centered (best just to use 2 calls)
 void Util::drawString(const std::string &s, double x, double y, const GLuint tex, const bool center_x,
@@ -191,7 +217,7 @@ void Util::drawChar(const char c, const double x, const double y, const GLuint t
     drawTexture(x, y, x + FONT_CHAR_DIMENSION_X, y + FONT_CHAR_DIMENSION_Y, tex, x1_tex, y1_tex, x2_tex, y2_tex);
 
     //draw box around the character to help with testing
-    drawBox(x, y, x + FONT_CHAR_DIMENSION_X, y + FONT_CHAR_DIMENSION_Y, false);
+    //drawBox(x, y, x + FONT_CHAR_DIMENSION_X, y + FONT_CHAR_DIMENSION_Y, false);
 }
 
 //Draws a texture to the screen.

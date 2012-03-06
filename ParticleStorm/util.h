@@ -49,6 +49,9 @@ public:
     static void drawMeter(double x1, double y1, double x2, double y2,
                           float amt, bool vert = false, const QColor *clr = NULL);
 
+    //draw an octagon for player diplay
+    static void drawOctagon(double x, double y, double size, const QColor *clr = NULL);
+
     //draw a string to the screen. When using the centering options, don't try to render multi-line strings (use 2 calls instead)
     static void drawString(const std::string &s, double x, double y, const GLuint tex, bool center_x = false, bool center_y = false,
                            float scale_x = 1, float scale_y = 1, bool useAlpha = true);

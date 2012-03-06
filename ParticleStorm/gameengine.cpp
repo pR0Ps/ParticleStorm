@@ -1,12 +1,7 @@
 #include "gameengine.h"
+#include "mainwindow.h"
 #include "util.h"
 #include <time.h>
-
-// Re-declaration of class constants. This must be present in the implementation
-// file since they are static data members and will be undefined references
-// otherwise.
-const int GameEngine::MAX_X;
-const int GameEngine::MAX_Y;
 
 GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
     setFixedSize(MAX_X, MAX_Y);
@@ -15,30 +10,19 @@ GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
     //pseudo-randomness
     qsrand((uint)time(NULL));
 
-    //init the testing values
-    for (int i = 0 ; i < 6 ; i++){
-        coords[i] = qrand() % (i % 2 == 0 ? MAX_X : MAX_Y);
-        vels[i] = (qrand() % 5) + 5;
-    }
-
     //init colours
     col_white = new QColor (255, 255, 255);
     col_yellow = new QColor(255, 255, 0);
     col_red = new QColor(255, 0, 0);
     col_green = new QColor(0, 255, 0);
     col_blue = new QColor(0, 0, 255);
+    col_black = new QColor(0, 0, 0);
 
     //FPS
-    framecnt = 0;
-    fps = 0;
     timer = new QTime();
-    timer->start();
 
     //Object manager
     objectManager = new ObjectManager();
-
-    //start the timer (sets off the frameloop via timerEvent)
-    startTimer(1/(double)MAX_FPS*1000);
 }
 
 //destructor
@@ -46,11 +30,12 @@ GameEngine::~GameEngine(){
     //framebuffer
     delete fbo;
 
+    //managers
+    delete objectManager;
+    delete resourceManager;
+
     //timer
     delete timer;
-
-    //object manager
-    delete objectManager;
 
     //colours
     delete col_white;
@@ -58,6 +43,15 @@ GameEngine::~GameEngine(){
     delete col_red;
     delete col_green;
     delete col_blue;
+    delete col_black;
+}
+
+//the main frameloop
+void GameEngine::timerEvent(QTimerEvent *){
+    if (!paused){
+        update();
+        updateGL();
+    }
 }
 
 void GameEngine::initializeGL(){
@@ -102,7 +96,39 @@ void GameEngine::initializeGL(){
     fbo->release();
 
     //load textures
-    textureManager = new TextureManager();
+    resourceManager = new ResourceManager();
+}
+
+//resets the game
+void GameEngine::reset(){
+    killTimer(gameClock);
+
+    //resets all the game objects
+    objectManager->reset();
+}
+
+//starts a game
+void GameEngine::start(){
+
+    //init the testing values
+    for (int i = 0 ; i < 6 ; i++){
+        coords[i] = qrand() % (i % 2 == 0 ? MAX_X : MAX_Y);
+        vels[i] = (qrand() % 5) + 5;
+    }
+
+    //game states
+    paused = false;
+    gameOverFrames = 0;
+
+    //FPS stuff
+    framecnt = 0;
+    fps = 0;
+    timer->start();
+
+    //start the timer (sets off the frameloop via timerEvent)
+    gameClock = startTimer(1/(double)MAX_FPS*1000);
+
+    //TODO: clear framebuffer somehow
 }
 
 //fade the frame
@@ -143,14 +169,15 @@ void GameEngine::drawScene(){
 
 //draws information for the player
 void GameEngine::drawHUD(){
+
     //demo bars for health + mana
-    Util::drawMeter(20, MAX_Y - 35, 220, MAX_Y - 20, .75, false, col_red);
-    Util::drawMeter(240, MAX_Y - 35, 440, MAX_Y - 20, 1, false, col_blue);
+    Util::drawMeter(20, MAX_Y - 35, 220, MAX_Y - 20, objectManager->getPlayer()->getLifePercent(), false, col_red);
+    Util::drawMeter(240, MAX_Y - 35, 440, MAX_Y - 20, objectManager->getPlayer()->getManaPercent(), false, col_blue);
     //Score text (frames for now)
-    Util::drawString("FRAME:", MAX_X - 260, MAX_Y - 25, textureManager->getTexture(TextureManager::TEXT), false, true);
-    Util::drawString(Util::doubleToString(framecnt, 10, 0), MAX_X - 90, MAX_Y - 25, textureManager->getTexture(TextureManager::TEXT), true, true, 1, Util::getScaleByFrame(framecnt, 25, 1, 2));
+    Util::drawString("SCORE:", MAX_X - 260, MAX_Y - 25, resourceManager->getTexture(ResourceManager::TEXT), false, true);
+    Util::drawString(Util::doubleToString(objectManager->getPlayer()->getScore(), 10, 0), MAX_X - 90, MAX_Y - 25, resourceManager->getTexture(ResourceManager::TEXT), true, true, 1, Util::getScaleByFrame(framecnt, 25, 1, 2));
     //FPS text
-    Util::drawString("FPS: " + Util::doubleToString(fps, 4, 1), 0, 0, textureManager->getTexture(TextureManager::TEXT));
+    Util::drawString("FPS: " + Util::doubleToString(fps, 4, 1), 0, 0, resourceManager->getTexture(ResourceManager::TEXT));
 }
 
 //update game logic - automatically called
@@ -178,36 +205,59 @@ void GameEngine::paintGL(){
         fps = FPS_COUNT_FRAME_INTERVAL/(double)(timer->restart()) * 1000;
     }
 
-    /*Draw method:
-      To framebuffer:
-        Old framebuffer (don't erase it)
-        Fade
-        Stars
-        Shrapnel
-        Powerups
-        Player (maybe implement selective fading)
-      To screen:
-        Current framebuffer
-        Particles
-        Enemies
-        HUD
-    */
+    //check game over
+    if (gameOverFrames > 0 || objectManager->getPlayer()->getLife() == 0){
+        gameOverFrames++;
+        Util::drawString("Game Over", MAX_X/2, MAX_Y/2, resourceManager->getTexture(ResourceManager::TEXT), true, true, 5, 5);
+        //fade screen (or other game-overy stuff) for GAME_OVER_FRAMES frames
+        if (gameOverFrames > GAME_OVER_FRAMES){
+            paused = true;
+            MainWindow::getInstance()->doneGame(objectManager->getPlayer()->getScore());
+        }
+    }
+    else{
+        //play the game
 
-    //draw to the framebuffer
-    fbo->bind();
-    doFade();
-    drawScene();
+        /*Draw method:
+          To framebuffer:
+            Old framebuffer (don't erase it)
+            Fade
+            Shrapnel
+            Powerups
+            Particles
+            Player (maybe implement selective fading)
+          To screen:
+            Current framebuffer
+            Stars
+            Enemies
+            HUD
+        */
 
-    objectManager->update(ObjectManager::PLAYER);
-    objectManager->update(ObjectManager::PARTICLE);
+        //all draw commands draw to the framebuffer
+        fbo->bind();
+        doFade();
+        drawScene();
 
-    objectManager->draw(ObjectManager::PARTICLE);
+        objectManager->update(ObjectManager::PLAYER);
+        objectManager->update(ObjectManager::PARTICLE);
 
-    fbo->release();
+        objectManager->draw(ObjectManager::PARTICLE);
 
-    //draw to screen
-    Util::drawTexture(0, 0, MAX_X, MAX_Y, fbo->texture());
-    objectManager->draw(ObjectManager::PLAYER);
-    drawHUD();
+        fbo->release();
+
+        //all draw commands go to screen
+
+        //draw framebuffer (all previous drawing commands)
+        Util::drawTexture(0, 0, MAX_X, MAX_Y, fbo->texture());
+
+        objectManager->draw(ObjectManager::PLAYER);
+
+        //testing
+        objectManager->modPlayerScore(1);
+        if (framecnt % 5 == 0)
+            objectManager->modPlayerLife(-1);
+
+        drawHUD();
+    }
 }
 

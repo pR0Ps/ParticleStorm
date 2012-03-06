@@ -21,8 +21,8 @@ SOURCES += main.cpp\
     enemy.cpp \
     shrapnel.cpp \
     util.cpp \
-    texturemanager.cpp \
-    gameengine.cpp
+    gameengine.cpp \
+    resourcemanager.cpp
 
 HEADERS  += mainwindow.h \
     objectmanager.h \
@@ -34,8 +34,8 @@ HEADERS  += mainwindow.h \
     enemy.h \
     shrapnel.h \
     util.h \
-    texturemanager.h \
-    gameengine.h
+    gameengine.h \
+    resourcemanager.h
 
 FORMS    += mainwindow.ui
 

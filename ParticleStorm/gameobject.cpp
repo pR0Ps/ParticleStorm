@@ -25,9 +25,9 @@ void GameObject::die(){
     inUse = false;
 }
 
-void GameObject::setLife(const int n, const bool rel){
+void GameObject::modLife(const int amt, const bool rel){
     if (rel)
-        life = std::max(0, std::min (life + n, maxLife));
+        life = std::max(0, std::min (life + amt, maxLife));
     else
-        life = std::max(0, std::min (n, maxLife));
+        life = std::max(0, std::min (amt, maxLife));
 }

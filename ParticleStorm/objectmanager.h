@@ -24,8 +24,6 @@ public:
     static const int MAX_POWERUPS = 20;
     static const int MAX_SHRAPNEL = 40;
     static const int MAX_STARS = 250;
-    static const int NUM_PARTICLE_COLOURS = 10;
-
 
     //object types
     enum ObjectType{
@@ -51,6 +49,9 @@ public:
         MANA
     };
 
+    //resets all the objects
+    void reset();
+
     //apply to all the objects in the OM individually
     void draw(ObjectType t);
     void pan(ObjectType t, double x, double y);
@@ -62,6 +63,11 @@ public:
 
     //get number of objects
     unsigned int getNumObjects(ObjectType t);
+
+    //player stuff
+    const Player* getPlayer(){return player;}
+    void modPlayerLife(int amt, bool rel = true){player->modLife(amt, rel);}
+    void modPlayerScore(int amt, bool rel = true){player->modScore(amt, rel);}
 
     //get unused object to modify
     GameObject* getUnused(ObjectType t);
@@ -84,14 +90,7 @@ public:
     //get the object manager instance
     static ObjectManager* getInstance(){return instance;}
 
-    //colours
-    const QColor* getParticleCol(float f);
-
-
 private:
-    //holds the colours
-    std::vector<const QColor*> *particleCol;
-
     //holds all the objects
     Player *player;
     std::vector<GameObject*> *particles;
@@ -107,7 +106,11 @@ private:
     //want to create in sequential order always
     unsigned int cur_particle;
 
+    //returns the address of the proper vector
     std::vector<GameObject*>& getVector(ObjectType t);
+
+    //sets all the objects as inactive
+    void deactivateAll(ObjectType t);
 };
 
 #endif // OBJECTMANAGER_H

@@ -30,7 +30,7 @@ public:
 
     //set
     void setInUse (bool inUse){this->inUse = inUse;}
-    void setLife(int l, bool rel);
+    void modLife(int amt, bool rel = true);
     void setMaxLife (int maxLife){this->maxLife = maxLife;}
     void setX(int x){this->x = x;}
     void setY(int y){this->y = y;}
@@ -38,13 +38,14 @@ public:
     void setVelY(int y_vel){this->y_vel = y_vel;}
 
     //get
-    bool getInUse(){return inUse;}
-    bool getLife(){return life;}
-    bool getMaxLife(){return maxLife;}
-    double getX(){return x;}
-    double getY(){return y;}
-    double getXVel(){return x_vel;}
-    double getYVel(){return y_vel;}
+    bool getInUse() const {return inUse;}
+    int getLife() const {return life;}
+    int getMaxLife() const {return maxLife;}
+    float getLifePercent() const {return life/(float)maxLife;}
+    double getX() const {return x;}
+    double getY() const {return y;}
+    double getXVel() const {return x_vel;}
+    double getYVel() const {return y_vel;}
 
 protected:
     //properties

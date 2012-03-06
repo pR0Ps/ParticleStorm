@@ -12,6 +12,8 @@ public:
 
     //constants
     static const int MAX_PARTICLE_SPEED = 100;
+    static const float SPEED_MULTIPLIER = 1;
+    static const float AIR_RESIST = 0.1;
 
     void draw() const;
     void update();
