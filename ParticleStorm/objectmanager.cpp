@@ -61,6 +61,9 @@ void ObjectManager::reset(){
     //reset the player
     player->reset();
 
+    //reset the particle counter
+    cur_particle = 0;
+
     //reset the objects
     deactivateAll(PARTICLE);
     deactivateAll(ENEMY);
@@ -190,22 +193,20 @@ void ObjectManager::deactivateAll(ObjectType t){
     }
 }
 
+//returns the number of objects in use
 unsigned int ObjectManager::getNumObjects(ObjectType t){
-    /*
-    //fix this to return number of active things
-    if (t == PARTICLE)
-        return particles->size();
-    else if (t == ENEMY)
-        return enemies->size();
-    else if (t == POWERUP)
-        return powerups->size();
-    else if (t == SHRAPNEL)
-        return shrapnel->size();
-    else if (t == STAR)
-        return stars->size();
-    else
-    */
-        return 0;
+    if (t == PLAYER){
+        return 1;
+    }
+    else{
+        std::vector<GameObject*> temp = getVector(t);
+        unsigned int cnt = 0;
+        for (unsigned int i = 0 ; i < temp.size() ; i++){
+            if (temp.at(i)->getInUse())
+                cnt++;
+        }
+        return cnt;
+    }
 }
 
 //return an unused object

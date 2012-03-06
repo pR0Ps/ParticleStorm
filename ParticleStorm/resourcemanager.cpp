@@ -32,6 +32,7 @@ ResourceManager::ResourceManager()
         //(gradiant from blue -> green -> red, like UI mockup)
         per = i/(float)NUM_COLOURS;
         //hard one-liner is hard
+        //still a little buggy
         colours->push_back(new QColor(
             (per <= .1) ? ((255/2.0)-(per/.1)*(255/2.0)) : ((per < .5) ? (0) : ((per <= .7) ? (((per-.5)/.2)*255) : (255))),
             (per <= .1) ? (0) : ((per <= .3) ? (((per-.1)/(.2))*255) : ((per <= .7) ? (255) : (per <=.9) ? (255-((per-.7)/(.2))*255) : (0))),

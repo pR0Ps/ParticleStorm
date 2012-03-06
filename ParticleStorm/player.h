@@ -38,21 +38,17 @@ public:
     // accessible to the whole class. Also, may want to move these definitions
     // into private access space if they shouldn't be accessible by other
     // classes.
-    static const int MAX_LIFE = 100;
-    static const int MAX_MANA = 100;
-    // The smallest possible size of the player's avatar, when not modified by
-    // their current life. Represented in pixels.
-    static const int BASE_SIZE = 50; // may want to store this in a double
+    static const int MAX_LIFE = 1000;
+    static const int MAX_MANA = 1000;
+
+    //max size of the player
+    static const int MAX_DIAMETER = 24;
+
+    //size of the rings around the player
+    static const int RING_SIZE = 4;
 
     // Constructor/destructor.
-    /*
-     * Default constructor.
-     */
     Player();
-
-    /*
-     * Destructor.
-     */
     ~Player();
 
     //resets the player
@@ -65,17 +61,20 @@ public:
     void update();
     void draw() const;
 
-    //shouldn't do anything but have to override it anyway
+    //Have to override to do nothing
     void applyForce(double x, double y, double mag){}
-    void die(); // may or may not need to override this
+    void pan(double x, double y){}
+    void die(){}
 
     //get player properties
     int getMana() const {return mana;}
     int getMaxMana() const {return MAX_MANA;}
     float getManaPercent() const {return mana/(float)MAX_MANA;}
+    //maybe change to diameter if needed, but I think most calculations should use radius
+    double getRadius () const {return (MAX_DIAMETER * getLifePercent())/2.0;}
 
     //score stuff
-    unsigned long int getScore() const {return score;}
+    long int getScore() const {return score;}
     void modScore(int amt, bool rel);
 
 private:
@@ -89,14 +88,8 @@ private:
     // currentAbility;
     int mana;
 
-    // The size of the player's avatar (represented by a circle). This shrinks
-    // in size as the player's life decreases to aid the player in recovering.
-    // This data member may not be needed actually, as the avatar's size depends
-    // on the player's life.
-    int size;
-
     //player score
-    unsigned long int score;
+    long int score;
 
     // Private member functions. The init function does not need to be
     // overridden and will likely be removed.
@@ -109,30 +102,6 @@ private:
      * Parameter: amount is reletive to current mana or not (set vs mod)
      */
     void modMana(int amount, bool rel = true);
-
-    /*
-     * Updates the size of the player's avatar, based upon the player's
-     * remaining life. The size of the avatar will decrease as the player's life
-     * decreases. This should be called in the constructor to initialize the
-     * size data member and in the Player's update function, since the player's
-     * life may have changed.
-     *
-     * Note: I have inlined this function since it performs a fairly simple
-     * calculation. Apparently inlined functions must be defined in a header
-     * file if it will be called in other .cpp files, but it shouldn't matter in
-     * this case since it's a private member function.
-     */
-    void updateSize();
-
-    /*
-     * Updates the colour of the player's avatar. For now at least, this is only
-     * called in the constructor. (May want to change the avatar's colour
-     * dynamically later on.)
-     *
-     * Note: the colour is allocated on the heap, so this needs to be freed
-     * later on.
-     */
-    void updateColour();
 
     /*
      * Determines if the given mouse position is within the bounds of the OpenGL

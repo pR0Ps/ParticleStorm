@@ -56,6 +56,9 @@ private:
     bool paused;
     unsigned int gameOverFrames;
 
+    //flag for initially clearing the framebuffer
+    bool initialClear;
+
     //colours
     const QColor *col_white;
     const QColor *col_yellow;

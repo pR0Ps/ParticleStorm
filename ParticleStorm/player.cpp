@@ -14,7 +14,8 @@
 // difficulty of the gameplay.
 const int Player::MAX_LIFE;
 const int Player::MAX_MANA;
-const int Player::BASE_SIZE;
+const int Player::MAX_DIAMETER;
+const int Player::RING_SIZE;
 
 // Implementation of constructor and destructor.
 
@@ -59,25 +60,12 @@ void Player::reset(){
 
     //set initial score;
     score = 0;
-
-    //initialize the size
-    updateSize();
 }
 
 
 // Implementation of pure virtual functions.
 
 void Player::update() {
-    // First update the size of the player's avatar, since this may be needed to
-    // determine if the mouse's position should be used to update the location
-    // of the avatar.
-    // Note: the avatar's size may actually lag a frame behind, since the update
-    // function will likely be called before collision detection is carried out.
-    // So the current size of the avatar may not be accurate in relation to the
-    // player's remaining life until the next time update is called, but this
-    // probably isn't a big deal.
-    updateSize();
-
     // Update the previous coordinates of the avatar with the current
     // coordinates.
     x2 = x;
@@ -102,14 +90,10 @@ void Player::update() {
 //draw the player
 void Player::draw() const {
     //draw concentric octagons that represent health
-    for (int i = floor(6 * getLifePercent()); i >= 0 ; i--){
-        Util::drawOctagon(x, y, 2 + (i + 1) * 4, true, ResourceManager::getInstance()->getColour(1 - (i/5.0f)));
+    for (int i = MAX_DIAMETER / RING_SIZE * getLifePercent(); i >= 0 ; i--){
+        Util::drawOctagon(x, y, 2 + (i + 1) * RING_SIZE, true, ResourceManager::getInstance()->getColour(1 - (i/(float)(RING_SIZE+1))));
     }
     //Util::drawTexture(x - size/2.0, y - size/2.0, x + size/2.0, y + size/2.0, ResourceManager::getInstance()->getTexture(ResourceManager::PLAYER));
-}
-
-void Player::die() {
-
 }
 
 //change the score
@@ -128,17 +112,6 @@ void Player::modMana(int amt, bool rel) {
         mana = std::max(0, std::min (mana + amt, MAX_MANA));
     else
         mana = std::max(0, std::min (amt, MAX_MANA));
-}
-
-// The current calculation used (unless the value of some constants are changed)
-// for the size of the player's avatar is: 50 pixels + 1 pixel for every 2 life
-// points the player has. So the avatar's size can range from 50 to 100 pixels,
-// and the avatar will only have the smallest size (50 pixels) when the player
-// has 1 life left.
-inline void Player::updateSize() {
-    // Should use descriptive constants here instead of literal values.
-    //TODO: change calculation to match displyed avatar
-    size = BASE_SIZE + life / 2 * 1;
 }
 
 bool Player::isValidMousePos(const QPoint& pos) {

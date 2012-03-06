@@ -23,7 +23,6 @@ public:
 
 private:
     //internally change the particle's colour to match its speed
-
     void updateColour();
 
     double dt;

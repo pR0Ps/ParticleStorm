@@ -18,9 +18,9 @@ GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
     setAutoFillBackground(false);
 
     //pseudo-randomness
-    qsrand((uint)time(NULL));
+    qsrand((unsigned int)time(NULL));
 
-    //init colours
+    //init colours - possibly move ResourceManager
     col_white = new QColor (255, 255, 255);
     col_yellow = new QColor(255, 255, 0);
     col_red = new QColor(255, 0, 0);
@@ -28,7 +28,7 @@ GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
     col_blue = new QColor(0, 0, 255);
     col_black = new QColor(0, 0, 0);
 
-    //FPS
+    //FPS timer
     timer = new QTime();
 
     //Object manager
@@ -72,7 +72,7 @@ void GameEngine::initializeGL(){
     makeCurrent();
 
     //current version of OpenGL
-    qDebug() << "Current OpenGL version: " << (char*)glGetString(GL_VERSION);
+    qDebug() << "Current OpenGL version:" << (char*)glGetString(GL_VERSION);
 
     //window stuff
     glViewport(0, 0, MAX_X, MAX_Y);
@@ -98,15 +98,12 @@ void GameEngine::initializeGL(){
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    //init and clear the framebuffer
+    //init the framebuffer
     QGLFramebufferObjectFormat format;
     format.setAttachment(QGLFramebufferObject::NoAttachment);
     format.setInternalTextureFormat(GL_RGB);
     format.setTextureTarget(GL_TEXTURE_2D);
     fbo = new QGLFramebufferObject(MAX_X, MAX_Y, format);
-    fbo->bind();
-    glClear(GL_COLOR_BUFFER_BIT);
-    fbo->release();
 
     //load textures
     resourceManager = new ResourceManager();
@@ -142,28 +139,36 @@ void GameEngine::start(){
     fps = 0;
     timer->start();
 
+    //tell the framebuffer to clear properly
+    initialClear = true;
+
     //start the timer (sets off the frameloop via timerEvent)
     gameClock = startTimer(1/(double)MAX_FPS*1000);
-
-    //TODO: clear framebuffer somehow
 }
 
 //fade the frame
 void GameEngine::doFade(){
     glColor3f(0, 0, 0);
 
-    //outsides don't get cleared very well
-    Util::drawBox(0, 0, MAX_X, FADE_BORDER_AMT, true);
-    Util::drawBox(0, MAX_Y - FADE_BORDER_AMT, MAX_X - FADE_BORDER_AMT, MAX_Y, true);
-    Util::drawBox(0, FADE_BORDER_AMT, FADE_BORDER_AMT, MAX_Y - FADE_BORDER_AMT, true);
-    Util::drawBox(MAX_X - FADE_BORDER_AMT, FADE_BORDER_AMT, MAX_X, MAX_Y, true);
+    if (initialClear){
+        //fully clears the screen
+        glClear(GL_COLOR_BUFFER_BIT);
+        initialClear = false;
+    }
+    else{
+        //outsides don't get cleared very well
+        Util::drawBox(0, 0, MAX_X, FADE_BORDER_AMT, true);
+        Util::drawBox(0, MAX_Y - FADE_BORDER_AMT, MAX_X - FADE_BORDER_AMT, MAX_Y, true);
+        Util::drawBox(0, FADE_BORDER_AMT, FADE_BORDER_AMT, MAX_Y - FADE_BORDER_AMT, true);
+        Util::drawBox(MAX_X - FADE_BORDER_AMT, FADE_BORDER_AMT, MAX_X, MAX_Y, true);
 
-    //fade the screen
-    for (int i = 0 ; i < LINES_PER_FADE ; i++){
-        glBegin(GL_LINES);
-            glVertex2i(qrand() % MAX_X, qrand() % MAX_Y);
-            glVertex2i(qrand() % MAX_X, qrand() % MAX_Y);
-        glEnd();
+        //fade the screen
+        for (int i = 0 ; i < LINES_PER_FADE ; i++){
+            glBegin(GL_LINES);
+                glVertex2i(qrand() % MAX_X, qrand() % MAX_Y);
+                glVertex2i(qrand() % MAX_X, qrand() % MAX_Y);
+            glEnd();
+        }
     }
 }
 
@@ -216,7 +221,7 @@ void GameEngine::update(){
         return;
     }
 
-    //testing stuff - basic bounds
+    //bouncing triangle - basic bounds
     for (int i = 0 ; i < 6 ; i++){
         if (coords[i] > (i % 2 == 0 ? MAX_X : MAX_Y)){
             vels[i] *= -1;
@@ -236,7 +241,7 @@ void GameEngine::update(){
 
     //testing game stuff
     objectManager->modPlayerScore(1);
-    objectManager->modPlayerLife(-1);
+    objectManager->modPlayerLife(-5);
 }
 
 //draws everything - automatically called
