@@ -76,14 +76,19 @@ void Player::update() {
     QPoint mousePos(MainWindow::getMousePos());
     if (isValidMousePos(mousePos)) {
         // then update the avatar's position with the current mouse coordinates
+        x2 = x;
+        y2 = y;
         x = mousePos.x();
-        y = mousePos.y();
+        y = GameEngine::MAX_Y - mousePos.y();
     }
     // otherwise leave the avatar's position unchanged
+
+    //testing
+    ObjectManager::getInstance()->spawnParticle(x, y);
 }
 
 void Player::draw() const {
-    Util::drawTexture(x-10, y-10, x+10, y+10, TextureManager::getInstance()->getTexture(TextureManager::PLAYER));
+    Util::drawTexture(x - size/2.0, y - size/2.0, x + size/2.0, y + size/2.0, TextureManager::getInstance()->getTexture(TextureManager::PLAYER));
 }
 
 void Player::doCollision(GameObject* other) {

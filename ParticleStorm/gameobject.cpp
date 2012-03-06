@@ -1,4 +1,5 @@
 #include "gameobject.h"
+#include "QtOpenGL"
 
 //basic prototype of the GameObject class
 
@@ -9,7 +10,10 @@ GameObject::GameObject(){
 }
 
 GameObject::~GameObject(){
-    delete clr;
+    //clr is a pointer to a shared colour
+    //delete in the class that holds the colour object, not here
+    //seriously, don't, I just spent >1hr debugging this
+    //delete clr;
 }
 
 void GameObject::pan(const double x, const double y){

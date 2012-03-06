@@ -15,9 +15,9 @@ public:
 
     void draw() const;
     void update();
-    void applyForce(double, double, double);
+    void applyForce(double x, double y, double mag);
     void die();
-    void startParticle(double, double, double, double); //initializes a new particle, specifying the position
+    void startParticle(double x, double y, double x_vel, double y_vel); //initializes a new particle, specifying the position
 
 private:
     //internally change the particle's colour to match its speed

@@ -6,7 +6,7 @@ Util::Util(){}
 
 //distance between 2 points
 double Util::distance(const double x1, const double y1, const double x2, const double y2){
-    return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
+    return sqrt((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1));
 }
 
 //returns the amount of scale to apply based on the # frames elapsed to make an object pulse
@@ -150,12 +150,10 @@ void Util::drawString(const std::string &s, double x, double y, const GLuint tex
     //scale the matrix
     glScalef(scale_x, scale_y, 1);
 
-    if (useAlpha){
+    if (!useAlpha){
         //save the previous settting
         glPushAttrib(GL_COLOR_BUFFER_BIT);
-        //tell OpenGL to use the transparency of the font texture
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glEnable(GL_BLEND);
+        glDisable(GL_BLEND);
     }
     //draw individual characters
     int dx = 0;

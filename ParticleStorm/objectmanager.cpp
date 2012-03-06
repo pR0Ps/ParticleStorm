@@ -13,11 +13,11 @@ ObjectManager::ObjectManager(){
 
     //create everything
     player = new Player();
-    particles = new std::vector<Particle*>;
-    enemies = new std::vector<Enemy*>;
-    powerups = new std::vector<Powerup*>;
-    shrapnel = new std::vector<Shrapnel*>;
-    stars = new std::vector<Star*>;
+    particles = new std::vector<GameObject*>;
+    enemies = new std::vector<GameObject*>;
+    powerups = new std::vector<GameObject*>;
+    shrapnel = new std::vector<GameObject*>;
+    stars = new std::vector<GameObject*>;
 
     //init objects
     initPool(PARTICLE, MAX_PARTICLES);
@@ -67,154 +67,74 @@ ObjectManager::~ObjectManager(){
     delete particleCol;
 }
 
-//GAH, Y U NO WORK?
-/*
-std::vector<GameObject*>& ObjectManager::getVector(ObjectTypes t){
+//returns the correct vector to operate on based on object type
+std::vector<GameObject*>& ObjectManager::getVector(ObjectType t){
     if (t == PARTICLE)
-        return &particles;
+        return *particles;
     else if (t == ENEMY)
-        return &enemies;
+        return *enemies;
     else if (t == POWERUP)
-        return &powerups;
+        return *powerups;
     else if (t == SHRAPNEL)
-        return &shrapnel;
+        return *shrapnel;
     else if (t == STAR)
-        return &stars;
+        return *stars;
     else
-        return NULL;
+        throw "bad enum type passed to getVector()";
 }
-*/
 
 //apply to all objects
 void ObjectManager::draw(ObjectType t){
-    //once getVector is working, this will get a lot cleaner
-    if (t == PARTICLE){
-        for (unsigned int i = 0 ; i < particles->size() ; i++){
-            if (particles->at(i)->getInUse())
-                particles->at(i)->draw();
-        }
+    if (t == PLAYER){
+        player->draw();
     }
-    else if (t == ENEMY){
-        for (unsigned int i = 0 ; i < enemies->size() ; i++){
-            if (enemies->at(i)->getInUse())
-                enemies->at(i)->draw();
-        }
-    }
-    else if (t == POWERUP){
-        for (unsigned int i = 0 ; i < powerups->size() ; i++){
-            if (powerups->at(i)->getInUse())
-                powerups->at(i)->draw();
-        }
-    }
-    else if (t == SHRAPNEL){
-        for (unsigned int i = 0 ; i < shrapnel->size() ; i++){
-            if (enemies->at(i)->getInUse())
-            shrapnel->at(i)->draw();
-        }
-    }
-    else if (t == STAR){
-        for (unsigned int i = 0 ; i < stars->size() ; i++){
-            if (stars->at(i)->getInUse())
-                stars->at(i)->draw();
+    else{
+        std::vector<GameObject*> temp = getVector(t);
+        for (unsigned int i = 0 ; i < temp.size() ; i++){
+            if (temp.at(i)->getInUse()){
+                temp.at(i)->draw();
+            }
         }
     }
 }
 void ObjectManager::pan(ObjectType t, const double x, const double y){
-    //once getVector is working, this will get a lot cleaner
-    if (t == PARTICLE){
-        for (unsigned int i = 0 ; i < particles->size() ; i++){
-            if (particles->at(i)->getInUse())
-                particles->at(i)->pan(x, y);
-        }
+    if (t == PLAYER){
+        //cannot pan the player
+        return;
     }
-    else if (t == ENEMY){
-        for (unsigned int i = 0 ; i < enemies->size() ; i++){
-            if (enemies->at(i)->getInUse())
-                enemies->at(i)->pan(x, y);
-        }
-    }
-    else if (t == POWERUP){
-        for (unsigned int i = 0 ; i < powerups->size() ; i++){
-            if (powerups->at(i)->getInUse())
-                powerups->at(i)->pan(x, y);
-        }
-    }
-    else if (t == SHRAPNEL){
-        for (unsigned int i = 0 ; i < shrapnel->size() ; i++){
-            if (shrapnel->at(i)->getInUse())
-                shrapnel->at(i)->pan(x, y);
-        }
-    }
-    else if (t == STAR){
-        for (unsigned int i = 0 ; i < stars->size() ; i++){
-            if (stars->at(i)->getInUse())
-                stars->at(i)->pan(x, y);
+    else{
+        std::vector<GameObject*> temp = getVector(t);
+        for (unsigned int i = 0 ; i < temp.size() ; i++){
+            if (temp.at(i)->getInUse()){
+                temp.at(i)->pan(x, y);
+            }
         }
     }
 }
 void ObjectManager::update(ObjectType t){
-    //once getVector is working, this will get a lot cleaner
-    if (t == PARTICLE){
-        for (unsigned int i = 0 ; i < particles->size() ; i++){
-            if (particles->at(i)->getInUse())
-                particles->at(i)->update();
-        }
+    if (t == PLAYER){
+        player->update();
     }
-    else if (t == ENEMY){
-        for (unsigned int i = 0 ; i < enemies->size() ; i++){
-            if (enemies->at(i)->getInUse())
-                enemies->at(i)->update();
-        }
-    }
-    else if (t == POWERUP){
-        for (unsigned int i = 0 ; i < powerups->size() ; i++){
-            if (powerups->at(i)->getInUse())
-                powerups->at(i)->update();
-        }
-    }
-    else if (t == SHRAPNEL){
-        for (unsigned int i = 0 ; i < shrapnel->size() ; i++){
-            if (shrapnel->at(i)->getInUse())
-                shrapnel->at(i)->update();
-        }
-    }
-    else if (t == STAR){
-        for (unsigned int i = 0 ; i < stars->size() ; i++){
-            if (stars->at(i)->getInUse())
-                stars->at(i)->update();
+    else{
+        std::vector<GameObject*> temp = getVector(t);
+        for (unsigned int i = 0 ; i < temp.size() ; i++){
+            if (temp.at(i)->getInUse()){
+                temp.at(i)->update();
+            }
         }
     }
 }
 void ObjectManager::applyForce(const ObjectType t, const double x, const double y, const double mag){
-    //once getVector is working, this will get a lot cleaner
-    if (t == PARTICLE){
-        for (unsigned int i = 0 ; i < particles->size() ; i++){
-            if (particles->at(i)->getInUse())
-                particles->at(i)->applyForce(x, y, mag);
-        }
+    if (t == PLAYER){
+        //cannot apply a force to player
+        return;
     }
-    else if (t == ENEMY){
-        for (unsigned int i = 0 ; i < enemies->size() ; i++){
-            if (enemies->at(i)->getInUse())
-                enemies->at(i)->applyForce(x, y, mag);
-        }
-    }
-    else if (t == POWERUP){
-        for (unsigned int i = 0 ; i < powerups->size() ; i++){
-            if (powerups->at(i)->getInUse())
-                powerups->at(i)->applyForce(x, y, mag);
-        }
-    }
-    else if (t == SHRAPNEL){
-        for (unsigned int i = 0 ; i < shrapnel->size() ; i++){
-            if (shrapnel->at(i)->getInUse())
-                shrapnel->at(i)->applyForce(x, y, mag);
-        }
-    }
-    else if (t == STAR){
-        for (unsigned int i = 0 ; i < stars->size() ; i++){
-            if (stars->at(i)->getInUse())
-                stars->at(i)->applyForce(x, y, mag);
+    else{
+        std::vector<GameObject*> temp = getVector(t);
+        for (unsigned int i = 0 ; i < temp.size() ; i++){
+            if (temp.at(i)->getInUse()){
+                temp.at(i)->applyForce(x, y, mag);
+            }
         }
     }
 }
@@ -223,26 +143,31 @@ void ObjectManager::applyForce(const ObjectType t, const double x, const double 
 //never need to allocate any more, just reuse the previous ones
 void ObjectManager::initPool(ObjectType t, const unsigned int numObjects){
     if (t == PARTICLE){
+        particles->reserve(numObjects);
         for (unsigned int i = 0 ; i < numObjects ; i++){
             particles->push_back(new Particle());
         }
     }
     else if (t == ENEMY){
+        enemies->reserve(numObjects);
         for (unsigned int i = 0 ; i < numObjects ; i++){
             enemies->push_back(new Enemy());
         }
     }
     else if (t == POWERUP){
+        powerups->reserve(numObjects);
         for (unsigned int i = 0 ; i < numObjects ; i++){
             powerups->push_back(new Powerup());
         }
     }
     else if (t == SHRAPNEL){
+        shrapnel->reserve(numObjects);
         for (unsigned int i = 0 ; i < numObjects ; i++){
             shrapnel->push_back(new Shrapnel());
         }
     }
     else if (t == STAR){
+        stars->reserve(numObjects);
         for (unsigned int i = 0 ; i < numObjects ; i++){
             stars->push_back(new Star());
         }
@@ -271,45 +196,24 @@ unsigned int ObjectManager::getNumObjects(ObjectType t){
 //for now, if there aren't any free, it returns NULL
 //this can be changed in the future to expand the object pool
 GameObject* ObjectManager::getUnused(ObjectType t){
-    //once getVector is working, this will get a lot cleaner
-    if (t == PARTICLE){
+    if (t == PLAYER){
+        //cannot get an unused player
+        return NULL;
+    }
+    else if (t == PARTICLE){
         //special rules for particles (always reuse oldest)
         cur_particle = ++cur_particle % particles->size();
         return particles->at(cur_particle);
     }
-    else if (t == ENEMY){
-        for (unsigned int i = 0 ; i < enemies->size() ; i++){
-            if (!enemies->at(i)->getInUse()){
-                return enemies->at(i);
+    else{
+        std::vector<GameObject*> temp = getVector(t);
+        for (unsigned int i = 0 ; i < temp.size() ; i++){
+            if (temp.at(i)->getInUse()){
+                temp.at(i);
             }
         }
         return NULL;
     }
-    else if (t == POWERUP){
-        for (unsigned int i = 0 ; i < powerups->size() ; i++){
-            if (!powerups->at(i)->getInUse()){
-                return powerups->at(i);
-            }
-        }
-        return NULL;
-    }
-    else if (t == SHRAPNEL){
-        for (unsigned int i = 0 ; i < shrapnel->size() ; i++){
-            if (!shrapnel->at(i)->getInUse()){
-                return shrapnel->at(i);
-            }
-        }
-        return NULL;
-    }
-    else if (t == STAR){
-        for (unsigned int i = 0 ; i < stars->size() ; i++){
-            if (!stars->at(i)->getInUse()){
-                return stars->at(i);
-            }
-        }
-        return NULL;
-    }
-    return NULL;
 }
 
 //collisions

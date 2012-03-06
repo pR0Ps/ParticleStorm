@@ -6,25 +6,24 @@
 
 
 Particle::Particle():GameObject(){
-
-    QColor colour(0,0,0);
     double dt(1/30);
-
 }
 
 void Particle::update() {
     //update positions
 
-    x += x_vel * dt;
-    y += y_vel * dt;
-
-    //update tail length?
+    //x += x_vel * dt;
+    //y += y_vel * dt;
 }
 
 void Particle::draw() const{
-    double lastx = 0;
-    double lasty = 0;
-    Util::drawJaggedLine(x, y, lastx, lasty, clr);
+    glPushAttrib(GL_CURRENT_BIT);
+    glColor3d(clr->red(), clr->green(), clr->blue());
+    glBegin(GL_LINES);
+        glVertex2d(x, y);
+        glVertex2d(x + 10, y + 10);
+    glEnd();
+    glPopAttrib();
 }
 
 void Particle::applyForce(double x, double y, double mag){
@@ -34,15 +33,15 @@ void Particle::die() {
     inUse = false;
 }
 
-void Particle::startParticle(double x1, double y1, double x2, double y2) {
+void Particle::startParticle(double x1, double y1, double x_vel, double y_vel) {
     this->x = x1;
     this->y = y1;
-    this->x_vel = (x1 - x2) / dt;
-    this->y_vel = (y1 - y2) / dt;
+    this->x_vel = x_vel;
+    this->y_vel = y_vel;
     this->inUse = true;
+    this->updateColour();
 }
 
 void Particle::updateColour() {
-
-    clr = ObjectManager::getInstance()->getParticleCol(Util::magnitude(x_vel, y_vel)/(double)MAX_PARTICLE_SPEED);
+    clr = ObjectManager::getInstance()->getParticleCol(Util::magnitude(x_vel, y_vel)/(float)MAX_PARTICLE_SPEED);
 }

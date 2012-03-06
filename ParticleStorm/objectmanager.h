@@ -94,11 +94,11 @@ private:
 
     //holds all the objects
     Player *player;
-    std::vector<Particle*> *particles;
-    std::vector<Enemy*> *enemies;
-    std::vector<Powerup*> *powerups;
-    std::vector<Shrapnel*> *shrapnel;
-    std::vector<Star*> *stars;
+    std::vector<GameObject*> *particles;
+    std::vector<GameObject*> *enemies;
+    std::vector<GameObject*> *powerups;
+    std::vector<GameObject*> *shrapnel;
+    std::vector<GameObject*> *stars;
 
     //self-reference
     static ObjectManager* instance;
@@ -107,7 +107,7 @@ private:
     //want to create in sequential order always
     unsigned int cur_particle;
 
-    //std::vector<GameObject*>& getVector(ObjectTypes t);
+    std::vector<GameObject*>& getVector(ObjectType t);
 };
 
 #endif // OBJECTMANAGER_H

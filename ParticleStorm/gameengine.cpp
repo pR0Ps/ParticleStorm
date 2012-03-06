@@ -78,7 +78,6 @@ void GameEngine::initializeGL(){
     //unneeded OpenGL features (will renable on a per-use basis)
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_DEPTH_TEST);
-    glDisable(GL_BLEND);
     glDisable(GL_ALPHA_TEST);
     glDisable(GL_DITHER);
     glDisable(GL_FOG);
@@ -88,6 +87,9 @@ void GameEngine::initializeGL(){
     glDisable(GL_LINE_STIPPLE);
     glDisable(GL_SCISSOR_TEST);
     glDisable(GL_STENCIL_TEST);
+    //for transparency
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     //init and clear the framebuffer
     QGLFramebufferObjectFormat format;
@@ -96,7 +98,7 @@ void GameEngine::initializeGL(){
     format.setTextureTarget(GL_TEXTURE_2D);
     fbo = new QGLFramebufferObject(MAX_X, MAX_Y, format);
     fbo->bind();
-        glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT);
     fbo->release();
 
     //load textures
@@ -193,12 +195,19 @@ void GameEngine::paintGL(){
 
     //draw to the framebuffer
     fbo->bind();
-        doFade();
-        drawScene();
+    doFade();
+    drawScene();
+
+    objectManager->update(ObjectManager::PLAYER);
+    objectManager->update(ObjectManager::PARTICLE);
+
+    objectManager->draw(ObjectManager::PARTICLE);
+
     fbo->release();
 
     //draw to screen
     Util::drawTexture(0, 0, MAX_X, MAX_Y, fbo->texture());
+    objectManager->draw(ObjectManager::PLAYER);
     drawHUD();
 }
 
