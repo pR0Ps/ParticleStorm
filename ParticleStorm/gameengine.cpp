@@ -142,6 +142,9 @@ void GameEngine::start(){
     //tell the framebuffer to clear properly
     initialClear = true;
 
+    //reset mouse state
+    mouseState = Qt::NoButton;
+
     //start the timer (sets off the frameloop via timerEvent)
     gameClock = startTimer(1/(double)MAX_FPS*1000);
 }
@@ -241,7 +244,9 @@ void GameEngine::update(){
 
     //testing game stuff
     objectManager->modPlayerScore(1);
-    objectManager->modPlayerLife(-5);
+    if (getMouseState() & Qt::RightButton){
+        objectManager->modPlayerLife(-5);
+    }
 }
 
 //draws everything - automatically called

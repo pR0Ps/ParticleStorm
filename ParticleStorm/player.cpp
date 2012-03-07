@@ -74,17 +74,19 @@ void Player::update() {
     // Now get the current position of the player's mouse and check it for
     // validity.
     QPoint mousePos(MainWindow::getInstance()->getMousePos());
-    if (isValidMousePos(mousePos)) {
+    if (isValidMousePos(mousePos)){
         // then update the avatar's position with the current mouse coordinates
         x = mousePos.x();
         y = GameEngine::MAX_Y - mousePos.y(); //window uses top-right as 0,0
     }
     // otherwise leave the avatar's position unchanged
 
-    //TESTING (drop a particle every frame)
-    //will want to change this to take into account mouse clicks and distance moved
+    //TESTING (drop a particle every frame when the mouse is pressed)
+    //TODO: change this to take into account mouse clicks and distance moved
     //(place a particle every interval on the line between x2,y2 and x,y)
-    ObjectManager::getInstance()->spawnParticle(x, y);
+    if (MainWindow::getInstance()->getMouseState() & Qt::LeftButton){
+        ObjectManager::getInstance()->spawnParticle(x, y);
+    }
 }
 
 //draw the player

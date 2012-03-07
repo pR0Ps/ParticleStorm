@@ -26,6 +26,7 @@ public:
      * the location of the player's mouse cursor.
      */
     QPoint getMousePos();
+    Qt::MouseButtons getMouseState();
 
     //get this instance
     static MainWindow* getInstance(){return instance;}

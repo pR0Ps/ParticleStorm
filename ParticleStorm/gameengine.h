@@ -23,11 +23,19 @@ public:
     static const int FADE_BORDER_AMT = 15;
     static const int GAME_OVER_FRAMES = 200;
 
+    //access mouse state
+    Qt::MouseButtons getMouseState(){return mouseState;}
+
     //control the game engine
     void reset();
     void start();
 
 private:
+    //mouse stuff
+    void mousePressEvent(QMouseEvent* event){mouseState = event->buttons();}
+    void mouseReleaseEvent(QMouseEvent* event){mouseState = event->buttons();}
+    Qt::MouseButtons mouseState;
+
     //call the main frameloop
     void timerEvent(QTimerEvent *);
 

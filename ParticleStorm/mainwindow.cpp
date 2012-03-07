@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     //set up the game engine
     engine = new GameEngine();
+    engine->setMouseTracking(true);
 
     instance = this;
 }
@@ -24,6 +25,10 @@ QPoint MainWindow::getMousePos(){
     // the mouse and the mapFromGlobal function converts this to a point relative
     // to a QWidget, in this case the OpenGL canvas.
     return engine->mapFromGlobal(QCursor::pos());
+}
+
+Qt::MouseButtons MainWindow::getMouseState(){
+    return engine->getMouseState();
 }
 
 void MainWindow::doneGame(const unsigned int score){
