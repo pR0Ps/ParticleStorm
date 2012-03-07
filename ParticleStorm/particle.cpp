@@ -19,9 +19,11 @@ void Particle::update() {
     dt = (1/(double)GameEngine::MAX_FPS);
 
     //apply air resistance
-    x_vel += ((x_vel < 0) ? AIR_RESIST : -AIR_RESIST);
-    y_vel += (y_vel < 0) ? AIR_RESIST : -AIR_RESIST;
+    //x_vel += ((x_vel < 0) ? AIR_RESIST : -AIR_RESIST);
+    //y_vel += (y_vel < 0) ? AIR_RESIST : -AIR_RESIST;
 
+    x_vel -= AIR_RESIST*x_vel*dt;
+    y_vel -= AIR_RESIST*y_vel*dt;
     //update positions
     x += x_vel * SPEED_MULTIPLIER * dt;
     y += y_vel * SPEED_MULTIPLIER * dt;
@@ -32,7 +34,7 @@ void Particle::draw() const{
     glColor3d(clr->red(), clr->green(), clr->blue());
 
     //'tail' should take into account current speed
-    //should be roughy the same location where the particle was last frame
+    //should be roughly the same location where the particle was last frame
     glBegin(GL_LINES);
         glVertex2d(x, y);
         glVertex2d(x + 10, y + 10);
@@ -41,6 +43,11 @@ void Particle::draw() const{
 }
 
 void Particle::applyForce(double x, double y, double mag){
+
+    double dist = Util::distance(this->x,this->y,x,y);
+    //calculating and updating x and y velocity using a 1/dist magnitude scaling
+    x_vel += (this->x-x)*mag/(dist*dist)*dt;
+    y_vel += (this->y-y)*mag/(dist*dist)*dt;
 }
 
 void Particle::die() {
