@@ -22,8 +22,8 @@ void Particle::update() {
     //x_vel += ((x_vel < 0) ? AIR_RESIST : -AIR_RESIST);
     //y_vel += (y_vel < 0) ? AIR_RESIST : -AIR_RESIST;
 
-    x_vel -= AIR_RESIST*x_vel*dt;
-    y_vel -= AIR_RESIST*y_vel*dt;
+    x_vel -= AIR_RESIST * x_vel * dt;
+    y_vel -= AIR_RESIST * y_vel * dt;
     //update positions
     x += x_vel * SPEED_MULTIPLIER * dt;
     y += y_vel * SPEED_MULTIPLIER * dt;
@@ -46,8 +46,8 @@ void Particle::applyForce(double x, double y, double mag){
 
     double dist = Util::distance(this->x,this->y,x,y);
     //calculating and updating x and y velocity using a 1/dist magnitude scaling
-    x_vel += (this->x-x)*mag/(dist*dist)*dt;
-    y_vel += (this->y-y)*mag/(dist*dist)*dt;
+    x_vel += (this->x - x) * mag / ((dist * dist) * GameEngine::FORCE_DISSIPATION) * dt;
+    y_vel += (this->y - y) * mag / ((dist * dist) * GameEngine::FORCE_DISSIPATION) * dt;
 }
 
 void Particle::die() {

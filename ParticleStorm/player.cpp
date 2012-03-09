@@ -87,6 +87,10 @@ void Player::update() {
     if (MainWindow::getInstance()->getMouseState() & Qt::LeftButton){
         ObjectManager::getInstance()->spawnParticle(x, y);
     }
+    if (MainWindow::getInstance()->getMouseState() & Qt::RightButton){
+        //magnitue is really high, take a look at this
+        ObjectManager::getInstance()->applyForce(ObjectManager::PARTICLE, x, y, 100000);
+    }
 }
 
 //draw the player

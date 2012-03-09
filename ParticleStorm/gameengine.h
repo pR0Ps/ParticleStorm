@@ -22,6 +22,7 @@ public:
     static const int LINES_PER_FADE = 400;
     static const int FADE_BORDER_AMT = 15;
     static const int GAME_OVER_FRAMES = 200;
+    static const float FORCE_DISSIPATION = 1;
 
     //access mouse state
     Qt::MouseButtons getMouseState(){return mouseState;}

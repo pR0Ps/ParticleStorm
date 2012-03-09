@@ -11,6 +11,7 @@ const int GameEngine::FPS_COUNT_FRAME_INTERVAL;
 const int GameEngine::LINES_PER_FADE;
 const int GameEngine::FADE_BORDER_AMT;
 const int GameEngine::GAME_OVER_FRAMES;
+const float GameEngine::FORCE_DISSIPATION;
 
 GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
     setFixedSize(MAX_X, MAX_Y);
@@ -244,9 +245,9 @@ void GameEngine::update(){
 
     //testing game stuff
     objectManager->modPlayerScore(1);
-    if (getMouseState() & Qt::RightButton){
-        objectManager->modPlayerLife(-5);
-    }
+    //if (getMouseState() & Qt::RightButton){
+    //    objectManager->modPlayerLife(-5);
+    //}
 }
 
 //draws everything - automatically called
