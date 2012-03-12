@@ -1,31 +1,35 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
+#include <string>
 #include "gameobject.h"
 
-class Enemy : public GameObject
-{
+class Enemy : public GameObject{
 public:
-    Enemy();
+    Enemy(string);
 
-    void draw() const;
-    void update();
-    void applyForce(double x, double y, double mag);
-
-    //initialize an instance of an enemy
-    void initialize(double hlth, double spd, double dmg);
+    void update(Player);
 
     //move from current position to given position
-    void moveLine(double x, double y);
+    void move(double, double);
 
     //for every hit/heal to the enemy
-    void decHealth(double dam);
-    void incHealth(double heal);
+    void changeHealth(double);
+
+    //draw enemy
+    void draw();
+
+    //reset an enemy (almost identical to constructor)
+    void reset();
 
 private:
+    const double MAXHLTH;
     double health;
     double speed;
     double damage;
+    double x,y;
+    bool active;
+    string type;
 };
 
 #endif // ENEMY_H
