@@ -262,13 +262,33 @@ void ObjectManager::spawnPowerup(PowerupType t, const double x, const double y, 
 }
 
 void ObjectManager::spawnEnemy(EnemyType t, const double x, const double y, const double x_tar, const double y_tar){
-
+    //will be elsewhere, storing here for now
+    /*
+    //determine start position at the edge of the screen
+    int start = qrand()%4;
+    if(start == 0){
+        x = 0;
+        y = qrand()%768;
+    }
+    else if(start == 1){
+        x = 1024;
+        y = qrand()%768;
+    }
+    else if(start == 2){
+        x = qrand()%1024;
+        y = 0;
+    }
+    else if(start == 3){
+        x = qrand()%1024;
+        y = 768;
+    }
+    */
 }
 
 void ObjectManager::spawnShrapnel(const double x, const double y, const double x_vel, const double y_vel, const double len, const QColor *clr){
 
 }
 
-Enemy* ObjectManager::getClosestEnemy(const double x, const double y, const double min_dist){
-    return NULL;
-}
+//Enemy* ObjectManager::getClosestEnemy(const double x, const double y, const double min_dist){
+//    return NULL;
+//}

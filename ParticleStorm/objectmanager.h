@@ -85,7 +85,7 @@ public:
     void spawnShrapnel (double x, double y, double x_vel, double y_vel, double len, const QColor *clr);
 
     //enemy stuff
-    Enemy* getClosestEnemy(double x, double y, double min_dist = 1);
+    //Enemy* getClosestEnemy(double x, double y, double min_dist = 1);
 
     //get the object manager instance
     static ObjectManager* getInstance(){return instance;}
