@@ -40,6 +40,14 @@ ResourceManager::ResourceManager()
         ));
     }
 
+    //init static textures
+    white = new QColor (255, 255, 255);
+    yellow = new QColor(255, 255, 0);
+    red = new QColor(255, 0, 0);
+    green = new QColor(0, 255, 0);
+    blue = new QColor(0, 0, 255);
+    black = new QColor(0, 0, 0);
+
     //set up self reference
     instance = this;
 }
@@ -53,9 +61,17 @@ ResourceManager::~ResourceManager()
     }
     delete textures;
 
-    //remove colours
+    //remove colour scale
     while(!colours->empty()) delete colours->back(), colours->pop_back();
     delete colours;
+
+    //delete static colours
+    delete white;
+    delete yellow;
+    delete red;
+    delete green;
+    delete blue;
+    delete black;
 }
 
 //loads an image from a file and returns the OpenGL handle for it
@@ -87,7 +103,7 @@ GLuint ResourceManager::getTexture(Texture t){
 }
 
 //return the stored colour of the specified gradient
-const QColor* ResourceManager::getColour(const float f){
+const QColor* ResourceManager::getColourScale(const float f){
     if (f < 0){
         return colours->at(0);
     }
@@ -97,4 +113,19 @@ const QColor* ResourceManager::getColour(const float f){
     else{
         return colours->at(floor(f * (NUM_COLOURS - 1)));
     }
+}
+
+const QColor* ResourceManager::getColour(Colours c){
+    if (c == WHITE)
+        return white;
+    else if (c == YELLOW)
+        return yellow;
+    else if (c == RED)
+        return red;
+    else if (c == GREEN)
+        return green;
+    else if (c == BLUE)
+        return blue;
+    else
+        return black;
 }

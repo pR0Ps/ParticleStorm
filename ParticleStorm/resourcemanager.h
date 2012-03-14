@@ -19,6 +19,16 @@ public:
         PLAYER
     };
 
+    //colours
+    enum Colours{
+        WHITE,
+        YELLOW,
+        RED,
+        GREEN,
+        BLUE,
+        BLACK
+    };
+
     //get instance
     static ResourceManager* getInstance(){return instance;}
 
@@ -26,7 +36,8 @@ public:
     GLuint getTexture(Texture t);
 
     //get colours
-    const QColor* getColour(float f);
+    const QColor* getColourScale(float f);
+    const QColor* getColour (Colours c);
 
 private:
     //the files to load textures from
@@ -37,6 +48,14 @@ private:
 
     //holds array of colours
     std::vector<const QColor*> *colours;
+
+    //static colours
+    const QColor *white;
+    const QColor *yellow;
+    const QColor *red;
+    const QColor *green;
+    const QColor *blue;
+    const QColor *black;
 
     //self-reference
     static ResourceManager* instance;

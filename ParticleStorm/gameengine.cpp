@@ -19,15 +19,7 @@ GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
     setAutoFillBackground(false);
 
     //pseudo-randomness
-    qsrand((unsigned int)time(NULL));
-
-    //init colours - possibly move ResourceManager
-    col_white = new QColor (255, 255, 255);
-    col_yellow = new QColor(255, 255, 0);
-    col_red = new QColor(255, 0, 0);
-    col_green = new QColor(0, 255, 0);
-    col_blue = new QColor(0, 0, 255);
-    col_black = new QColor(0, 0, 0);
+    qsrand((unsigned int)time(NULL));    
 
     //FPS timer
     timer = new QTime();
@@ -50,14 +42,6 @@ GameEngine::~GameEngine(){
 
     //timer
     delete timer;
-
-    //colours
-    delete col_white;
-    delete col_yellow;
-    delete col_red;
-    delete col_green;
-    delete col_blue;
-    delete col_black;
 }
 
 //the main frameloop
@@ -180,7 +164,7 @@ void GameEngine::doFade(){
 void GameEngine::drawScene(){
     //draw lightning every 3 frames
     if (framecnt % 3 == 0)
-        Util::drawJaggedLine(qrand() % MAX_X, qrand() % MAX_Y, qrand() % MAX_X, qrand() % MAX_Y, col_white);
+        Util::drawJaggedLine(qrand() % MAX_X, qrand() % MAX_Y, qrand() % MAX_X, qrand() % MAX_Y, resourceManager->getColour(ResourceManager::WHITE));
 
     //draw triangles
     glBegin(GL_TRIANGLES);
@@ -190,15 +174,15 @@ void GameEngine::drawScene(){
     glEnd();
 
     //zap the green corner of the triangle from 100, 100 with green lightning
-    Util::drawJaggedLine(100, 100, coords[2], coords[3], col_green);
+    Util::drawJaggedLine(100, 100, coords[2], coords[3], resourceManager->getColour(ResourceManager::GREEN));
 }
 
 //draws information for the player
 void GameEngine::drawHUD(){
 
     //demo bars for health + mana
-    Util::drawMeter(20, MAX_Y - 35, 220, MAX_Y - 20, objectManager->getPlayer()->getLifePercent(), false, col_red);
-    Util::drawMeter(240, MAX_Y - 35, 440, MAX_Y - 20, objectManager->getPlayer()->getManaPercent(), false, col_blue);
+    Util::drawMeter(20, MAX_Y - 35, 220, MAX_Y - 20, objectManager->getPlayer()->getLifePercent(), false, resourceManager->getColour(ResourceManager::RED));
+    Util::drawMeter(240, MAX_Y - 35, 440, MAX_Y - 20, objectManager->getPlayer()->getManaPercent(), false, resourceManager->getColour(ResourceManager::BLUE));
     //Score text (frames for now)
     Util::drawString("SCORE:", MAX_X - 260, MAX_Y - 25, resourceManager->getTexture(ResourceManager::TEXT), false, true);
     Util::drawString(Util::doubleToString(objectManager->getPlayer()->getScore(), 10, 0), MAX_X - 90, MAX_Y - 25, resourceManager->getTexture(ResourceManager::TEXT), true, true, 1, Util::getScaleByFrame(framecnt, 25, 1, 2));

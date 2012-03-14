@@ -97,7 +97,7 @@ void Player::update() {
 void Player::draw() const {
     //draw concentric octagons that represent health
     for (int i = MAX_DIAMETER / RING_SIZE * getLifePercent(); i >= 0 ; i--){
-        Util::drawOctagon(x, y, 2 + (i + 1) * RING_SIZE, true, ResourceManager::getInstance()->getColour(1 - (i/(float)(RING_SIZE+1))));
+        Util::drawOctagon(x, y, 2 + (i + 1) * RING_SIZE, true, ResourceManager::getInstance()->getColourScale(1 - (i/(float)(RING_SIZE+1))));
     }
     //Util::drawTexture(x - size/2.0, y - size/2.0, x + size/2.0, y + size/2.0, ResourceManager::getInstance()->getTexture(ResourceManager::PLAYER));
 }

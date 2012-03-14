@@ -68,14 +68,6 @@ private:
     //flag for initially clearing the framebuffer
     bool initialClear;
 
-    //colours
-    const QColor *col_white;
-    const QColor *col_yellow;
-    const QColor *col_red;
-    const QColor *col_green;
-    const QColor *col_blue;
-    const QColor *col_black;
-
 protected:
     //overrides
     void initializeGL();
