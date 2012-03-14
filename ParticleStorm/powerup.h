@@ -3,8 +3,14 @@
 
 #include "gameobject.h"
 
+using namespace std;
+
 class Powerup : public GameObject
 {
+private:
+    int x;
+    int y;
+    String type;
 public:
     Powerup();
 
