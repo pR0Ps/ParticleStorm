@@ -14,12 +14,17 @@ public:
     static const float FOREGROUND_SPEED_EDGE = 0.8;
     static const float BACKGROUND_SPEED_CENTER = 0.3;
     static const float BACKGROUND_SPEED_EDGE = 0.4;
+    static const float SCALE_FORCE_DISSIPATION = 10;
+    static const float SPEED_MULTIPLIER =1; //just incase
 
     Star();
 
     void draw() const;
     void update();
     void applyForce(double x, double y, double mag);
+private:
+     int dt;
+
 };
 
 #endif // STAR_H
