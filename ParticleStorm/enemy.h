@@ -27,7 +27,6 @@ public:
 private:
     double speed;
     double damage;
-    bool active;
     int type;
 };
 

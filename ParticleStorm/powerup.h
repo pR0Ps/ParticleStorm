@@ -2,16 +2,16 @@
 #define POWERUP_H
 
 #include "gameobject.h"
+#include "objectmanager.h"
 
-using namespace std;
 class Powerup : public GameObject
 {
 private:
-    int x;
-    int y;
-    string type;
+    int type;
 public:
     Powerup();
+
+    void startPowerup(int type, double x, double y, double x_vel, double y_vel);
 
     void draw() const;
     void update();
