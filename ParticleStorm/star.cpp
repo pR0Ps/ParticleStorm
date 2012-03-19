@@ -8,6 +8,14 @@ Star::Star():GameObject(){
 
 }
 
+
+const float Star::FOREGROUND_SPEED_CENTER;
+const float Star::FOREGROUND_SPEED_EDGE;
+const float Star::BACKGROUND_SPEED_CENTER;
+const float Star::BACKGROUND_SPEED_EDGE;
+const float Star::SCALE_FORCE_DISSIPATION;
+const float Star::SPEED_MULTIPLIER;
+
 int count = 0;
 
 void Star::update(){
@@ -71,9 +79,9 @@ void Star::applyForce(double x, double y, double mag){
 }
 
 void Star::draw() const{
-    double size_box_x= x+1;
+    /*double size_box_x= x+1;
     double size_box_y= y+1;
 
     Util::drawBox(x, y, size_box_x, size_box_y, ResourceManager::getInstance()->getColour(ResourceManager::WHITE));
-
+*/
 }
