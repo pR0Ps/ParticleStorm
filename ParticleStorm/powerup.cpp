@@ -1,4 +1,5 @@
 #include "powerup.h"
+#include "gameengine.h"
 
 Powerup::Powerup():GameObject(){
     //do nothing
@@ -20,8 +21,15 @@ void Powerup::draw() const{
 
 void Powerup::update(){
 
+    dt = (1/(double)GameEngine::MAX_FPS);
+
+
 }
 
 void Powerup::applyForce(double x, double y, double mag){
+
+}
+
+void Powerup::die(){
 
 }
