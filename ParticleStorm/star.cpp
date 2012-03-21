@@ -71,17 +71,17 @@ void Star::applyForce(double x, double y, double mag){
    // if I understand this correctly, I should get the distance between the star and
    // player, and then apply a force to it. Force dissipation for this will be extremely small
    // by being scaled down quite a bit by SCALE_FORCE_DISSIPATION
-    double dist = Util::distance(this->x,this->y,x,y);
+    /*double dist = Util::distance(this->x,this->y,x,y);
 
     x_vel += (this->x- x) * mag / ((dist*dist)*(GameEngine::FORCE_DISSIPATION/Star::SCALE_FORCE_DISSIPATION)*dt);
     y_vel += (this->y- y) * mag / ((dist*dist)*(GameEngine::FORCE_DISSIPATION/Star::SCALE_FORCE_DISSIPATION)*dt);
-
+*/
 }
 
 void Star::draw() const{
-    /*double size_box_x= x+1;
+    double size_box_x= x+1;
     double size_box_y= y+1;
 
     Util::drawBox(x, y, size_box_x, size_box_y, ResourceManager::getInstance()->getColour(ResourceManager::WHITE));
-*/
+
 }
