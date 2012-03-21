@@ -80,7 +80,7 @@ public:
     //spawning stuff
     void spawnParticle(double x, double y, double x_vel, double y_vel);
     void spawnParticle(double x, double y);
-    void spawnPowerup (PowerupType t, double x, double y, double x_vel = 0, double y_vel = 0);
+    void spawnPowerup (PowerupType t, double x, double y, double x_vel = 0, double y_vel = 0, int value);
     void spawnEnemy(EnemyType t, double x, double y, double x_tar = 0, double y_tar = 0);
     void spawnShrapnel (double x, double y, double x_vel, double y_vel, double len, const QColor *clr);
 

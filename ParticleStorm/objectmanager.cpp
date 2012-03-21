@@ -258,7 +258,7 @@ void ObjectManager::spawnParticle(const double x, const double y){
 }
 
 void ObjectManager::spawnPowerup(PowerupType t, const double x, const double y, const double x_vel, const double y_vel){
-
+    static_cast<Powerup*>(getUnused(Powerup))->startPowerup(type, x, y, x_vel, y_vel, value);
 }
 
 void ObjectManager::spawnEnemy(EnemyType t, const double x, const double y, const double x_tar, const double y_tar){

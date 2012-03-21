@@ -5,9 +5,9 @@ Powerup::Powerup():GameObject(){
     //do nothing
 }
 
-void Powerup::startPowerup(int type, double x, double y, double x_vel, double y_vel){
+void Powerup::startPowerup(int type, double x, double y, double x_vel, double y_vel, int value){
     this->type = type;
-    //set stuff based on type here
+    this->value = value;
     this->x = x;
     this->y = y;
     this->x_vel = x_vel;
@@ -22,14 +22,7 @@ void Powerup::draw() const{
 void Powerup::update(){
 
     dt = (1/(double)GameEngine::MAX_FPS);
-
-
-}
-
-void Powerup::applyForce(double x, double y, double mag){
-
-}
-
-void Powerup::die(){
+    x_vel -= AIR_RESIST * x_vel * dt;
+    y_vel -= AIR_RESIST * y_vel * dt;
 
 }
