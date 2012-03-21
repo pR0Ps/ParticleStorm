@@ -26,8 +26,9 @@ public:
     static double distance(double x1, double y1, double x2, double y2);
     static double magnitude(double x, double y) {return distance(0, 0, x, y);}
     //degree versions of cos and sin
-    static double cosd (double x){return cos(x * (180 / PI));}
-    static double sind (double x){return sin(x * (180 / PI));}
+    static double cosd (double x){return cos(x * (PI/180));}
+    static double sind (double x){return sin(x * (PI/180));}
+    static double atand(double y,double x){return atan2(y,x)*(180/PI); }
 
     //because floor doesn't actually return an int (WRYYY?)
     static int flr (double d){return static_cast<int>(floor(d));}

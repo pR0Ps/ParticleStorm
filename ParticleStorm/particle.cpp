@@ -2,9 +2,12 @@
 #include "objectmanager.h"
 #include "gameengine.h"
 #include "util.h"
-
+#include "float.h"
+#include <iostream>
 #include "qmath.h"
 #include <QColor>
+
+using namespace std;
 
 const int Particle::MAX_PARTICLE_SPEED;
 const float Particle::SPEED_MULTIPLIER;
@@ -18,15 +21,15 @@ void Particle::update() {
 
     dt = (1/(double)GameEngine::MAX_FPS);
 
-    //apply air resistance
-    //x_vel += ((x_vel < 0) ? AIR_RESIST : -AIR_RESIST);
-    //y_vel += (y_vel < 0) ? AIR_RESIST : -AIR_RESIST;
-
     x_vel -= AIR_RESIST * x_vel * dt;
     y_vel -= AIR_RESIST * y_vel * dt;
     //update positions
     x += x_vel * SPEED_MULTIPLIER * dt;
     y += y_vel * SPEED_MULTIPLIER * dt;
+    this->updateColour();
+
+        //cout << Util::magnitude(x_vel,y_vel) << endl;
+
 }
 
 void Particle::draw() const{
@@ -37,7 +40,7 @@ void Particle::draw() const{
     //should be roughly the same location where the particle was last frame
     glBegin(GL_LINES);
         glVertex2d(x, y);
-        glVertex2d(x + 10, y + 10);
+        glVertex2d(x - x_vel*dt, y - y_vel*dt);
     glEnd();
     glPopAttrib();
 }
@@ -46,8 +49,19 @@ void Particle::applyForce(double x, double y, double mag){
 
     double dist = Util::distance(this->x,this->y,x,y);
     //calculating and updating x and y velocity using a 1/dist magnitude scaling
+
+    if(dist == 0) {
+        dist = DBL_MIN; //avoiding a div by 0 error in the next step
+    }
+
     x_vel += (this->x - x) * mag / ((dist * dist) * GameEngine::FORCE_DISSIPATION) * dt;
     y_vel += (this->y - y) * mag / ((dist * dist) * GameEngine::FORCE_DISSIPATION) * dt;
+
+    if(Util::magnitude(x_vel,y_vel) > MAX_PARTICLE_SPEED) {
+        double angle = Util::atand(y_vel,x_vel);
+        x_vel = MAX_PARTICLE_SPEED*Util::cosd(angle);
+        y_vel = MAX_PARTICLE_SPEED*Util::sind(angle);
+    }
 }
 
 void Particle::die() {
