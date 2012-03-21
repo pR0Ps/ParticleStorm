@@ -31,6 +31,7 @@ private:
     double damage;
     int type;
     double dist;
+    double dt;
 };
 
 #endif // ENEMY_H

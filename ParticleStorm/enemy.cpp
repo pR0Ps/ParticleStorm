@@ -1,4 +1,5 @@
 #include "enemy.h"
+#include "gameengine.h"
 
 #include <string>
 

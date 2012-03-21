@@ -8,6 +8,7 @@ class Powerup : public GameObject
 {
 private:
     int type;
+    double dt;
 public:
     Powerup();
 
@@ -21,6 +22,7 @@ public:
 
     //Dies after a specific amount of time, or when player collides
     void die();
+
 };
 
 #endif // POWERUP_H
