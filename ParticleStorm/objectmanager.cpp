@@ -225,8 +225,8 @@ GameObject* ObjectManager::getUnused(ObjectType t){
     else{
         std::vector<GameObject*> temp = getVector(t);
         for (unsigned int i = 0 ; i < temp.size() ; i++){
-            if (temp.at(i)->getInUse()){
-                temp.at(i);
+            if (!temp.at(i)->getInUse()){
+                return temp.at(i);
             }
         }
         return NULL;
@@ -283,6 +283,11 @@ void ObjectManager::spawnEnemy(EnemyType t, const double x, const double y, cons
         y = 768;
     }
     */
+    qDebug() << "spawn enemy started";
+    qDebug() << getUnused(ENEMY);
+    qDebug() << "enemy spawned";
+    static_cast<Enemy*>(getUnused(ENEMY))->startEnemy(t, x, y, x_tar, y_tar);
+    qDebug() << "enemy created";
 }
 
 void ObjectManager::spawnShrapnel(const double x, const double y, const double x_vel, const double y_vel, const double len, const QColor *clr){

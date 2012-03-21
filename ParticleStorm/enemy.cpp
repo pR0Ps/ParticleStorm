@@ -1,5 +1,6 @@
 #include "enemy.h"
 #include "gameengine.h"
+#include <QDebug>
 
 #include <string>
 
@@ -7,7 +8,6 @@ using namespace std;
 
 //canvas is 1024x768
 Enemy::Enemy():GameObject(){
-
 }
 
 //y u no enemytype?
@@ -18,14 +18,13 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
     //calculating the x and y distance from enemy spawn and current player position
     double x_dist = x_tar - x;
     double y_dist = y_tar - y;
-
+    qDebug() << "set distance";
     //calculate angle
     double theta = atan(y_dist/x_dist);
 
     //calculating the x and y values to make a unit vector pointing at player
     x_vel = cos(theta);
     y_vel = sin(theta);
-
 	//give starting stats depending on type
     if(type == ObjectManager::GRUNT){ 			//grunt
         maxLife = life = 100;
@@ -52,6 +51,8 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         speed = 2;
         damage = 10;
     }
+
+    clr = ResourceManager::getInstance()->getColour(ResourceManager::RED);
 }
 
 void Enemy::update(){
@@ -60,6 +61,7 @@ void Enemy::update(){
 
         x += x_vel * speed * dt;
         y += y_vel * speed * dt;
+        qDebug() << "new x and y are calculated";
     }
     else if(type == ObjectManager::SHOOTER){
         //shooter
@@ -70,7 +72,9 @@ void Enemy::update(){
 }
 
 void Enemy::draw() const{
-	//needs openGL
+    qDebug() << "before draw";
+    Util::drawBox(x-100,y-100,x+100,y+100,true,clr);
+    qDebug() << "after draw";
 }
 
 void Enemy::die(){

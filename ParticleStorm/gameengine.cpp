@@ -2,6 +2,7 @@
 #include "mainwindow.h"
 #include "util.h"
 #include <time.h>
+#include <QDebug>
 
 //ick, redundancy
 const int GameEngine::MAX_X;
@@ -132,6 +133,12 @@ void GameEngine::start(){
 
     //start the timer (sets off the frameloop via timerEvent)
     gameClock = startTimer(1/(double)MAX_FPS*1000);
+
+    objectManager->spawnEnemy(ObjectManager::GRUNT, 0, 300, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
+    objectManager->spawnEnemy(ObjectManager::GRUNT, 300, 0, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
+    objectManager->spawnEnemy(ObjectManager::GRUNT, 0, 600, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
+    objectManager->spawnEnemy(ObjectManager::GRUNT, 600, 0, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
+
 }
 
 //fade the frame
@@ -226,6 +233,7 @@ void GameEngine::update(){
     //game stuff
     objectManager->update(ObjectManager::PLAYER);
     objectManager->update(ObjectManager::PARTICLE);
+    objectManager->update(ObjectManager::ENEMY);
 
     //testing game stuff
     objectManager->modPlayerScore(1);
@@ -269,6 +277,7 @@ void GameEngine::paintGL(){
         Util::drawTexture(0, 0, MAX_X, MAX_Y, fbo->texture());
 
         objectManager->draw(ObjectManager::PLAYER);
+        objectManager->draw(ObjectManager::ENEMY);
 
         drawHUD();
     }
