@@ -18,9 +18,12 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
     double x_dist = x_tar - x;
     double y_dist = y_tar - y;
 
+    //calculate angle
+    double theta = atan(y_dist/x_dist);
+
     //calculating the x and y values to make a unit vector pointing at player
-    x_vel = sqrt(1 - (y_dist * y_dist));
-    y_vel = sqrt(1 - (x_dist * x_dist));
+    x_vel = cos(theta);
+    y_vel = sin(theta);
 
 	//give starting stats depending on type
     if(type == ObjectManager::GRUNT){ 			//grunt
