@@ -17,6 +17,7 @@ const int Player::MAX_MANA;
 const int Player::MAX_DIAMETER;
 const int Player::RING_SIZE;
 const int Player::FORCE_EXERT;
+const int Player::PARTICLE_SPACING;
 
 // Implementation of constructor and destructor.
 
@@ -56,8 +57,8 @@ void Player::reset(){
     // Dummy values for the previous position of the avatar on the last call to
     // update. This will be initialized to the correct value on the first call
     // to update.
-    x2 = x;
-    y2 = y;
+    x_old = x;
+    y_old = y;
 
     //set initial score;
     score = 0;
@@ -69,8 +70,8 @@ void Player::reset(){
 void Player::update(double deltaTime) {
     // Update the previous coordinates of the avatar with the current
     // coordinates.
-    x2 = x;
-    y2 = y;
+    x_old = x;
+    y_old = y;
 
     // Now get the current position of the player's mouse and check it for
     // validity.
@@ -82,16 +83,21 @@ void Player::update(double deltaTime) {
     }
     // otherwise leave the avatar's position unchanged
 
-    //TESTING (drop a particle every frame when the mouse is pressed)
-    //TODO: change this to take into account mouse clicks and distance moved
-    //(place a particle every interval on the line between x2,y2 and x,y)
+    ObjectManager* o = ObjectManager::getInstance();
+
     if (MainWindow::getInstance()->getMouseState() & Qt::LeftButton){
-        ObjectManager::getInstance()->spawnParticle(x, y);
+        //spawn a particle every PARTICLE_SPACING px along the line between the old a new pos
+        const double dist = Util::distance(x, y, x_old, y_old);
+        const double tempX = (x - x_old) / dist;
+        const double tempY = (y - y_old) / dist;
+        for (int i = 0 ; i < dist ; i+= PARTICLE_SPACING){
+            o->spawnParticle(x_old + tempX * i, y_old + tempY * i);
+        }
     }
     else if (MainWindow::getInstance()->getMouseState() & Qt::RightButton){
         //magnitue is really high, take a look at this
-        ObjectManager::getInstance()->applyForce(ObjectManager::PARTICLE, x, y, Player::FORCE_EXERT);
-        ObjectManager::getInstance()->applyForce(ObjectManager::STAR, x, y, Star::FORCE_EXERT);
+        o->applyForce(ObjectManager::PARTICLE, x, y, Player::FORCE_EXERT);
+        o->applyForce(ObjectManager::STAR, x, y, Star::FORCE_EXERT);
     }
 }
 
@@ -101,7 +107,7 @@ void Player::draw() const {
     for (int i = MAX_DIAMETER / RING_SIZE * getLifePercent(); i >= 0 ; i--){
         Util::drawOctagon(x, y, 2 + (i + 1) * RING_SIZE, true, ResourceManager::getInstance()->getColourScale(1 - (i/(float)(RING_SIZE+1))));
     }
-    //Util::drawTexture(x - size/2.0, y - size/2.0, x + size/2.0, y + size/2.0, ResourceManager::getInstance()->getTexture(ResourceManager::PLAYER));
+    Util::drawLine(x, y, x_old, y_old, ResourceManager::getInstance()->getColour(ResourceManager::BLUE));
 }
 
 //change the score

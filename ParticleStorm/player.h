@@ -42,6 +42,9 @@ public:
     static const int MAX_MANA = 1000;
     static const int FORCE_EXERT = 100000;
 
+    //spacing of the particles to drop
+    static const int PARTICLE_SPACING = 15;
+
     //max size of the player
     static const int MAX_DIAMETER = 24;
 
@@ -81,7 +84,7 @@ public:
 private:
     // Data members.
     // These represent the location of the player on the last call to update.
-    double x2, y2;
+    double x_old, y_old;
     // Not sure what type to use for this yet - will likely use enum constants.
     // This may be unnecessary actually - may be simpler to just call the
     // useAbility function with the ability as an argument. The currently

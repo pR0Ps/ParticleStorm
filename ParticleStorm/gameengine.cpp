@@ -264,6 +264,9 @@ void GameEngine::paintGL(){
         objectManager->draw(ObjectManager::SHRAPNEL);
         objectManager->draw(ObjectManager::POWERUP);
         objectManager->draw(ObjectManager::PARTICLE);
+        if (getMouseState() & Qt::LeftButton){
+            objectManager->draw(ObjectManager::PLAYER);
+        }
 
         fbo->release();
         //all draw commands go to screen
