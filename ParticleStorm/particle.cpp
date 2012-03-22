@@ -7,8 +7,6 @@
 #include "qmath.h"
 #include <QColor>
 
-using namespace std;
-
 const int Particle::MAX_PARTICLE_SPEED;
 const float Particle::SPEED_MULTIPLIER;
 const float Particle::AIR_RESIST;

@@ -2,10 +2,6 @@
 #include "gameengine.h"
 #include <QDebug>
 
-#include <string>
-
-using namespace std;
-
 Enemy::Enemy():GameObject(){
 }
 
