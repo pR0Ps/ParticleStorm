@@ -56,12 +56,11 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
     clr = ResourceManager::getInstance()->getColour(ResourceManager::RED);
 }
 
-void Enemy::update(){
+void Enemy::update(double deltaTime){
     if(type == ObjectManager::GRUNT || type == ObjectManager::TANK || type == ObjectManager::SPRINTER){
-        dt = (1/(double)GameEngine::MAX_FPS);
 
-        x += x_vel * speed * dt;
-        y += y_vel * speed * dt;
+        x += x_vel * speed * deltaTime;
+        y += y_vel * speed * deltaTime;
 
     }
     else if(type == ObjectManager::SHOOTER){

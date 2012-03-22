@@ -16,6 +16,7 @@ const int Player::MAX_LIFE;
 const int Player::MAX_MANA;
 const int Player::MAX_DIAMETER;
 const int Player::RING_SIZE;
+const int Player::FORCE_EXERT;
 
 // Implementation of constructor and destructor.
 
@@ -65,7 +66,7 @@ void Player::reset(){
 
 // Implementation of pure virtual functions.
 
-void Player::update() {
+void Player::update(double deltaTime) {
     // Update the previous coordinates of the avatar with the current
     // coordinates.
     x2 = x;
@@ -89,7 +90,7 @@ void Player::update() {
     }
     if (MainWindow::getInstance()->getMouseState() & Qt::RightButton){
         //magnitue is really high, take a look at this
-        ObjectManager::getInstance()->applyForce(ObjectManager::PARTICLE, x, y, 100000);
+        ObjectManager::getInstance()->applyForce(ObjectManager::PARTICLE, x, y, FORCE_EXERT);
     }
 }
 

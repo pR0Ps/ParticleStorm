@@ -111,7 +111,7 @@ const QColor* ResourceManager::getColourScale(const float f){
         return colours->at(NUM_COLOURS - 1);
     }
     else{
-        return colours->at(floor(f * (NUM_COLOURS - 1)));
+        return colours->at(round(f * (NUM_COLOURS - 1)));
     }
 }
 

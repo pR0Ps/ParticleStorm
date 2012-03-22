@@ -17,12 +17,12 @@ public:
     //constants (redeclare in implementation)
     static const int MAX_X = 1024;
     static const int MAX_Y = 768;
-    static const int MAX_FPS = 50;
-    static const int FPS_COUNT_FRAME_INTERVAL = 100;
+    static const int MAX_FPS = 120;
+    static const int FPS_COUNT_FRAME_INTERVAL = 50;
     static const int LINES_PER_FADE = 400;
     static const int FADE_BORDER_AMT = 15;
     static const int GAME_OVER_FRAMES = 200;
-    static const float FORCE_DISSIPATION = 1;
+    static const float FORCE_DISSIPATION = 5;
 
     //access mouse state
     Qt::MouseButtons getMouseState(){return mouseState;}
@@ -53,8 +53,9 @@ private:
     int coords[6];
     int vels[6];
 
-    //FPS stuff
+    //timing stuff (FPS/deltatime)
     unsigned long int framecnt;
+    double secSinceFrameInterval;
     QTime *timer;
     float fps;
 

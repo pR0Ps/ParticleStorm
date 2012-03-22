@@ -18,27 +18,26 @@ const float Star::SPEED_MULTIPLIER;
 
 int count = 0;
 
-void Star::update(){
-    dt = (1/(double)GameEngine::MAX_FPS);
+void Star::update(double deltaTime){
     //foreground stars
     //  if (array[1-100])
     if(count<100){
     //if(x_pos<100||x_pos>800 && y_pos<100||y_pos>800)// is it on the edge
         if((x<100 || x>800) && (y<100 || y>800)){
-        x_vel -= FOREGROUND_SPEED_EDGE*x_vel*dt;
-        y_vel -= FOREGROUND_SPEED_EDGE*y_vel*dt;
+        x_vel -= FOREGROUND_SPEED_EDGE*x_vel*deltaTime;
+        y_vel -= FOREGROUND_SPEED_EDGE*y_vel*deltaTime;
         //positions
-        x += x_vel *SPEED_MULTIPLIER*dt;
-        y += y_vel *SPEED_MULTIPLIER*dt;
+        x += x_vel *SPEED_MULTIPLIER*deltaTime;
+        y += y_vel *SPEED_MULTIPLIER*deltaTime;
         }
 
     //else
     else{
-        x_vel -= FOREGROUND_SPEED_CENTER*x_vel*dt;
-        y_vel -= FOREGROUND_SPEED_CENTER*y_vel*dt;
+        x_vel -= FOREGROUND_SPEED_CENTER*x_vel*deltaTime;
+        y_vel -= FOREGROUND_SPEED_CENTER*y_vel*deltaTime;
         //positions
-        x += x_vel *SPEED_MULTIPLIER*dt;
-        y += y_vel *SPEED_MULTIPLIER*dt;
+        x += x_vel *SPEED_MULTIPLIER*deltaTime;
+        y += y_vel *SPEED_MULTIPLIER*deltaTime;
     }
 }
   /////////////////////////////////////////
@@ -46,19 +45,19 @@ void Star::update(){
     else{
          //if(x_pos<100||x_pos>800 && y_pos<100||y_pos>800)// is it on the edge
         if((x<100||x>800) && (y<100||y>100)){
-            x_vel -= FOREGROUND_SPEED_EDGE*x_vel*dt;
-            y_vel -= FOREGROUND_SPEED_EDGE*y_vel*dt;
+            x_vel -= FOREGROUND_SPEED_EDGE*x_vel*deltaTime;
+            y_vel -= FOREGROUND_SPEED_EDGE*y_vel*deltaTime;
             //positions
-            x += x_vel *SPEED_MULTIPLIER*dt;
-            y += y_vel *SPEED_MULTIPLIER*dt;
+            x += x_vel *SPEED_MULTIPLIER*deltaTime;
+            y += y_vel *SPEED_MULTIPLIER*deltaTime;
         }
             //else
             else {
-            x_vel -= FOREGROUND_SPEED_CENTER*x_vel*dt;
-            y_vel -= FOREGROUND_SPEED_CENTER*y_vel*dt;
+            x_vel -= FOREGROUND_SPEED_CENTER*x_vel*deltaTime;
+            y_vel -= FOREGROUND_SPEED_CENTER*y_vel*deltaTime;
             //positions
-            x += x_vel *SPEED_MULTIPLIER*dt;
-            y += y_vel *SPEED_MULTIPLIER*dt;
+            x += x_vel *SPEED_MULTIPLIER*deltaTime;
+            y += y_vel *SPEED_MULTIPLIER*deltaTime;
         }
 
     }

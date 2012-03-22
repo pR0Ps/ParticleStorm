@@ -17,8 +17,8 @@ public:
     //pan the object with the screen
     virtual void pan(double x, double y);
 
-    //update the object (pos from vel, AI, etc)
-    virtual void update() = 0;
+    //update the object (pos from vel, AI, etc) using the ms since last update
+    virtual void update(double deltaTime) = 0;
 
     //apply force to the object
     //x, y is the point that the force originated from

@@ -8,7 +8,7 @@ void Shrapnel::draw() const{
 
 }
 
-void Shrapnel::update(){
+void Shrapnel::update(double deltaTime){
 
 }
 

@@ -123,6 +123,7 @@ void GameEngine::start(){
     //FPS stuff
     framecnt = 0;
     fps = 0;
+    secSinceFrameInterval = 0;
     timer->start();
 
     //tell the framebuffer to clear properly
@@ -199,10 +200,15 @@ void GameEngine::drawHUD(){
 
 //update game logic - automatically called
 void GameEngine::update(){
+    //get time since last update
+    double deltaTime = timer->restart()/(float)1000;
+
     //FPS monitoring
     framecnt++;
+    secSinceFrameInterval += deltaTime;
     if (framecnt % FPS_COUNT_FRAME_INTERVAL == 0){
-        fps = FPS_COUNT_FRAME_INTERVAL/(double)(timer->restart()) * 1000;
+        fps = FPS_COUNT_FRAME_INTERVAL/(double)secSinceFrameInterval;
+        secSinceFrameInterval = 0;
     }
 
     //game over
@@ -231,9 +237,12 @@ void GameEngine::update(){
     }
 
     //game stuff
-    objectManager->update(ObjectManager::PLAYER);
-    objectManager->update(ObjectManager::PARTICLE);
-    objectManager->update(ObjectManager::ENEMY);
+    objectManager->update(ObjectManager::PLAYER, deltaTime);
+    objectManager->update(ObjectManager::PARTICLE, deltaTime);
+    objectManager->update(ObjectManager::ENEMY, deltaTime);
+    objectManager->update(ObjectManager::STAR, deltaTime);
+    objectManager->update(ObjectManager::POWERUP, deltaTime);
+    objectManager->update(ObjectManager::SHRAPNEL, deltaTime);
 
     //testing game stuff
     objectManager->modPlayerScore(1);
@@ -267,6 +276,8 @@ void GameEngine::paintGL(){
         doFade();
         drawScene();
 
+        objectManager->draw(ObjectManager::SHRAPNEL);
+        objectManager->draw(ObjectManager::POWERUP);
         objectManager->draw(ObjectManager::PARTICLE);
 
         fbo->release();
@@ -276,8 +287,9 @@ void GameEngine::paintGL(){
         //draw framebuffer (all previous drawing commands)
         Util::drawTexture(0, 0, MAX_X, MAX_Y, fbo->texture());
 
-        objectManager->draw(ObjectManager::PLAYER);
+        objectManager->draw(ObjectManager::STAR);
         objectManager->draw(ObjectManager::ENEMY);
+        objectManager->draw(ObjectManager::PLAYER);
 
         drawHUD();
     }

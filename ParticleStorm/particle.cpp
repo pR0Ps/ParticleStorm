@@ -17,18 +17,20 @@ Particle::Particle():GameObject(){
 
 }
 
-void Particle::update() {
+void Particle::update(double deltaTime) {
 
-    dt = (1/(double)GameEngine::MAX_FPS);
+    x_vel -= AIR_RESIST * x_vel * deltaTime;
+    y_vel -= AIR_RESIST * y_vel * deltaTime;
 
-    x_vel -= AIR_RESIST * x_vel * dt;
-    y_vel -= AIR_RESIST * y_vel * dt;
     //update positions
-    x += x_vel * SPEED_MULTIPLIER * dt;
-    y += y_vel * SPEED_MULTIPLIER * dt;
+    x_old = x;
+    y_old = y;
+    x += x_vel * SPEED_MULTIPLIER * deltaTime;
+    y += y_vel * SPEED_MULTIPLIER * deltaTime;
+
     this->updateColour();
 
-        //cout << Util::magnitude(x_vel,y_vel) << endl;
+    //cout << Util::magnitude(x_vel,y_vel) << endl;
 
 }
 
@@ -40,7 +42,7 @@ void Particle::draw() const{
     //should be roughly the same location where the particle was last frame
     glBegin(GL_LINES);
         glVertex2d(x, y);
-        glVertex2d(x - x_vel*dt, y - y_vel*dt);
+        glVertex2d(x_old, y_old);
     glEnd();
     glPopAttrib();
 }
@@ -54,8 +56,8 @@ void Particle::applyForce(double x, double y, double mag){
         dist = DBL_MIN; //avoiding a div by 0 error in the next step
     }
 
-    x_vel += (this->x - x) * mag / ((dist * dist) * GameEngine::FORCE_DISSIPATION) * dt;
-    y_vel += (this->y - y) * mag / ((dist * dist) * GameEngine::FORCE_DISSIPATION) * dt;
+    x_vel += (this->x - x) * mag / ((dist * dist) * GameEngine::FORCE_DISSIPATION);
+    y_vel += (this->y - y) * mag / ((dist * dist) * GameEngine::FORCE_DISSIPATION);
 
     if(Util::magnitude(x_vel,y_vel) > MAX_PARTICLE_SPEED) {
         double angle = Util::atand(y_vel,x_vel);

@@ -116,15 +116,15 @@ void ObjectManager::pan(ObjectType t, const double x, const double y){
         }
     }
 }
-void ObjectManager::update(ObjectType t){
+void ObjectManager::update(ObjectType t, double deltaTime){
     if (t == PLAYER){
-        player->update();
+        player->update(deltaTime);
     }
     else{
         std::vector<GameObject*> temp = getVector(t);
         for (unsigned int i = 0 ; i < temp.size() ; i++){
             if (temp.at(i)->getInUse()){
-                temp.at(i)->update();
+                temp.at(i)->update(deltaTime);
             }
         }
     }

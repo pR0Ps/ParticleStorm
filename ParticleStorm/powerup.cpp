@@ -19,10 +19,9 @@ void Powerup::draw() const{
 
 }
 
-void Powerup::update(){
+void Powerup::update(double deltaTime){
 
-    dt = (1/(double)GameEngine::MAX_FPS);
-    x_vel -= AIR_RESIST * x_vel * dt;
-    y_vel -= AIR_RESIST * y_vel * dt;
+    x_vel -= AIR_RESIST * x_vel * deltaTime;
+    y_vel -= AIR_RESIST * y_vel * deltaTime;
 
 }

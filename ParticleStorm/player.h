@@ -40,6 +40,7 @@ public:
     // classes.
     static const int MAX_LIFE = 1000;
     static const int MAX_MANA = 1000;
+    static const int FORCE_EXERT = 100000;
 
     //max size of the player
     static const int MAX_DIAMETER = 24;
@@ -58,7 +59,7 @@ public:
     // methods in Java.
     // Note: do not use the virutal keyword in the implementation of these
     // functions.
-    void update();
+    void update(double deltaTime);
     void draw() const;
 
     //Have to override to do nothing

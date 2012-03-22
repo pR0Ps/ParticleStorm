@@ -55,7 +55,7 @@ public:
     //apply to all the objects in the OM individually
     void draw(ObjectType t);
     void pan(ObjectType t, double x, double y);
-    void update(ObjectType t);
+    void update(ObjectType t, double deltaTime);
     void applyForce(ObjectType t, double x, double y, double mag);
 
     //initilize the object pool of type t;

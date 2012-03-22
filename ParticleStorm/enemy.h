@@ -9,7 +9,7 @@ class Enemy : public GameObject{
 public:
     Enemy();
 
-    void update();
+    void update(double deltaTime);
 
     //move from current position to given position
     void move(double x, double y);
@@ -31,7 +31,6 @@ private:
     double damage;
     int type;
     double dist;
-    double dt;
 };
 
 #endif // ENEMY_H

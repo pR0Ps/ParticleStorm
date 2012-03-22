@@ -20,10 +20,9 @@ public:
     Star();
 
     void draw() const;
-    void update();
+    void update(double deltaTime);
     void applyForce(double x, double y, double mag);
 private:
-     int dt;
 
 };
 

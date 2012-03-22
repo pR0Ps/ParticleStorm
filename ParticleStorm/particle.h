@@ -11,12 +11,12 @@ public:
     Particle();
 
     //constants (redeclare in implementation)
-    static const int MAX_PARTICLE_SPEED = 800;
+    static const int MAX_PARTICLE_SPEED = 1500;
     static const float SPEED_MULTIPLIER = 1;
-    static const float AIR_RESIST = 0.1;
+    static const float AIR_RESIST = 1;
 
     void draw() const;
-    void update();
+    void update(double deltaTime);
     void applyForce(double x, double y, double mag);
     void die();
     void startParticle(double x, double y, double x_vel, double y_vel); //initializes a new particle, specifying the position
@@ -24,8 +24,7 @@ public:
 private:
     //internally change the particle's colour to match its speed
     void updateColour();
-
-    double dt;
+    double x_old, y_old;
 };
 
 #endif // PARTICLE_H
