@@ -24,9 +24,21 @@ public:
     static const int GAME_OVER_FRAMES = 200;
     static const float PAN_SPEED = 0.5;
 
+    enum Keys{
+        DROP,
+        PUSH,
+        PULL,
+        ABILITY,
+        CHGABILITY //MUST BE LAST
+    };
+
     //access mouse state
     Qt::MouseButtons getMouseState(){return mouseState;}
     QPoint getMousePos(){return mapFromGlobal(QCursor::pos());}
+
+    //access key state
+    bool keyPressed(Keys k){return currKeys[k];}
+    bool keyClicked(Keys k){return currKeys[k] && !oldKeys[k];}
 
     //control the game engine
     void reset();
@@ -37,6 +49,13 @@ private:
     void mousePressEvent(QMouseEvent* event){mouseState = event->buttons();}
     void mouseReleaseEvent(QMouseEvent* event){mouseState = event->buttons();}
     Qt::MouseButtons mouseState;
+
+    //keyboard stuff
+    void keyPressEvent(QKeyEvent * event){currKeys[keyMap.value(event->key())] = true;}
+    void keyReleaseEvent(QKeyEvent * event){currKeys[keyMap.value(event->key())] = false;}
+    QMap<int, int> keyMap;
+    bool currKeys[CHGABILITY+1];
+    bool oldKeys[CHGABILITY+1];
 
     //call the main frameloop
     void timerEvent(QTimerEvent *);

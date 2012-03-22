@@ -107,8 +107,8 @@ void Star::applyForce(double x, double y, double mag){
     if(dist == 0) {
         dist = 0.0001; //avoiding a div by 0 error in the next step
     }
-    x_vel += (this->x - x) * mag / ((dist * dist) * FORCE_DISSIPATION);
-    y_vel += (this->y - y) * mag / ((dist * dist) * FORCE_DISSIPATION);
+    x_vel += (this->x - x) * mag / ((dist * dist) * FORCE_DISSIPATION * this->dist);
+    y_vel += (this->y - y) * mag / ((dist * dist) * FORCE_DISSIPATION * this->dist);
 }
 
 void Star::draw() const{

@@ -25,6 +25,18 @@ GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
     //FPS/deltaTime timer
     timer = new QTime();
 
+    //set up keypress mapping
+    keyMap.insert(Qt::Key_A, DROP);
+    keyMap.insert(Qt::Key_S, PUSH);
+    keyMap.insert(Qt::Key_D, PULL);
+    keyMap.insert(Qt::Key_Space, ABILITY);
+    keyMap.insert(Qt::Key_Control, CHGABILITY);
+
+    //init keypress arrays
+    for (int i = 0 ; i < CHGABILITY+1 ; i++){
+        oldKeys[i] = currKeys[i] = false;
+    }
+
     //initial garbage value for gameClock
     gameClock = 0;
 }
@@ -201,9 +213,14 @@ void GameEngine::update(){
 
     //game stuff
 
+    //deal with keyboard input
+    for (int i = 0 ; i < CHGABILITY+1 ; i++){
+        oldKeys[i] = currKeys[i];
+    }
+
     //pan everything
-    panX = (MAX_X / 2.0 - objectManager->getPlayer()->getX()) * PAN_SPEED * deltaTime;
-    panY = (MAX_Y / 2.0 - objectManager->getPlayer()->getY()) * PAN_SPEED * deltaTime;
+    panX = (MAX_X / (double)2.0 - objectManager->getPlayer()->getX()) * PAN_SPEED * deltaTime;
+    panY = (MAX_Y / (double)2.0 - objectManager->getPlayer()->getY()) * PAN_SPEED * deltaTime;
     objectManager->pan(ObjectManager::PARTICLE, panX, panY);
     objectManager->pan(ObjectManager::ENEMY, panX, panY);
     objectManager->pan(ObjectManager::STAR, panX, panY);
@@ -262,7 +279,7 @@ void GameEngine::paintGL(){
         objectManager->draw(ObjectManager::SHRAPNEL);
         objectManager->draw(ObjectManager::POWERUP);
         objectManager->draw(ObjectManager::PARTICLE);
-        if (getMouseState() & Qt::LeftButton){
+        if (getMouseState() & Qt::LeftButton || keyPressed(GameEngine::DROP)){
             objectManager->draw(ObjectManager::PLAYER);
         }
 

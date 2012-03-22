@@ -20,12 +20,20 @@ MainWindow::~MainWindow(){
     delete engine;
 }
 
+//mouse stuff
 QPoint MainWindow::getMousePos(){
     return engine->getMousePos();
 }
-
 Qt::MouseButtons MainWindow::getMouseState(){
     return engine->getMouseState();
+}
+
+//keyboard stuff
+bool MainWindow::keyPressed(GameEngine::Keys k){
+    return engine->keyPressed(k);
+}
+bool MainWindow::keyClicked(GameEngine::Keys k){
+    return engine->keyClicked(k);
 }
 
 void MainWindow::doneGame(const unsigned int score){

@@ -72,9 +72,13 @@ void Player::update(double deltaTime) {
     x_old = x;
     y_old = y;
 
+    //repeatedly needed, get temp pointers
+    ObjectManager* o = ObjectManager::getInstance();
+    MainWindow* mw = MainWindow::getInstance();
+
     // Now get the current position of the player's mouse and check it for
     // validity.
-    QPoint mousePos(MainWindow::getInstance()->getMousePos());
+    QPoint mousePos(mw->getMousePos());
     if (isValidMousePos(mousePos)){
         // then update the avatar's position with the current mouse coordinates
         x = mousePos.x();
@@ -82,9 +86,7 @@ void Player::update(double deltaTime) {
     }
     // otherwise leave the avatar's position unchanged
 
-    ObjectManager* o = ObjectManager::getInstance();
-
-    if (MainWindow::getInstance()->getMouseState() & Qt::LeftButton){
+    if (mw->getMouseState() & Qt::LeftButton || mw->keyPressed(GameEngine::DROP)){
         //at least one particle (if staying still)
         o->spawnParticle(x, y);
 
@@ -96,11 +98,11 @@ void Player::update(double deltaTime) {
             o->spawnParticle(x_old + tempX * i, y_old + tempY * i);
         }
     }
-    else if (MainWindow::getInstance()->getMouseState() & Qt::RightButton){
+    else if (mw->getMouseState() & Qt::RightButton || mw->keyPressed(GameEngine::PUSH)){
         o->applyForce(ObjectManager::PARTICLE, x, y, Particle::FORCE_EXERT);
         o->applyForce(ObjectManager::STAR, x, y, Star::FORCE_EXERT);
     }
-    else if (MainWindow::getInstance()->getMouseState() &Qt::MiddleButton){
+    else if (mw->getMouseState() & Qt::MiddleButton || mw->keyPressed(GameEngine::PULL)){
         o->applyForce(ObjectManager::PARTICLE, x, y, -Particle::FORCE_EXERT);
         o->applyForce(ObjectManager::STAR, x, y, -Star::FORCE_EXERT);
     }
