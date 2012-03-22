@@ -86,6 +86,9 @@ void Player::update(double deltaTime) {
     ObjectManager* o = ObjectManager::getInstance();
 
     if (MainWindow::getInstance()->getMouseState() & Qt::LeftButton){
+        //at least one particle (if staying still)
+        o->spawnParticle(x, y);
+
         //spawn a particle every PARTICLE_SPACING px along the line between the old a new pos
         const double dist = Util::distance(x, y, x_old, y_old);
         const double tempX = (x - x_old) / dist;

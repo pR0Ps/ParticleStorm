@@ -7,6 +7,7 @@
 const float Star::FORCE_DISSIPATION;
 const int Star::EXTRA_BOUNDS;
 const int Star::FORCE_EXERT;
+const int Star::MAX_DIST;
 
 Star::Star():GameObject(){
     //init the star
@@ -15,7 +16,7 @@ Star::Star():GameObject(){
     y = y_old = qrand() % (GameEngine::MAX_Y + EXTRA_BOUNDS*2) - EXTRA_BOUNDS;
     clr = ResourceManager::getInstance()->getColour(ResourceManager::WHITE);
 
-    dist = qrand() % 3 == 1 ? 2 : qrand() % 3 == 1 ? 15 : qrand() % 13 + 2;
+    dist = qrand() % 3 == 1 ? 2 : qrand() % 3 == 1 ? MAX_DIST : qrand() % (MAX_DIST-2) + 2;
 }
 
 void Star::update(double deltaTime){

@@ -20,11 +20,9 @@ public:
     static const int MAX_FPS = 120;
     static const int FPS_COUNT_FRAME_INTERVAL = 50;
     static const int LINES_PER_FADE = 400;
-    static const int FADE_BORDER_AMT = 15;
+    static const int CLEAR_BORDER_AMT = 15;
     static const int GAME_OVER_FRAMES = 200;
     static const float PAN_SPEED = 0.5;
-    static const float PAN_THRESHOLD_X = 175;
-    static const float PAN_THRESHOLD_Y = 175;
 
     //access mouse state
     Qt::MouseButtons getMouseState(){return mouseState;}
@@ -66,6 +64,9 @@ private:
 
     //flag for initially clearing the framebuffer
     bool initialClear;
+
+    //stores the current amount to pan
+    double panX, panY;
 
 protected:
     //overrides

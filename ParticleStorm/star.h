@@ -12,6 +12,7 @@ public:
     static const float FORCE_DISSIPATION = 100;
     static const int EXTRA_BOUNDS = 0;
     static const int FORCE_EXERT = 5000;
+    static const int MAX_DIST = 10;
 
     Star();
 

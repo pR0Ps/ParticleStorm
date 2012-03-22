@@ -10,11 +10,9 @@ const int GameEngine::MAX_Y;
 const int GameEngine::MAX_FPS;
 const int GameEngine::FPS_COUNT_FRAME_INTERVAL;
 const int GameEngine::LINES_PER_FADE;
-const int GameEngine::FADE_BORDER_AMT;
+const int GameEngine::CLEAR_BORDER_AMT;
 const int GameEngine::GAME_OVER_FRAMES;
 const float GameEngine::PAN_SPEED;
-const float GameEngine::PAN_THRESHOLD_X;
-const float GameEngine::PAN_THRESHOLD_Y;
 
 GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
     setFixedSize(MAX_X, MAX_Y);
@@ -24,7 +22,7 @@ GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
     //pseudo-randomness
     qsrand((unsigned int)time(NULL));    
 
-    //FPS timer
+    //FPS/deltaTime timer
     timer = new QTime();
 
     //initial garbage value for gameClock
@@ -148,10 +146,10 @@ void GameEngine::doFade(){
     }
     else{
         //outsides don't get cleared very well
-        Util::drawBox(0, 0, MAX_X, FADE_BORDER_AMT, true);
-        Util::drawBox(0, MAX_Y - FADE_BORDER_AMT, MAX_X - FADE_BORDER_AMT, MAX_Y, true);
-        Util::drawBox(0, FADE_BORDER_AMT, FADE_BORDER_AMT, MAX_Y - FADE_BORDER_AMT, true);
-        Util::drawBox(MAX_X - FADE_BORDER_AMT, FADE_BORDER_AMT, MAX_X, MAX_Y, true);
+        Util::drawBox(0, 0, MAX_X, CLEAR_BORDER_AMT, true);
+        Util::drawBox(0, MAX_Y - CLEAR_BORDER_AMT, MAX_X - CLEAR_BORDER_AMT, MAX_Y, true);
+        Util::drawBox(0, CLEAR_BORDER_AMT, CLEAR_BORDER_AMT, MAX_Y - CLEAR_BORDER_AMT, true);
+        Util::drawBox(MAX_X - CLEAR_BORDER_AMT, CLEAR_BORDER_AMT, MAX_X, MAX_Y, true);
 
         //fade the screen
         for (int i = 0 ; i < LINES_PER_FADE ; i++){
@@ -176,7 +174,7 @@ void GameEngine::drawHUD(){
     Util::drawString("FPS: " + Util::doubleToString(fps, 4, 1), 0, 0, resourceManager->getTexture(ResourceManager::TEXT));
 }
 
-//update game logic - automatically called
+//update game logic - automatically called by timer
 void GameEngine::update(){
     //get time since last update
     double deltaTime = timer->restart()/(float)1000;
@@ -196,25 +194,21 @@ void GameEngine::update(){
             paused = true;
             MainWindow::getInstance()->doneGame(objectManager->getPlayer()->getScore());
         }
-        //don't bother updating anything else
-        return;
+        //compute game over stuff
+
+        return; //don't bother updating anything else
     }
 
     //game stuff
 
     //pan everything
-    if ((objectManager->getPlayer()->getX() > MAX_X - PAN_THRESHOLD_X ||
-            objectManager->getPlayer()->getX() < PAN_THRESHOLD_X) ||
-            (objectManager->getPlayer()->getY() > MAX_Y - PAN_THRESHOLD_Y ||
-            objectManager->getPlayer()->getY() < PAN_THRESHOLD_Y)){
-        const double PANX = (MAX_X / 2.0d - objectManager->getPlayer()->getX()) * PAN_SPEED * deltaTime;
-        const double PANY = (MAX_Y / 2.0d - objectManager->getPlayer()->getY()) * PAN_SPEED * deltaTime;
-        objectManager->pan(ObjectManager::PARTICLE, PANX, PANY);
-        objectManager->pan(ObjectManager::ENEMY, PANX, PANY);
-        objectManager->pan(ObjectManager::STAR, PANX, PANY);
-        objectManager->pan(ObjectManager::POWERUP, PANX, PANY);
-        objectManager->pan(ObjectManager::SHRAPNEL, PANX, PANY);
-    }
+    panX = (MAX_X / 2.0d - objectManager->getPlayer()->getX()) * PAN_SPEED * deltaTime;
+    panY = (MAX_Y / 2.0d - objectManager->getPlayer()->getY()) * PAN_SPEED * deltaTime;
+    objectManager->pan(ObjectManager::PARTICLE, panX, panY);
+    objectManager->pan(ObjectManager::ENEMY, panX, panY);
+    objectManager->pan(ObjectManager::STAR, panX, panY);
+    objectManager->pan(ObjectManager::POWERUP, panX, panY);
+    objectManager->pan(ObjectManager::SHRAPNEL, panX, panY);
 
 
     //update everything
@@ -227,38 +221,40 @@ void GameEngine::update(){
 
     //testing game stuff
     objectManager->modPlayerScore(1);
-    //if (getMouseState() & Qt::RightButton){
-    //    objectManager->modPlayerLife(-5);
-    //}
+    /*if (getMouseState() & Qt::RightButton){
+        objectManager->modPlayerLife(-5);
+    }*/
 }
 
-//draws everything - automatically called
+//draws everything - automatically called by timer
 void GameEngine::paintGL(){
     if (gameOverFrames == 0){
         //draw the game
 
         /*Draw method:
           To framebuffer:
-            Old framebuffer (don't erase it)
+            Old framebuffer (pan it)
             Fade
             Shrapnel
             Powerups
             Particles
-            Player (maybe implement selective fading)
+            Player (selective fading when dropping particles)
           To screen:
             Current framebuffer
             Stars
             Enemies
+            Player
             HUD
         */
 
-        //all draw commands draw to the framebuffer
+        //all draw commands after here draw to the framebuffer
         fbo->bind();
-        doFade();
 
-        //draw testing lightning
-        if (framecnt % 3 == 0)
-            Util::drawJaggedLine(qrand() % MAX_X, qrand() % MAX_Y, qrand() % MAX_X, qrand() % MAX_Y, resourceManager->getColour(ResourceManager::WHITE));
+        //shift framebuffer by pan amount (by offsetting it and drawing it to itself)
+        Util::drawTexture(0 + panX, 0 + panY, MAX_X + panX, MAX_Y + panY, fbo->texture());
+
+        //fade the previous frame
+        doFade();
 
         //draw blurred objects
         objectManager->draw(ObjectManager::SHRAPNEL);
@@ -269,15 +265,17 @@ void GameEngine::paintGL(){
         }
 
         fbo->release();
-        //all draw commands go to screen
+        //all draw commands after here go to screen
 
-        //draw framebuffer (all previous drawing commands)
+        //draw current framebuffer
         Util::drawTexture(0, 0, MAX_X, MAX_Y, fbo->texture());
 
+        //draw objects that shouldn't be faded
         objectManager->draw(ObjectManager::STAR);
         objectManager->draw(ObjectManager::ENEMY);
         objectManager->draw(ObjectManager::PLAYER);
 
+        //draw the interface and information
         drawHUD();
     }
     else{
