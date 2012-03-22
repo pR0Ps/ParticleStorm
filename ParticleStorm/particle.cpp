@@ -1,5 +1,5 @@
 #include "particle.h"
-#include "objectmanager.h"
+#include "resourcemanager.h"
 #include "gameengine.h"
 #include "util.h"
 #include "float.h"

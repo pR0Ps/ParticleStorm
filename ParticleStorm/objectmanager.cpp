@@ -257,8 +257,8 @@ void ObjectManager::spawnParticle(const double x, const double y){
     spawnParticle(x, y, mag * Util::cosd(angle), mag * Util::sind(angle));
 }
 
-void ObjectManager::spawnPowerup(PowerupType t, const double x, const double y, const double x_vel, const double y_vel){
-    static_cast<Powerup*>(getUnused(Powerup))->startPowerup(type, x, y, x_vel, y_vel, value);
+void ObjectManager::spawnPowerup (PowerupType t, double x, double y, double x_vel, double y_vel, int value){
+    static_cast<Powerup*>(getUnused(POWERUP))->startPowerup(t, x, y, x_vel, y_vel, value);
 }
 
 void ObjectManager::spawnEnemy(EnemyType t, const double x, const double y, const double x_tar, const double y_tar){
@@ -283,11 +283,7 @@ void ObjectManager::spawnEnemy(EnemyType t, const double x, const double y, cons
         y = 768;
     }
     */
-    qDebug() << "spawn enemy started";
-    qDebug() << getUnused(ENEMY);
-    qDebug() << "enemy spawned";
     static_cast<Enemy*>(getUnused(ENEMY))->startEnemy(t, x, y, x_tar, y_tar);
-    qDebug() << "enemy created";
 }
 
 void ObjectManager::spawnShrapnel(const double x, const double y, const double x_vel, const double y_vel, const double len, const QColor *clr){
