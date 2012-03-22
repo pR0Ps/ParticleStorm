@@ -12,6 +12,8 @@ using namespace std;
 const int Particle::MAX_PARTICLE_SPEED;
 const float Particle::SPEED_MULTIPLIER;
 const float Particle::AIR_RESIST;
+const float Particle::FORCE_DISSIPATION;
+const int Particle::FORCE_EXERT;
 
 Particle::Particle():GameObject(){
 
@@ -49,8 +51,8 @@ void Particle::applyForce(double x, double y, double mag){
         dist = DBL_MIN; //avoiding a div by 0 error in the next step
     }
 
-    x_vel += (this->x - x) * mag / ((dist * dist) * GameEngine::FORCE_DISSIPATION);
-    y_vel += (this->y - y) * mag / ((dist * dist) * GameEngine::FORCE_DISSIPATION);
+    x_vel += (this->x - x) * mag / ((dist * dist) * FORCE_DISSIPATION);
+    y_vel += (this->y - y) * mag / ((dist * dist) * FORCE_DISSIPATION);
 
     if(Util::magnitude(x_vel,y_vel) > MAX_PARTICLE_SPEED) {
         double angle = Util::atand(y_vel,x_vel);

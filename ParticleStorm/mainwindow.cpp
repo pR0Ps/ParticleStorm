@@ -21,10 +21,7 @@ MainWindow::~MainWindow(){
 }
 
 QPoint MainWindow::getMousePos(){
-    // The pos function returns a QPoint representing the global coordinates of
-    // the mouse and the mapFromGlobal function converts this to a point relative
-    // to a QWidget, in this case the OpenGL canvas.
-    return engine->mapFromGlobal(QCursor::pos());
+    return engine->getMousePos();
 }
 
 Qt::MouseButtons MainWindow::getMouseState(){

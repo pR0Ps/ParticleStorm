@@ -9,21 +9,19 @@
 class Star : public GameObject
 {
 public:
-   //constants that will be used to control speed
-    static const float FOREGROUND_SPEED_CENTER =0.5 ;
-    static const float FOREGROUND_SPEED_EDGE = 0.8;
-    static const float BACKGROUND_SPEED_CENTER = 0.3;
-    static const float BACKGROUND_SPEED_EDGE = 0.4;
-    static const float SCALE_FORCE_DISSIPATION = 10;
-    static const float SPEED_MULTIPLIER =1; //just incase
+    static const float FORCE_DISSIPATION = 100;
+    static const int EXTRA_BOUNDS = 0;
+    static const int FORCE_EXERT = 5000;
 
     Star();
 
     void draw() const;
+    void pan(double x, double y);
     void update(double deltaTime);
     void applyForce(double x, double y, double mag);
 private:
-
+    double x_old, y_old;
+    double dist;
 };
 
 #endif // STAR_H

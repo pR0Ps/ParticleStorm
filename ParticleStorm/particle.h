@@ -14,6 +14,8 @@ public:
     static const int MAX_PARTICLE_SPEED = 1500;
     static const float SPEED_MULTIPLIER = 1;
     static const float AIR_RESIST = 1;
+    static const float FORCE_DISSIPATION = 5;
+    static const int FORCE_EXERT = 100000;
 
     void draw() const;
     void update(double deltaTime);

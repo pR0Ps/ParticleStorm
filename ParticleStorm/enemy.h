@@ -24,13 +24,14 @@ public:
     //apply force (do nothing, but still need to override)
     void applyForce(double x, double y, double mag){}
 
+    void pan(double x, double y);
     void die();
 
 private:
     double speed;
     double damage;
     int type;
-    double dist;
+    double x_tar, y_tar;
 };
 
 #endif // ENEMY_H

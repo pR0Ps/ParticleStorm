@@ -253,7 +253,7 @@ void ObjectManager::spawnParticle(const double x, const double y, const double x
 
 void ObjectManager::spawnParticle(const double x, const double y){
     const unsigned int angle = qrand() % 359;
-    const int mag = qrand() % 120 / 10.0;
+    const int mag = qrand() % 120 / 5.0;
     spawnParticle(x, y, mag * Util::cosd(angle), mag * Util::sind(angle));
 }
 

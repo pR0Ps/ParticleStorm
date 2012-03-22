@@ -22,10 +22,11 @@ public:
     static const int LINES_PER_FADE = 400;
     static const int FADE_BORDER_AMT = 15;
     static const int GAME_OVER_FRAMES = 200;
-    static const float FORCE_DISSIPATION = 5;
+    static const float PAN_SPEED = 0.5;
 
     //access mouse state
     Qt::MouseButtons getMouseState(){return mouseState;}
+    QPoint getMousePos(){return mapFromGlobal(QCursor::pos());}
 
     //control the game engine
     void reset();
@@ -47,11 +48,6 @@ private:
     QGLFramebufferObject *fbo; //offscreen framebuffer
     ObjectManager *objectManager; //manages all the objects in the game
     ResourceManager *resourceManager;
-
-    //testing stuff
-    void drawScene();
-    int coords[6];
-    int vels[6];
 
     //timing stuff (FPS/deltatime)
     unsigned long int framecnt;

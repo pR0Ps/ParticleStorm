@@ -12,7 +12,6 @@ const int GameEngine::FPS_COUNT_FRAME_INTERVAL;
 const int GameEngine::LINES_PER_FADE;
 const int GameEngine::FADE_BORDER_AMT;
 const int GameEngine::GAME_OVER_FRAMES;
-const float GameEngine::FORCE_DISSIPATION;
 
 GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
     setFixedSize(MAX_X, MAX_Y);
@@ -24,9 +23,6 @@ GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
 
     //FPS timer
     timer = new QTime();
-
-    //Object manager
-    objectManager = new ObjectManager();
 
     //initial garbage value for gameClock
     gameClock = 0;
@@ -76,7 +72,7 @@ void GameEngine::initializeGL(){
     glDisable(GL_FOG);
     glDisable(GL_LIGHTING);
     glDisable(GL_LINE_SMOOTH); //could enable, but performance-heavy and not supported for all
-    glDisable(GL_POINT_SMOOTH); //same for this
+    glEnable(GL_POINT_SMOOTH); //same for this
     glDisable(GL_LINE_STIPPLE);
     glDisable(GL_SCISSOR_TEST);
     glDisable(GL_STENCIL_TEST);
@@ -93,6 +89,9 @@ void GameEngine::initializeGL(){
 
     //load textures
     resourceManager = new ResourceManager();
+
+    //init object manager (needs resource manager)
+    objectManager = new ObjectManager();
 }
 
 //resets the game
@@ -109,13 +108,6 @@ void GameEngine::reset(){
 
 //starts a game
 void GameEngine::start(){
-
-    //init the testing values
-    for (int i = 0 ; i < 6 ; i++){
-        coords[i] = qrand() % (i % 2 == 0 ? MAX_X : MAX_Y);
-        vels[i] = (qrand() % 5) + 5;
-    }
-
     //game states
     paused = false;
     gameOverFrames = 0;
@@ -135,11 +127,11 @@ void GameEngine::start(){
     //start the timer (sets off the frameloop via timerEvent)
     gameClock = startTimer(1/(double)MAX_FPS*1000);
 
+    //spawn some testing enemies
     objectManager->spawnEnemy(ObjectManager::GRUNT, 0, 300, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
     objectManager->spawnEnemy(ObjectManager::GRUNT, 300, 0, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
     objectManager->spawnEnemy(ObjectManager::GRUNT, 0, 600, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
     objectManager->spawnEnemy(ObjectManager::GRUNT, 600, 0, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
-
 }
 
 //fade the frame
@@ -166,23 +158,6 @@ void GameEngine::doFade(){
             glEnd();
         }
     }
-}
-
-//test scene
-void GameEngine::drawScene(){
-    //draw lightning every 3 frames
-    if (framecnt % 3 == 0)
-        Util::drawJaggedLine(qrand() % MAX_X, qrand() % MAX_Y, qrand() % MAX_X, qrand() % MAX_Y, resourceManager->getColour(ResourceManager::WHITE));
-
-    //draw triangles
-    glBegin(GL_TRIANGLES);
-        glColor3f(1, 0, 0); glVertex2i(coords[0], coords[1]);
-        glColor3f(0, 1, 0); glVertex2i(coords[2], coords[3]);
-        glColor3f(0, 0, 1); glVertex2i(coords[4], coords[5]);
-    glEnd();
-
-    //zap the green corner of the triangle from 100, 100 with green lightning
-    Util::drawJaggedLine(100, 100, coords[2], coords[3], resourceManager->getColour(ResourceManager::GREEN));
 }
 
 //draws information for the player
@@ -222,21 +197,19 @@ void GameEngine::update(){
         return;
     }
 
-    //bouncing triangle - basic bounds
-    for (int i = 0 ; i < 6 ; i++){
-        if (coords[i] > (i % 2 == 0 ? MAX_X : MAX_Y)){
-            vels[i] *= -1;
-            coords[i] = (i % 2 == 0 ? MAX_X : MAX_Y);
-        }
-        else if (coords[i] < 0){
-            vels[i] *= -1;
-            coords[i] = 0;
-        }
-        //apply velocity
-        coords[i] += vels[i];
-    }
-
     //game stuff
+
+    //pan everything
+    const double PANX = (MAX_X / 2.0d - objectManager->getPlayer()->getX()) * PAN_SPEED * deltaTime;
+    const double PANY = (MAX_Y / 2.0d - objectManager->getPlayer()->getY()) * PAN_SPEED * deltaTime;
+    objectManager->pan(ObjectManager::PARTICLE, PANX, PANY);
+    objectManager->pan(ObjectManager::ENEMY, PANX, PANY);
+    objectManager->pan(ObjectManager::STAR, PANX, PANY);
+    objectManager->pan(ObjectManager::POWERUP, PANX, PANY);
+    objectManager->pan(ObjectManager::SHRAPNEL, PANX, PANY);
+
+
+    //update everything
     objectManager->update(ObjectManager::PLAYER, deltaTime);
     objectManager->update(ObjectManager::PARTICLE, deltaTime);
     objectManager->update(ObjectManager::ENEMY, deltaTime);
@@ -274,20 +247,23 @@ void GameEngine::paintGL(){
         //all draw commands draw to the framebuffer
         fbo->bind();
         doFade();
-        drawScene();
 
+        //draw testing lightning
+        if (framecnt % 3 == 0)
+            Util::drawJaggedLine(qrand() % MAX_X, qrand() % MAX_Y, qrand() % MAX_X, qrand() % MAX_Y, resourceManager->getColour(ResourceManager::WHITE));
+
+        //draw blurred objects
         objectManager->draw(ObjectManager::SHRAPNEL);
         objectManager->draw(ObjectManager::POWERUP);
         objectManager->draw(ObjectManager::PARTICLE);
+        objectManager->draw(ObjectManager::STAR);
 
         fbo->release();
-
         //all draw commands go to screen
 
         //draw framebuffer (all previous drawing commands)
         Util::drawTexture(0, 0, MAX_X, MAX_Y, fbo->texture());
 
-        objectManager->draw(ObjectManager::STAR);
         objectManager->draw(ObjectManager::ENEMY);
         objectManager->draw(ObjectManager::PLAYER);
 

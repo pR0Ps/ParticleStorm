@@ -34,11 +34,19 @@ void Util::drawLine(double x1, const double y1, const double x2, double y2, cons
         glPushAttrib(GL_CURRENT_BIT);
         glColor3d(clr->red(), clr->green(), clr->blue());
     }
-    //draw the line
-    glBegin(GL_LINES);
-        glVertex2d(x1, y1);
-        glVertex2d(x2, y2);
-    glEnd();
+    if (abs(x1 - x2) < 1 && abs(y1 - y2) < 1){
+        //draw a point
+        glBegin(GL_POINTS);
+            glVertex2d(x1, y1);
+        glEnd();
+    }
+    else{
+        //draw the line
+        glBegin(GL_LINES);
+            glVertex2d(x1, y1);
+            glVertex2d(x2, y2);
+        glEnd();
+    }
 
     //restore old color
     if (clr != NULL) glPopAttrib();

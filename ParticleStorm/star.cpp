@@ -4,20 +4,50 @@
 #include "util.h"
 #include "star.h"
 
-Star::Star():GameObject(){
+const float Star::FORCE_DISSIPATION;
+const int Star::EXTRA_BOUNDS;
+const int Star::FORCE_EXERT;
 
+Star::Star():GameObject(){
+    //init the star
+    inUse = true;
+    x = x_old = qrand() % (GameEngine::MAX_X + EXTRA_BOUNDS*2) - EXTRA_BOUNDS;
+    y = y_old = qrand() % (GameEngine::MAX_Y + EXTRA_BOUNDS*2) - EXTRA_BOUNDS;
+    clr = ResourceManager::getInstance()->getColour(ResourceManager::WHITE);
+
+    dist = qrand() % 3 == 1 ? 2 : qrand() % 3 == 1 ? 15 : qrand() % 13 + 2;
 }
 
-const float Star::FOREGROUND_SPEED_CENTER;
-const float Star::FOREGROUND_SPEED_EDGE;
-const float Star::BACKGROUND_SPEED_CENTER;
-const float Star::BACKGROUND_SPEED_EDGE;
-const float Star::SCALE_FORCE_DISSIPATION;
-const float Star::SPEED_MULTIPLIER;
-
-int count = 0;
-
 void Star::update(double deltaTime){
+    //update velocity
+    x_vel -= 2 * x_vel * deltaTime;
+    y_vel -= 2 * y_vel * deltaTime;
+
+    //move star
+    x_old = x;
+    y_old = y;
+    x += x_vel * deltaTime;
+    y += y_vel * deltaTime;
+
+    //wrap the star around when panned offscreen
+    if (this->x > GameEngine::MAX_X + EXTRA_BOUNDS){
+        this->x = -EXTRA_BOUNDS;
+        this->x_old = -EXTRA_BOUNDS;
+    }
+    else if (this->x < -EXTRA_BOUNDS){
+        this->x = GameEngine::MAX_X + EXTRA_BOUNDS;
+        this->x_old = GameEngine::MAX_X + EXTRA_BOUNDS;
+    }
+    if (this->y > GameEngine::MAX_Y + EXTRA_BOUNDS){
+        this->y = -EXTRA_BOUNDS;
+        this->y_old = -EXTRA_BOUNDS;
+    }
+    else if (this->y < -EXTRA_BOUNDS){
+        this->y = GameEngine::MAX_Y + EXTRA_BOUNDS;
+        this->y_old = GameEngine::MAX_Y + EXTRA_BOUNDS;
+    }
+
+    /*
     //foreground stars
     //  if (array[1-100])
     if(count<100){
@@ -63,21 +93,20 @@ void Star::update(double deltaTime){
     if(count<250){
     count++;}
     else{count=0;}
+    */
 }
 
-/*
-//no force exerted on stars for now
+void Star::pan(double x, double y){
+    this->x += x / dist;
+    this->y += y / dist;
+}
+
 void Star::applyForce(double x, double y, double mag){
-   // if I understand this correctly, I should get the distance between the star and
-   // player, and then apply a force to it. Force dissipation for this will be extremely small
-   // by being scaled down quite a bit by SCALE_FORCE_DISSIPATION
-    /*double dist = Util::distance(this->x,this->y,x,y);
-
-    x_vel += (this->x- x) * mag / ((dist*dist)*(GameEngine::FORCE_DISSIPATION/Star::SCALE_FORCE_DISSIPATION)*dt);
-    y_vel += (this->y- y) * mag / ((dist*dist)*(GameEngine::FORCE_DISSIPATION/Star::SCALE_FORCE_DISSIPATION)*dt);
+    double dist = Util::distance(this->x,this->y,x,y);
+    x_vel += (this->x - x) * mag / ((dist * dist) * FORCE_DISSIPATION);
+    y_vel += (this->y - y) * mag / ((dist * dist) * FORCE_DISSIPATION);
 }
-*/
 
 void Star::draw() const{
-    Util::drawLine(x, y, x_old, y_old, ResourceManager::getInstance()->getColour(ResourceManager::WHITE));
+    Util::drawLine(x, y, x_old, y_old, clr);
 }

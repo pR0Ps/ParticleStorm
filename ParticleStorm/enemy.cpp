@@ -6,14 +6,15 @@
 
 using namespace std;
 
-//canvas is 1024x768
 Enemy::Enemy():GameObject(){
 }
 
 //y u no enemytype?
 void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
     inUse = true;
-	type = t;
+    type = t;
+    this->x_tar = x_tar;
+    this->y_tar = y_tar;
 
     //calculating the x and y distance from enemy spawn and current player position
     double x_dist = x_tar - x;
@@ -72,7 +73,15 @@ void Enemy::update(double deltaTime){
 }
 
 void Enemy::draw() const{
-    Util::drawBox(x-100,y-100,x+100,y+100,true,clr);
+    Util::drawBox(x-100,y-100,x+100,y+100,false,clr);
+}
+
+//pan the enemy (and their target)
+void Enemy::pan(double x, double y){
+    this->x += x;
+    this->y += y;
+    this->x_tar += x_tar;
+    this->y_tar += y_tar;
 }
 
 void Enemy::die(){
