@@ -235,7 +235,26 @@ GameObject* ObjectManager::getUnused(ObjectType t){
 
 //collisions
 void ObjectManager::doEnemyParticleCollisions(){
+    int numEnemies = this->getNumObjects(ENEMY);
+    int numParticles = this->getNumObjects(PARTICLE);
 
+    Particle particle;
+    Enemy enemy;
+
+    for(int i=0; i<numEnemies; i++) {
+
+        enemy = enemies->at(i);
+
+        for(int j=0; j<numParticles; j++) {
+
+            particle = particles->at(j);
+
+            //do collision check
+
+
+
+        }
+    }
 }
 
 void ObjectManager::doPlayerEnemyCollisions(){
