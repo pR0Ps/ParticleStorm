@@ -264,7 +264,6 @@ void GameEngine::paintGL(){
         objectManager->draw(ObjectManager::SHRAPNEL);
         objectManager->draw(ObjectManager::POWERUP);
         objectManager->draw(ObjectManager::PARTICLE);
-        objectManager->draw(ObjectManager::STAR);
 
         fbo->release();
         //all draw commands go to screen
@@ -272,6 +271,7 @@ void GameEngine::paintGL(){
         //draw framebuffer (all previous drawing commands)
         Util::drawTexture(0, 0, MAX_X, MAX_Y, fbo->texture());
 
+        objectManager->draw(ObjectManager::STAR);
         objectManager->draw(ObjectManager::ENEMY);
         objectManager->draw(ObjectManager::PLAYER);
 

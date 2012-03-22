@@ -103,6 +103,9 @@ void Star::pan(double x, double y){
 
 void Star::applyForce(double x, double y, double mag){
     double dist = Util::distance(this->x,this->y,x,y);
+    if(dist == 0) {
+        dist = 0.0001; //avoiding a div by 0 error in the next step
+    }
     x_vel += (this->x - x) * mag / ((dist * dist) * FORCE_DISSIPATION);
     y_vel += (this->y - y) * mag / ((dist * dist) * FORCE_DISSIPATION);
 }

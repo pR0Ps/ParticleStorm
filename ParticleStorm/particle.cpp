@@ -48,7 +48,7 @@ void Particle::applyForce(double x, double y, double mag){
     //calculating and updating x and y velocity using a 1/dist magnitude scaling
 
     if(dist == 0) {
-        dist = DBL_MIN; //avoiding a div by 0 error in the next step
+        dist = 0.0001; //avoiding a div by 0 error in the next step
     }
 
     x_vel += (this->x - x) * mag / ((dist * dist) * FORCE_DISSIPATION);

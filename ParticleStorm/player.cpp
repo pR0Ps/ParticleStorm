@@ -88,7 +88,7 @@ void Player::update(double deltaTime) {
     if (MainWindow::getInstance()->getMouseState() & Qt::LeftButton){
         ObjectManager::getInstance()->spawnParticle(x, y);
     }
-    if (MainWindow::getInstance()->getMouseState() & Qt::RightButton){
+    else if (MainWindow::getInstance()->getMouseState() & Qt::RightButton){
         //magnitue is really high, take a look at this
         ObjectManager::getInstance()->applyForce(ObjectManager::PARTICLE, x, y, Player::FORCE_EXERT);
         ObjectManager::getInstance()->applyForce(ObjectManager::STAR, x, y, Star::FORCE_EXERT);
