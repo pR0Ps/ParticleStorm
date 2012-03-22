@@ -16,7 +16,6 @@ const int Player::MAX_LIFE;
 const int Player::MAX_MANA;
 const int Player::MAX_DIAMETER;
 const int Player::RING_SIZE;
-const int Player::FORCE_EXERT;
 const int Player::PARTICLE_SPACING;
 
 // Implementation of constructor and destructor.
@@ -98,9 +97,12 @@ void Player::update(double deltaTime) {
         }
     }
     else if (MainWindow::getInstance()->getMouseState() & Qt::RightButton){
-        //magnitue is really high, take a look at this
-        o->applyForce(ObjectManager::PARTICLE, x, y, Player::FORCE_EXERT);
+        o->applyForce(ObjectManager::PARTICLE, x, y, Particle::FORCE_EXERT);
         o->applyForce(ObjectManager::STAR, x, y, Star::FORCE_EXERT);
+    }
+    else if (MainWindow::getInstance()->getMouseState() &Qt::MiddleButton){
+        o->applyForce(ObjectManager::PARTICLE, x, y, -Particle::FORCE_EXERT);
+        o->applyForce(ObjectManager::STAR, x, y, -Star::FORCE_EXERT);
     }
 }
 
