@@ -12,6 +12,9 @@ const int GameEngine::FPS_COUNT_FRAME_INTERVAL;
 const int GameEngine::LINES_PER_FADE;
 const int GameEngine::FADE_BORDER_AMT;
 const int GameEngine::GAME_OVER_FRAMES;
+const float GameEngine::PAN_SPEED;
+const float GameEngine::PAN_THRESHOLD_X;
+const float GameEngine::PAN_THRESHOLD_Y;
 
 GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
     setFixedSize(MAX_X, MAX_Y);
@@ -200,13 +203,18 @@ void GameEngine::update(){
     //game stuff
 
     //pan everything
-    const double PANX = (MAX_X / 2.0d - objectManager->getPlayer()->getX()) * PAN_SPEED * deltaTime;
-    const double PANY = (MAX_Y / 2.0d - objectManager->getPlayer()->getY()) * PAN_SPEED * deltaTime;
-    objectManager->pan(ObjectManager::PARTICLE, PANX, PANY);
-    objectManager->pan(ObjectManager::ENEMY, PANX, PANY);
-    objectManager->pan(ObjectManager::STAR, PANX, PANY);
-    objectManager->pan(ObjectManager::POWERUP, PANX, PANY);
-    objectManager->pan(ObjectManager::SHRAPNEL, PANX, PANY);
+    if ((objectManager->getPlayer()->getX() > MAX_X - PAN_THRESHOLD_X ||
+            objectManager->getPlayer()->getX() < PAN_THRESHOLD_X) ||
+            (objectManager->getPlayer()->getY() > MAX_Y - PAN_THRESHOLD_Y ||
+            objectManager->getPlayer()->getY() < PAN_THRESHOLD_Y)){
+        const double PANX = (MAX_X / 2.0d - objectManager->getPlayer()->getX()) * PAN_SPEED * deltaTime;
+        const double PANY = (MAX_Y / 2.0d - objectManager->getPlayer()->getY()) * PAN_SPEED * deltaTime;
+        objectManager->pan(ObjectManager::PARTICLE, PANX, PANY);
+        objectManager->pan(ObjectManager::ENEMY, PANX, PANY);
+        objectManager->pan(ObjectManager::STAR, PANX, PANY);
+        objectManager->pan(ObjectManager::POWERUP, PANX, PANY);
+        objectManager->pan(ObjectManager::SHRAPNEL, PANX, PANY);
+    }
 
 
     //update everything

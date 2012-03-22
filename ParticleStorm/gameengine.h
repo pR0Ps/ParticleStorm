@@ -23,6 +23,8 @@ public:
     static const int FADE_BORDER_AMT = 15;
     static const int GAME_OVER_FRAMES = 200;
     static const float PAN_SPEED = 0.5;
+    static const float PAN_THRESHOLD_X = 175;
+    static const float PAN_THRESHOLD_Y = 175;
 
     //access mouse state
     Qt::MouseButtons getMouseState(){return mouseState;}
