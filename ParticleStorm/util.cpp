@@ -27,6 +27,23 @@ float Util::getScaleByFrame(unsigned long int frame, unsigned int steps,
     return frame/(float)(steps/(float)(max - min)) + min;
 }
 
+//draws a line
+void Util::drawLine(double x1, const double y1, const double x2, double y2, const QColor *clr){
+    //save current color
+    if (clr != NULL){
+        glPushAttrib(GL_CURRENT_BIT);
+        glColor3d(clr->red(), clr->green(), clr->blue());
+    }
+    //draw the line
+    glBegin(GL_LINES);
+        glVertex2d(x1, y1);
+        glVertex2d(x2, y2);
+    glEnd();
+
+    //restore old color
+    if (clr != NULL) glPopAttrib();
+}
+
 //draws a box
 void Util::drawBox(double x1, const double y1, const double x2, double y2, const bool fill, const QColor *clr){
     //save current color

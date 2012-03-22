@@ -40,6 +40,7 @@ public:
 
     //drawing:
     static void drawBox(double x1, double y1, double x2, double y2, bool fill, const QColor *clr = NULL);
+    static void drawLine(double x1, double y1, double x2, double y2, const QColor *clr = NULL);
 
     //gives a nice lightning effect
     static void drawJaggedLine(double x1, double y1, double x2, double y2,

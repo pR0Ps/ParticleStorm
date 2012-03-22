@@ -35,16 +35,9 @@ void Particle::update(double deltaTime) {
 }
 
 void Particle::draw() const{
-    glPushAttrib(GL_CURRENT_BIT);
-    glColor3d(clr->red(), clr->green(), clr->blue());
-
     //'tail' should take into account current speed
     //should be roughly the same location where the particle was last frame
-    glBegin(GL_LINES);
-        glVertex2d(x, y);
-        glVertex2d(x_old, y_old);
-    glEnd();
-    glPopAttrib();
+    Util::drawLine(x, y, x_old, y_old, clr);
 }
 
 void Particle::applyForce(double x, double y, double mag){

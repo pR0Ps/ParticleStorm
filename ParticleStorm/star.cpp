@@ -8,7 +8,6 @@ Star::Star():GameObject(){
 
 }
 
-
 const float Star::FOREGROUND_SPEED_CENTER;
 const float Star::FOREGROUND_SPEED_EDGE;
 const float Star::BACKGROUND_SPEED_CENTER;
@@ -66,6 +65,8 @@ void Star::update(double deltaTime){
     else{count=0;}
 }
 
+/*
+//no force exerted on stars for now
 void Star::applyForce(double x, double y, double mag){
    // if I understand this correctly, I should get the distance between the star and
    // player, and then apply a force to it. Force dissipation for this will be extremely small
@@ -74,13 +75,9 @@ void Star::applyForce(double x, double y, double mag){
 
     x_vel += (this->x- x) * mag / ((dist*dist)*(GameEngine::FORCE_DISSIPATION/Star::SCALE_FORCE_DISSIPATION)*dt);
     y_vel += (this->y- y) * mag / ((dist*dist)*(GameEngine::FORCE_DISSIPATION/Star::SCALE_FORCE_DISSIPATION)*dt);
-*/
 }
+*/
 
 void Star::draw() const{
-    double size_box_x= x+1;
-    double size_box_y= y+1;
-
-    Util::drawBox(x, y, size_box_x, size_box_y, ResourceManager::getInstance()->getColour(ResourceManager::WHITE));
-
+    Util::drawLine(x, y, x_old, y_old, ResourceManager::getInstance()->getColour(ResourceManager::WHITE));
 }
