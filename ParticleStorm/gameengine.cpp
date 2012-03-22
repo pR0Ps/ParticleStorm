@@ -202,8 +202,8 @@ void GameEngine::update(){
     //game stuff
 
     //pan everything
-    panX = (MAX_X / 2.0d - objectManager->getPlayer()->getX()) * PAN_SPEED * deltaTime;
-    panY = (MAX_Y / 2.0d - objectManager->getPlayer()->getY()) * PAN_SPEED * deltaTime;
+    panX = (MAX_X / 2.0 - objectManager->getPlayer()->getX()) * PAN_SPEED * deltaTime;
+    panY = (MAX_Y / 2.0 - objectManager->getPlayer()->getY()) * PAN_SPEED * deltaTime;
     objectManager->pan(ObjectManager::PARTICLE, panX, panY);
     objectManager->pan(ObjectManager::ENEMY, panX, panY);
     objectManager->pan(ObjectManager::STAR, panX, panY);
@@ -218,6 +218,8 @@ void GameEngine::update(){
     objectManager->update(ObjectManager::STAR, deltaTime);
     objectManager->update(ObjectManager::POWERUP, deltaTime);
     objectManager->update(ObjectManager::SHRAPNEL, deltaTime);
+
+    objectManager->doEnemyParticleCollisions(); //not sure if this is where collision updates will be done
 
     //testing game stuff
     objectManager->modPlayerScore(1);

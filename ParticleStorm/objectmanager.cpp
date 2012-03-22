@@ -235,24 +235,33 @@ GameObject* ObjectManager::getUnused(ObjectType t){
 
 //collisions
 void ObjectManager::doEnemyParticleCollisions(){
-    int numEnemies = this->getNumObjects(ENEMY);
-    int numParticles = this->getNumObjects(PARTICLE);
 
-    Particle particle;
-    Enemy enemy;
+    //int numEnemies = this->getNumObjects(ENEMY);
+    //int numParticles = this->getNumObjects(PARTICLE);
 
-    for(int i=0; i<numEnemies; i++) {
+    std::vector<GameObject*> particles = getVector(PARTICLE);
+    std::vector<GameObject*> enemies = getVector(ENEMY);
+    int enemyProxyRadius = 100; //need to get each enemy's radius based on type
 
-        enemy = enemies->at(i);
+    for(unsigned int i=0; i<enemies.size(); i++) {
 
-        for(int j=0; j<numParticles; j++) {
+        //enemy = enemies[i];
 
-            particle = particles->at(j);
+        if(enemies[i]->getInUse()) { //does the enemies vector store unused enemies?
 
-            //do collision check
+        for(unsigned int j=0; j<particles.size(); j++) {
 
+            //particle = particles[j];
 
+            if(particles[j]->getInUse()) {
 
+                if(Util::magnitude(particles[j]->getX()-enemies[i]->getX(),particles[j]->getY()-enemies[i]->getY()) < enemyProxyRadius) {
+                    particles[j]->die();
+                    enemies[i]->die(); //assuming 1 shot kills for now
+                    //shrapnel still needs to be implemented
+                }
+            }
+        }
         }
     }
 }
