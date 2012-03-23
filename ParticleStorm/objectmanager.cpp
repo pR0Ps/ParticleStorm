@@ -250,23 +250,22 @@ void ObjectManager::doEnemyParticleCollisions(){
 
         //enemy = enemies[i];
 
-        if(enemies[i]->getInUse()) { //does the enemies vector store unused enemies?
+        if(enemies[i]->getInUse()) { //enemies vector stores unused enemies
 
-        for(unsigned int j=0; j<particles.size(); j++) {
+            for(unsigned int j=0; j<particles.size(); j++) {
 
-            //particle = particles[j];
+                //particle = particles[j];
 
-            if(particles[j]->getInUse()) {
+                if(particles[j]->getInUse()) {
 
-                if(Util::magnitude(particles[j]->getX()-enemies[i]->getX(),particles[j]->getY()-enemies[i]->getY()) < enemyProxyRadius) {
-                    particles[j]->die();
-                    //enemies[i]->die(); //for 1 shot kills for now
-                    enemies[i]->modLife(-10,true); //for death by damage
+                    if(Util::magnitude(particles[j]->getX()-enemies[i]->getX(),particles[j]->getY()-enemies[i]->getY()) < enemyProxyRadius) {
+                        enemies[i]->modLife(-static_cast<Particle*>(particles[j])->getSpeedPercent() * Enemy::MAX_DAMAGE,true); //for death by damage
+                        particles[j]->die();
 
-                    //shrapnel still needs to be implemented
+                        //shrapnel still needs to be implemented
+                    }
                 }
             }
-        }
         }
     }
 }

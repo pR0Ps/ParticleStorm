@@ -72,5 +72,5 @@ void Particle::startParticle(double x1, double y1, double x_vel, double y_vel) {
 }
 
 void Particle::updateColour() {
-    clr = ResourceManager::getInstance()->getColourScale(Util::magnitude(x_vel, y_vel)/(float)MAX_PARTICLE_SPEED);
+    clr = ResourceManager::getInstance()->getColourScale(getSpeedPercent());
 }

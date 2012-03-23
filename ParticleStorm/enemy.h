@@ -7,6 +7,10 @@
 
 class Enemy : public GameObject{
 public:
+
+    //redeclare in cpp file
+    static const int MAX_DAMAGE = 10;
+
     Enemy();
 
     void update(double deltaTime);

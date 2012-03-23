@@ -2,6 +2,8 @@
 #include "gameengine.h"
 #include <QDebug>
 
+const int Enemy::MAX_DAMAGE;
+
 Enemy::Enemy():GameObject(){
 }
 
