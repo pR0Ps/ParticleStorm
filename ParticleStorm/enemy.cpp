@@ -9,6 +9,8 @@ Enemy::Enemy():GameObject(){
 void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
     inUse = true;
     type = t;
+    this->x=x;
+    this->y=y;
     this->x_tar = x_tar;
     this->y_tar = y_tar;
 
@@ -17,7 +19,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
     double y_dist = y_tar - y;
 
     //calculate angle
-    double theta = atan(y_dist/x_dist);
+    double theta = Util::atand(y_dist,x_dist);
 
     //calculating the x and y values to make a unit vector pointing at player
     x_vel = cos(theta);

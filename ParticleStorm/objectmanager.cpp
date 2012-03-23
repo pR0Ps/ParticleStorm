@@ -241,6 +241,9 @@ void ObjectManager::doEnemyParticleCollisions(){
 
     std::vector<GameObject*> particles = getVector(PARTICLE);
     std::vector<GameObject*> enemies = getVector(ENEMY);
+    //Particle* particle;
+    //Enemy* enemy;
+
     int enemyProxyRadius = 100; //need to get each enemy's radius based on type
 
     for(unsigned int i=0; i<enemies.size(); i++) {
@@ -257,7 +260,9 @@ void ObjectManager::doEnemyParticleCollisions(){
 
                 if(Util::magnitude(particles[j]->getX()-enemies[i]->getX(),particles[j]->getY()-enemies[i]->getY()) < enemyProxyRadius) {
                     particles[j]->die();
-                    enemies[i]->die(); //assuming 1 shot kills for now
+                    //enemies[i]->die(); //for 1 shot kills for now
+                    enemies[i]->modLife(-10,true); //for death by damage
+
                     //shrapnel still needs to be implemented
                 }
             }

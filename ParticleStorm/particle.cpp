@@ -2,7 +2,6 @@
 #include "resourcemanager.h"
 #include "gameengine.h"
 #include "util.h"
-#include "float.h"
 #include <iostream>
 #include "qmath.h"
 #include <QColor>

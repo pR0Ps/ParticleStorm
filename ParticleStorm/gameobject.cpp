@@ -30,4 +30,7 @@ void GameObject::modLife(const int amt, const bool rel){
         life = std::max(0, std::min (life + amt, maxLife));
     else
         life = std::max(0, std::min (amt, maxLife));
+
+    if(life <= 0)
+        this->die();
 }
