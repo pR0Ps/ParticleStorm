@@ -43,6 +43,8 @@ public:
     //control the game engine
     void reset();
     void start();
+    //fps accessor
+    float getfps();
 
 private:
     //mouse stuff
@@ -76,6 +78,7 @@ private:
 
     //game clock
     int gameClock;
+
 
     //game modifiers
     bool paused;

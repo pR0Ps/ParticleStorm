@@ -39,6 +39,7 @@ GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
 
     //initial garbage value for gameClock
     gameClock = 0;
+
 }
 
 //destructor
@@ -107,6 +108,7 @@ void GameEngine::initializeGL(){
     objectManager = new ObjectManager();
 }
 
+
 //resets the game
 void GameEngine::reset(){
     if (gameClock != 0){
@@ -139,7 +141,6 @@ void GameEngine::start(){
 
     //start the timer (sets off the frameloop via timerEvent)
     gameClock = startTimer(1/(double)MAX_FPS*1000);
-
     //spawn some testing enemies
     objectManager->spawnEnemy(ObjectManager::GRUNT, 0, 300, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
     objectManager->spawnEnemy(ObjectManager::GRUNT, 300, 0, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
@@ -185,6 +186,8 @@ void GameEngine::drawHUD(){
     //FPS text
     Util::drawString("FPS: " + Util::doubleToString(fps, 4, 1), 0, 0, resourceManager->getTexture(ResourceManager::TEXT));
 }
+//accessor for fps
+float GameEngine::getfps(){return fps;}
 
 //update game logic - automatically called by timer
 void GameEngine::update(){

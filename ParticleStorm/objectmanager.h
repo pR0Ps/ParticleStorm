@@ -82,7 +82,7 @@ public:
     void spawnParticle(double x, double y);
     void spawnPowerup (PowerupType t, double x, double y, double x_vel, double y_vel, int value);
     void spawnEnemy(EnemyType t, double x, double y, double x_tar = 0, double y_tar = 0);
-    void spawnShrapnel (double x, double y, double x_vel, double y_vel, double len, const QColor *clr);
+    void spawnShrapnel (double x, double y);
 
     //enemy stuff
     //Enemy* getClosestEnemy(double x, double y, double min_dist = 1);

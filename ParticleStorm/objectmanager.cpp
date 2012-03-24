@@ -257,12 +257,15 @@ void ObjectManager::doEnemyParticleCollisions(){
                 //particle = particles[j];
 
                 if(particles[j]->getInUse()) {
-
-                    if(Util::magnitude(particles[j]->getX()-enemies[i]->getX(),particles[j]->getY()-enemies[i]->getY()) < enemyProxyRadius) {
+                    double collisionX = particles[j]->getX()- enemies[i]->getX();
+                    double collisionY = particles[j]->getY()- enemies[i]->getY();
+                    double shrapnelX = particles[j]->getX();
+                    double shrapnelY = particles[j]->getY();
+                    if(Util::magnitude(collisionX, collisionY) < enemyProxyRadius) {
                         enemies[i]->modLife(-static_cast<Particle*>(particles[j])->getSpeedPercent() * Enemy::MAX_DAMAGE,true); //for death by damage
                         particles[j]->die();
-
-                        //shrapnel still needs to be implemented
+                        spawnShrapnel(shrapnelX,shrapnelY);
+                        //shrapnel still needs to be implempented
                     }
                 }
             }
@@ -318,10 +321,9 @@ void ObjectManager::spawnEnemy(EnemyType t, const double x, const double y, cons
     static_cast<Enemy*>(getUnused(ENEMY))->startEnemy(t, x, y, x_tar, y_tar);
 }
 
-void ObjectManager::spawnShrapnel(const double x, const double y, const double x_vel, const double y_vel, const double len, const QColor *clr){
-
+void ObjectManager::spawnShrapnel(const double x, const double y){
+    static_cast<Shrapnel*>(getUnused(SHRAPNEL))->makeShrapnel(x,y);
 }
-
 //Enemy* ObjectManager::getClosestEnemy(const double x, const double y, const double min_dist){
 //    return NULL;
 //}
