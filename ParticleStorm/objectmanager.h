@@ -22,7 +22,7 @@ public:
     static const int MAX_PARTICLES = 200;
     static const int MAX_ENEMIES = 20;
     static const int MAX_POWERUPS = 20;
-    static const int MAX_SHRAPNEL = 40;
+    static const int MAX_SHRAPNEL = 200;
     static const int MAX_STARS = 250;
 
     //object types
