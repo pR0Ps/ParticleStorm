@@ -3,7 +3,7 @@
 #include <QDebug>
 
 const int Enemy::MAX_DAMAGE;
-const int Enemy::RAM_DAMAGE;
+
 
 Enemy::Enemy():GameObject(){
 }
