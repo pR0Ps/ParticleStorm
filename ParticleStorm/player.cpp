@@ -17,6 +17,7 @@ const int Player::MAX_MANA;
 const int Player::MAX_DIAMETER;
 const int Player::RING_SIZE;
 const int Player::PARTICLE_SPACING;
+const int Player::MAX_DAMAGE;
 
 // Implementation of constructor and destructor.
 

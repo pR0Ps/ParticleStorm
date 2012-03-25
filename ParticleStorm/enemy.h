@@ -11,6 +11,7 @@ public:
     //redeclare in cpp file
     static const int MAX_DAMAGE = 10;
 
+
     Enemy();
 
     void update(double deltaTime);
@@ -31,6 +32,7 @@ public:
     void pan(double x, double y);
     void die();
 
+    int getDamage() const {return damage;}
     double getRadius() const {return radius;}
 
 private:

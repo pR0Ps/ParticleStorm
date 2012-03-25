@@ -19,6 +19,7 @@ public:
     void update(double deltaTime);
     void applyForce(double x, double y, double mag){}
 
+    double getRadius() const {return radius;}
     //Dies after a specific amount of time, or when player collides
 
 private:
@@ -27,6 +28,7 @@ private:
     double spin;
     double angle;
     double ttl;
+    double radius;
 };
 
 #endif // POWERUP_H

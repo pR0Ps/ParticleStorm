@@ -40,6 +40,7 @@ public:
     // classes.
     static const int MAX_LIFE = 1000;
     static const int MAX_MANA = 1000;
+    static const int RAM_DAMAGE = 10;
 
     //spacing of the particles to drop
     static const int PARTICLE_SPACING = 15;
