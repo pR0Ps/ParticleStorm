@@ -1,7 +1,11 @@
 #include "shrapnel.h"
 #include "util.h"
 
-const int Shrapnel::SHRAPNEL_TIME;
+const int Shrapnel::MAX_SHRAPNEL_SPEED;
+const int Shrapnel::INITIAL_PUSH;
+const int Shrapnel::MAX_ROTATION_SPD;
+const double Shrapnel::INITIAL_TTL;
+
 Shrapnel::Shrapnel():GameObject(){
 
 }
@@ -25,6 +29,7 @@ void Shrapnel::startShrapnel(double x, double y, double x_vel, double y_vel, dou
     this->spin = Util::randInt(-MAX_ROTATION_SPD, MAX_ROTATION_SPD);
     this->len = len;
     this->clr = clr;
+    this->ttl = INITIAL_TTL;
     this->inUse = true;
 }
 
@@ -36,14 +41,11 @@ void Shrapnel::draw() const{
 
 
 void Shrapnel::update(double deltaTime){
-
-    int count;
-
-    if((count) > SHRAPNEL_TIME){
-        inUse=false;
-        count=0;
-    }
-    count++;
+    //kill old shrapnel
+    if (ttl <= 0)
+        die();
+    else
+        this->ttl -= deltaTime;
 }
 
 void Shrapnel::applyForce(double x, double y, double mag){

@@ -188,7 +188,7 @@ void GameEngine::drawHUD(){
 
 //update game logic - automatically called by timer
 void GameEngine::update(){
-    //get time since last update
+    //get time (in seconds) since last update
     double deltaTime = timer->restart()/(float)1000;
 
     //FPS monitoring

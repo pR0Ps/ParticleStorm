@@ -11,6 +11,7 @@ const float Particle::SPEED_MULTIPLIER;
 const float Particle::AIR_RESIST;
 const float Particle::FORCE_DISSIPATION;
 const int Particle::FORCE_EXERT;
+const double Particle::INITITAL_TTL;
 
 Particle::Particle():GameObject(){
 
@@ -29,7 +30,11 @@ void Particle::update(double deltaTime) {
 
     this->updateColour();
 
-    //cout << Util::magnitude(x_vel,y_vel) << endl;
+    //kill old particles
+    if (ttl <= 0)
+        die();
+    else
+        this->ttl -= deltaTime;
 
 }
 
@@ -67,6 +72,7 @@ void Particle::startParticle(double x1, double y1, double x_vel, double y_vel) {
     this->y = y1;
     this->x_vel = x_vel;
     this->y_vel = y_vel;
+    this->ttl = INITITAL_TTL;
     this->inUse = true;
     this->updateColour();
 }

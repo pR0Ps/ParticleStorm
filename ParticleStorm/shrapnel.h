@@ -6,10 +6,11 @@
 class Shrapnel : public GameObject
 {
 public:
-   static const int SHRAPNEL_TIME = 150;
-   static const int MAX_SHRAPNEL_SPEED = 100;
-   static const int INITIAL_PUSH = 100;
-   static const int MAX_ROTATION_SPD = 40;
+    //redeclare in cpp file
+    static const int MAX_SHRAPNEL_SPEED = 100;
+    static const int INITIAL_PUSH = 100;
+    static const int MAX_ROTATION_SPD = 40;
+    static const double INITIAL_TTL = 5;
 
     Shrapnel();
 
@@ -22,6 +23,7 @@ private:
     double len; //length of shrapnel
     double spin; //how fast it spins
     double angle; //current angle
+    double ttl;
 };
 
 #endif // SHRAPNEL_H

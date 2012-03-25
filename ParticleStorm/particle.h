@@ -16,6 +16,7 @@ public:
     static const float AIR_RESIST = 1;
     static const float FORCE_DISSIPATION = 5;
     static const int FORCE_EXERT = 100000;
+    static const double INITITAL_TTL = 10;
 
     void draw() const;
     void update(double deltaTime);
@@ -28,6 +29,7 @@ private:
     //internally change the particle's colour to match its speed
     void updateColour();
     double x_old, y_old;
+    double ttl; //time to live
 };
 
 #endif // PARTICLE_H
