@@ -10,6 +10,7 @@ public:
 
     //redeclare in cpp file
     static const int MAX_DAMAGE = 10;
+    static const double MAX_COLLISION_BUFFER_TIME = 1.0;
 
 
     Enemy();
@@ -31,9 +32,10 @@ public:
 
     void pan(double x, double y);
     void die();
-
+    bool isImmune() const {return collisionBufferTime <= 0;}
     int getDamage() const {return damage;}
     double getRadius() const {return radius;}
+    void setImmune() {collisionBufferTime = MAX_COLLISION_BUFFER_TIME;}
 
 private:
     double speed;
@@ -41,6 +43,7 @@ private:
     int type;
     double x_tar, y_tar;
     double radius;
+    double collisionBufferTime;
 
     //shrapnel stuff
     int numShrapnel;

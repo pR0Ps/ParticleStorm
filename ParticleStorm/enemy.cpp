@@ -16,7 +16,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
     this->y=y;
     this->x_tar = x_tar;
     this->y_tar = y_tar;
-
+    this->collisionBufferTime = 0;
     //calculating the x and y distance from enemy spawn and current player position
     double x_dist = x_tar - x;
     double y_dist = y_tar - y;
@@ -97,6 +97,10 @@ void Enemy::update(double deltaTime){
     else{
         //healer
     }
+
+    if(collisionBufferTime > 0)
+        collisionBufferTime -= deltatime;
+
 }
 
 void Enemy::draw() const{
