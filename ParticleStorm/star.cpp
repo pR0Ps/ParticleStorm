@@ -7,6 +7,7 @@
 const float Star::FORCE_DISSIPATION;
 const int Star::EXTRA_BOUNDS;
 const int Star::FORCE_EXERT;
+const double Star::FORCE_CUTOFF;
 const int Star::MAX_DIST;
 
 Star::Star():GameObject(){
@@ -57,6 +58,9 @@ void Star::pan(double x, double y){
 
 void Star::applyForce(double x, double y, double mag){
     double dist = Util::distance(this->x,this->y,x,y);
+
+    if (dist > FORCE_CUTOFF) return;
+
     if(dist == 0) {
         dist = 0.0001; //avoiding a div by 0 error in the next step
     }

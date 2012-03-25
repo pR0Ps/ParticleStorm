@@ -9,9 +9,10 @@
 class Star : public GameObject
 {
 public:
-    static const float FORCE_DISSIPATION = 50;
+    static const float FORCE_DISSIPATION = 25;
     static const int EXTRA_BOUNDS = 0;
     static const int FORCE_EXERT = 5000;
+    static const double FORCE_CUTOFF = 250;
     static const int MAX_DIST = 10;
 
     Star();

@@ -10,6 +10,7 @@ const int Particle::MAX_PARTICLE_SPEED;
 const float Particle::SPEED_MULTIPLIER;
 const float Particle::AIR_RESIST;
 const float Particle::FORCE_DISSIPATION;
+const double Particle::FORCE_CUTOFF;
 const int Particle::FORCE_EXERT;
 const double Particle::INITITAL_TTL;
 
@@ -45,10 +46,11 @@ void Particle::draw() const{
 }
 
 void Particle::applyForce(double x, double y, double mag){
-
     double dist = Util::distance(this->x,this->y,x,y);
-    //calculating and updating x and y velocity using a 1/dist magnitude scaling
 
+    if (dist > FORCE_CUTOFF) return;
+
+    //calculating and updating x and y velocity using a 1/dist magnitude scaling
     if(dist == 0) {
         dist = 0.0001; //avoiding a div by 0 error in the next step
     }
