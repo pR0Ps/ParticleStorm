@@ -263,10 +263,31 @@ void ObjectManager::doEnemyParticleCollisions(){
 
 void ObjectManager::doPlayerEnemyCollisions(){
 
+    std::vector<GameObject*> enemies = getVector(ENEMY);
+
+    for(unsigned int i = 0; i < enemies.size(); i++) {
+        if(enemies[i]->getInUse()) { //enemies vector stores unused enemies
+
+            if(Util::magnitude(player->getX()-enemies[i]->getX(),player->getY()-enemies[i]->getY()) < static_cast<enemy*>(enemies[i])->getRadius()) {
+                //do player enemy collision
+            }
+        }
+    }
+
 }
 
 void ObjectManager::doPlayerPowerupCollisions(){
 
+    std::vector<GameObject*> powerups = getVector(POWERUP);
+
+    for(unsigned int i = 0; i < powerups.size(); i++) {
+        if(powerup[i]->getInUse()) { //enemies vector stores unused enemies
+
+            if(Util::magnitude(player->getX()-powerups[i]->getX(),player->getY()-powerups[i]->getY()) < static_cast<powerup*>(powerups[i])->getRadius()) {
+                //do player powerups collision
+            }
+        }
+    }
 }
 
 //spawning
