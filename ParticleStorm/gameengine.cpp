@@ -11,7 +11,7 @@ const int GameEngine::MAX_FPS;
 const int GameEngine::FPS_COUNT_FRAME_INTERVAL;
 const int GameEngine::LINES_PER_FADE;
 const int GameEngine::CLEAR_BORDER_AMT;
-const int GameEngine::GAME_OVER_FRAMES;
+const double GameEngine::GAME_OVER_SECONDS;
 const float GameEngine::PAN_SPEED;
 
 GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
@@ -31,9 +31,10 @@ GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
     keyMap.insert(Qt::Key_D, PULL);
     keyMap.insert(Qt::Key_Space, ABILITY);
     keyMap.insert(Qt::Key_Control, CHGABILITY);
+    keyMap.insert(Qt::Key_Escape, EXIT);
 
     //init keypress arrays
-    for (int i = 0 ; i < CHGABILITY+1 ; i++){
+    for (int i = 0 ; i < EXIT+1 ; i++){
         oldKeys[i] = currKeys[i] = false;
     }
 
@@ -120,7 +121,6 @@ void GameEngine::keyReleaseEvent(QKeyEvent * event){
         currKeys[keyMap.value(event->key())] = false;
 }
 
-QMap<int, int> keyMap;
 //resets the game
 void GameEngine::reset(){
     if (gameClock != 0){
@@ -137,7 +137,7 @@ void GameEngine::reset(){
 void GameEngine::start(){
     //game states
     paused = false;
-    gameOverFrames = 0;
+    gameOverTimer = 0;
 
     //FPS stuff
     framecnt = 0;
@@ -216,9 +216,9 @@ void GameEngine::update(){
     }
 
     //game over
-    if (gameOverFrames > 0 || objectManager->getPlayer()->getLife() == 0){
-        gameOverFrames++;
-        if (gameOverFrames > GAME_OVER_FRAMES){
+    if (gameOverTimer > 0 || objectManager->getPlayer()->getLife() == 0){
+        gameOverTimer += deltaTime;
+        if (gameOverTimer > GAME_OVER_SECONDS){
             paused = true;
             MainWindow::getInstance()->doneGame(objectManager->getPlayer()->getScore());
         }
@@ -230,8 +230,12 @@ void GameEngine::update(){
     //game stuff
 
     //deal with keyboard input
-    for (int i = 0 ; i < CHGABILITY+1 ; i++){
+    for (int i = 0 ; i < EXIT+1 ; i++){
         oldKeys[i] = currKeys[i];
+    }
+    //should add a pause option here as well
+    if (keyPressed(EXIT)){
+        exit(0);
     }
 
     //pan everything
@@ -263,7 +267,7 @@ void GameEngine::update(){
 
 //draws everything - automatically called by timer
 void GameEngine::paintGL(){
-    if (gameOverFrames == 0){
+    if (gameOverTimer == 0){
         //draw the game
 
         /*Draw method:

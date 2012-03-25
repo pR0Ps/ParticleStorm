@@ -31,7 +31,7 @@ public:
     static double atand(double y,double x){return atan2(y,x)*(180/PI); }
 
     //random stuff
-    static int randInt(int min, int max){return qrand() % (max - min) + min;}
+    static int randInt(int min, int max){return qrand() % (max - min + 1) + min;}
 
     //because floor doesn't actually return an int (WRYYY?)
     static int flr (double d){return static_cast<int>(floor(d));}

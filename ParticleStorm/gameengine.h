@@ -21,7 +21,7 @@ public:
     static const int FPS_COUNT_FRAME_INTERVAL = 50;
     static const int LINES_PER_FADE = 400;
     static const int CLEAR_BORDER_AMT = 15;
-    static const int GAME_OVER_FRAMES = 200;
+    static const double GAME_OVER_SECONDS = 5;
     static const float PAN_SPEED = 0.5;
 
     enum Keys{
@@ -29,7 +29,8 @@ public:
         PUSH,
         PULL,
         ABILITY,
-        CHGABILITY //MUST BE LAST
+        CHGABILITY,
+        EXIT //MUST BE LAST
     };
 
     //access mouse state
@@ -54,8 +55,8 @@ private:
     void keyPressEvent(QKeyEvent * event);
     void keyReleaseEvent(QKeyEvent * event);
     QMap<int, int> keyMap;
-    bool currKeys[CHGABILITY+1];
-    bool oldKeys[CHGABILITY+1];
+    bool currKeys[EXIT+1];
+    bool oldKeys[EXIT+1];
 
     //call the main frameloop
     void timerEvent(QTimerEvent *);
@@ -79,7 +80,7 @@ private:
 
     //game modifiers
     bool paused;
-    unsigned int gameOverFrames;
+    double gameOverTimer;
 
     //flag for initially clearing the framebuffer
     bool initialClear;
