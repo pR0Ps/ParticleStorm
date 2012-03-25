@@ -296,8 +296,20 @@ void ObjectManager::doPlayerPowerupCollisions(){
 
 bool ObjectManager::playerCollision(double px1, double py1, double px2, double py2, double ex, double ey, double radius) {
 
-    //haven't implemented vertical path case yet
+    //checking that enemy is in the player path range
+    double playerAngle = Util::atand(py2-py1,px2-px1);
+    double angle1 = Util::atand(ey-py1,ex-px1) - playerAngle;
+    double angle2 = Util::atand(ey-py2,ex-px2) - playerAngle;
 
+    if(angle1 > 90 && angle1 < 270){
+        return Util::magnitude(px1-ex,py1-ey) < radius;
+    }
+
+    if(angle2 < 90 && angle2 > 270) {
+        return Util::magnitude(px2-ex,py2-ey) < radius;
+    }
+
+    //checking for non moving player case
     if((px1 == px2) && (py1 == py2)) {
 
        return Util::magnitude(px1-ex,py1-ey) < radius;
