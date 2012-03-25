@@ -18,24 +18,6 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
     this->x_tar = x_tar;
     this->y_tar = y_tar;
     this->collisionBufferTime = 0;
-    //calculating the x and y distance from enemy spawn and current player position
-    double x_dist = x_tar - x;
-    double y_dist = y_tar - y;
-
-    //calculate angle in radians
-    double theta = atan(y_dist/x_dist);
-
-    //calculating the x and y values to make a unit vector pointing at player
-    x_vel = cos(theta);
-    y_vel = sin(theta);
-    /*if(x_tar < x && y_tar < y){
-        x_vel = -x_vel;
-        y_vel = -y_vel;
-    }
-    else if(x_tar < x && y_tar > y)
-        x_vel = -x_vel;
-    else if(x_tar > x && y_tar < y)
-        y_vel = -y_vel;*/
 
     //give starting stats depending on type
     if(type == ObjectManager::GRUNT){
@@ -45,6 +27,25 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         numShrapnel = 4;
         shrapnelLen = 40;
         radius = 20;
+
+        //calculating the x and y distance from enemy spawn and current player position
+        double x_dist = x_tar - x;
+        double y_dist = y_tar - y;
+
+        //calculate angle in radians
+        double theta = atan(y_dist/x_dist);
+
+        //calculating the x and y values to make a unit vector pointing at player
+        x_vel = cos(theta);
+        y_vel = sin(theta);
+        if(x_tar < x && y_tar < y){
+            x_vel = -x_vel;
+            y_vel = -y_vel;
+        }
+        else if(x_tar < x && y_tar > y)
+            x_vel = -x_vel;
+        else if(x_tar > x && y_tar < y)
+            y_vel = -y_vel;
     }
     else if(type == ObjectManager::HEALER){
         maxLife = life = 100;
@@ -61,6 +62,25 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         numShrapnel = 8;
         shrapnelLen = 15;
         radius = 30;
+
+        //calculating the x and y distance from enemy spawn and current player position
+        double x_dist = x_tar - x;
+        double y_dist = y_tar - y;
+
+        //calculate angle in radians
+        double theta = atan(y_dist/x_dist);
+
+        //calculating the x and y values to make a unit vector pointing at player
+        x_vel = cos(theta);
+        y_vel = sin(theta);
+        if(x_tar < x && y_tar < y){
+            x_vel = -x_vel;
+            y_vel = -y_vel;
+        }
+        else if(x_tar < x && y_tar > y)
+            x_vel = -x_vel;
+        else if(x_tar > x && y_tar < y)
+            y_vel = -y_vel;
     }
     else if(type == ObjectManager::SPRINTER){
         maxLife = life = 100;
@@ -69,6 +89,25 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         numShrapnel = 4;
         shrapnelLen = 30;
         radius = 15;
+
+        //calculating the x and y distance from enemy spawn and current player position
+        double x_dist = x_tar - x;
+        double y_dist = y_tar - y;
+
+        //calculate angle in radians
+        double theta = atan(y_dist/x_dist);
+
+        //calculating the x and y values to make a unit vector pointing at player
+        x_vel = cos(theta);
+        y_vel = sin(theta);
+        if(x_tar < x && y_tar < y){
+            x_vel = -x_vel;
+            y_vel = -y_vel;
+        }
+        else if(x_tar < x && y_tar > y)
+            x_vel = -x_vel;
+        else if(x_tar > x && y_tar < y)
+            y_vel = -y_vel;
     }
     else if(type == ObjectManager::SHOOTER){
         maxLife = life = 75;
@@ -94,6 +133,11 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
 }
 
 void Enemy::update(double deltaTime){
+
+    if(abs(x - x_tar) == 2048 || abs(y - y_tar) == 1536){
+        die();
+    }
+
     if(type == ObjectManager::GRUNT || type == ObjectManager::TANK || type == ObjectManager::SPRINTER){
 
         x += x_vel * speed * deltaTime;
@@ -101,7 +145,35 @@ void Enemy::update(double deltaTime){
 
     }
     else if(type == ObjectManager::SHOOTER){
-        //shooter
+
+        //move to either top or bottom of screen, depending on which is closer
+        if(x < ((GameEngine::MAX_X)/2) && x > 10){
+            x -= speed * deltaTime;
+        }
+        else if(x >= ((GameEngine::MAX_X)/2) && x < 758){
+            x += speed * deltaTime;
+        }
+        else if(x > 758){
+            x -= speed * deltaTime;
+        }
+        else if(x < 10){
+            x += speed * deltaTime;
+        }
+
+        //move to either left or right of screen, depending on which is closer
+        if(y < ((GameEngine::MAX_Y)/2) && y > 10){
+            y -= speed * deltaTime;
+        }
+        else if(y >= ((GameEngine::MAX_Y)/2) && y < 1014){
+            y += speed * deltaTime;
+        }
+        else if(y > 1014){
+            y -= speed * deltaTime;
+        }
+        else if(y < 10){
+            y += speed * deltaTime;
+        }
+
     }
     else{
         //healer

@@ -155,12 +155,12 @@ void GameEngine::start(){
     gameClock = startTimer(1/(double)MAX_FPS*1000);
 
     //spawn some testing enemies
-    objectManager->spawnEnemy(ObjectManager::GRUNT, 100, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
-    objectManager->spawnEnemy(ObjectManager::HEALER, 200, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
-    objectManager->spawnEnemy(ObjectManager::TANK, 300, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
-    objectManager->spawnEnemy(ObjectManager::SPRINTER, 400, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
+    //objectManager->spawnEnemy(ObjectManager::GRUNT, 100, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
+    //objectManager->spawnEnemy(ObjectManager::HEALER, 200, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
+    //objectManager->spawnEnemy(ObjectManager::TANK, 300, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
+    //objectManager->spawnEnemy(ObjectManager::SPRINTER, 400, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
     objectManager->spawnEnemy(ObjectManager::SHOOTER, 500, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
-    objectManager->spawnEnemy(ObjectManager::BULLET, 600, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
+    //objectManager->spawnEnemy(ObjectManager::BULLET, 600, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
 
     objectManager->spawnPowerup(ObjectManager::HEALTH, 700, 100, 50, 50, 50);
 }
@@ -329,3 +329,23 @@ void GameEngine::paintGL(){
     }
 }
 
+void spawnPosition(){
+    /*
+    int start = qrand()%4;
+    if(start == 0){
+        x_start = 0;
+        y_start = qrand()%768;
+    }
+    else if(start == 1){
+        x_start = 1024;
+        y_start = qrand()%768;
+    }
+    else if(start == 2){
+        x_start = qrand()%1024;
+        y_start = 0;
+    }
+    else if(start == 3){
+        x_start = qrand()%1024;
+        y_start = 768;
+    }*/
+}

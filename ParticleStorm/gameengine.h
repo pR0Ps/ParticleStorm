@@ -88,6 +88,9 @@ private:
     //stores the current amount to pan
     double panX, panY;
 
+    //random spawn coordinates for enemies
+    double x_start, y_start;
+
 protected:
     //overrides
     void initializeGL();
