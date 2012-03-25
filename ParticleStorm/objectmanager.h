@@ -13,6 +13,8 @@
 #include <vector>
 
 class ObjectManager;
+class Enemy; // forward declaration of Enemy class (needed for compilation)
+
 class ObjectManager{
 public:
     ObjectManager();
@@ -85,7 +87,17 @@ public:
     void spawnShrapnel (double x, double y, double x_vel, double y_vel, int num, double len, const QColor *clr);
 
     //enemy stuff
-    //Enemy* getClosestEnemy(double x, double y, double min_dist = 1);
+    /*
+     * Finds the closest enemy relative to the x and y screen coordinates. The
+     * minDistance and maxDistance parameters form bounds on how close or far
+     * away the Enemy must be to be considered "close" to the given coordinates.
+     *
+     * Note: minDistance should be greater than 0 when the coordinates given are
+     * of an enemy, otherwise the closest enemy will be determined to be the
+     * enemy itself.
+     */
+    Enemy* getClosestEnemy(double x, double y, double minDistance = 1,
+            double maxDistance = 1000);
 
     //get the object manager instance
     static ObjectManager* getInstance(){return instance;}

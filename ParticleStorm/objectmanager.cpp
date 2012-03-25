@@ -383,6 +383,26 @@ void ObjectManager::spawnShrapnel(const double x, const double y, const double x
     }
 }
 
-//Enemy* ObjectManager::getClosestEnemy(const double x, const double y, const double min_dist){
-//    return NULL;
-//}
+Enemy* ObjectManager::getClosestEnemy(double x, double y, double minDistance,
+                                      double maxDistance) {
+    Enemy* closestEnemy = NULL;
+    int closestDistance = INT_MAX;
+
+    for (unsigned int i = 0; i < enemies->size(); i++) {
+        // The cast is needed because the enemies vector is declared as a
+        // vector of GameObject pointers.
+        Enemy* currentEnemy = dynamic_cast<Enemy*> (enemies->at(i));
+        int distance = Util::distance(x, y, currentEnemy->getX(),
+                                      currentEnemy->getY());
+
+        // Perform bounds checking on the distance to the currently selected
+        // enemy and determine if this is the new closest enemy.
+        if (distance >= minDistance && distance <= maxDistance &&
+                distance < closestDistance) {
+            closestEnemy = currentEnemy;
+            closestDistance = distance;
+        }
+    }
+
+    return closestEnemy;
+}
