@@ -2,7 +2,7 @@
  * Implementation file for the Player class.
  *
  * Last modified by: Luke
- * Last modified on: March 4, 2012
+ * Last modified on: March 25, 2012
  */
 
 #include "player.h"
@@ -18,6 +18,7 @@ const int Player::MAX_DIAMETER;
 const int Player::RING_SIZE;
 const int Player::PARTICLE_SPACING;
 const int Player::RAM_DAMAGE;
+const double Player::TIME_BETWEEN_CHG_ABILITY;
 
 // Implementation of constructor and destructor.
 
@@ -41,7 +42,7 @@ Player::~Player() {
 }
 
 //resets all the player attributes to their original values - this is called at
-// the end of the constructor
+//the end of the constructor
 void Player::reset(){
     // *This must be defined in the body of the constructor, since it is
     // inherited from the GameObject class (see the C++ Programming Tips page on
@@ -63,6 +64,12 @@ void Player::reset(){
 
     //set initial score
     score = 0;
+    currentAbility = VORTEX;
+
+    // Initialize variables for keeping track of when change ability was last
+    // used.
+    chgAbilityActivatedOnLastUpdate = false;
+    timeSinceLastChgAbility = 0;
 }
 
 
@@ -89,7 +96,7 @@ void Player::update(double deltaTime) {
     // otherwise leave the avatar's position unchanged
 
     // Perform an ability if any have been activated.
-    performAbility();
+    performAbility(deltaTime);
 }
 
 //draw the player
@@ -143,8 +150,9 @@ bool Player::isValidMousePos(const QPoint& pos) {
             (mouseY >= 0 && mouseY <= GameEngine::MAX_Y);
 }
 
-void Player::performAbility() {
+void Player::performAbility(double deltaT) {
     // Refetch the object manager and main window instances.
+    // (Should pass these as parameters.)
     ObjectManager* manager = ObjectManager::getInstance();
     MainWindow* window = MainWindow::getInstance();
 
@@ -185,8 +193,18 @@ void Player::performAbility() {
         useAbility();
 
     // Change special ability.
-    else if (window->keyPressed(GameEngine::CHGABILITY))
-        changeAbility();
+    else if (window->keyPressed(GameEngine::CHGABILITY)) {
+        changeAbility(deltaT);
+        chgAbilityActivatedOnLastUpdate = true;
+    }
+
+    // If the change ability button is not pressed, then reset the variables for
+    // keeping track of how often the player's special ability can be changed.
+    // (This should possibly be in a separate if statement instead of an else.)
+    else {
+        chgAbilityActivatedOnLastUpdate = false;
+        timeSinceLastChgAbility = 0;
+    }
 }
 
 void Player::useAbility() const {
@@ -204,10 +222,20 @@ void Player::useAbility() const {
     }
 }
 
-void Player::changeAbility() {
-    if (currentAbility == SHOCKWAVE)
-        // then wraparound back to vortex
-        currentAbility = VORTEX;
+void Player::changeAbility(double deltaT) {
+    // If the change ability button was not pressed on the last update or the
+    // button has been held down long enough to change the ability again then go
+    // ahead and change it.
+    if (!chgAbilityActivatedOnLastUpdate ||
+            timeSinceLastChgAbility > TIME_BETWEEN_CHG_ABILITY) {
+        if (currentAbility == SHOCKWAVE)
+            // then wraparound back to vortex
+            currentAbility = VORTEX;
+        else
+            currentAbility++;
+
+        timeSinceLastChgAbility = 0;
+    }
     else
-        currentAbility++;
+        timeSinceLastChgAbility += deltaT;
 }

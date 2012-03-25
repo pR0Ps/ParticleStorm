@@ -61,6 +61,10 @@ public:
         SHOCKWAVE
     };
 
+    // The amount of time that must pass before the player's special ability can
+    // be changed when the change ability button is held down continuously.
+    static const double TIME_BETWEEN_CHG_ABILITY = 0.5; // measured in seconds
+
     // Constructor/destructor.
     Player();
     ~Player();
@@ -88,7 +92,8 @@ public:
     int getMana() const {return mana;}
     int getMaxMana() const {return MAX_MANA;}
     float getManaPercent() const {return mana/(float)MAX_MANA;}
-    //maybe change to diameter if needed, but I think most calculations should use radius
+    //maybe change to diameter if needed, but I think most calculations should
+    //use radius
     double getRadius () const {return (MAX_DIAMETER * getLifePercent())/2.0;}
 
     //score stuff
@@ -108,8 +113,8 @@ public:
     void modMana(int amount, bool rel = true);
 
     /*
-     * Returns a string representation of the player's currently selected ability for
-     * display in the game HUD.
+     * Returns a string representation of the player's currently selected
+     * ability for display in the game HUD.
      */
     string getAbilityString() const;
 
@@ -119,7 +124,12 @@ private:
     double x_old, y_old;
     int mana;
     long int score;
-    int currentAbility; // the player's currently selected special ability
+    // The player's currently selected special ability. This should only be
+    // assigned values from the ability enum.
+    int currentAbility;
+    // Variables for keeping track of how often change ability can be activated.
+    bool chgAbilityActivatedOnLastUpdate;
+    double timeSinceLastChgAbility; // measured in seconds
 
     // Private member functions.
     /*
@@ -136,8 +146,10 @@ private:
     /*
      * Polls the user's input and performs the appropriate ability if one has
      * been activated.
+     *
+     * Parameter: the time since the last call to update.
      */
-    void performAbility();
+    void performAbility(double deltaT);
 
     /*
      * Performs the player's currently selected special ability when the special
@@ -147,9 +159,13 @@ private:
 
     /*
      * Advances the player's currently selected special ability to the next one
-     * in the sequence when the change ability button is pressed.
+     * in the sequence when the change ability button is pressed. The ability
+     * can be changed a limited number of times per second when the change
+     * ability button is held down.
+     *
+     * Parameter: the time since the last call to update.
      */
-    void changeAbility();
+    void changeAbility(double deltaT);
 };
 
 #endif // PLAYER_H
