@@ -44,6 +44,7 @@ private:
     double x_tar, y_tar;
     double radius;
     double collisionBufferTime;
+    int horVert;
 
     //shrapnel stuff
     int numShrapnel;
