@@ -111,6 +111,7 @@ private:
 
     //sets all the objects as inactive
     void deactivateAll(ObjectType t);
+    bool playerCollision(double, double, double, double, double, double,double);
 };
 
 #endif // OBJECTMANAGER_H

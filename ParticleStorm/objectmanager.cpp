@@ -270,7 +270,7 @@ void ObjectManager::doPlayerEnemyCollisions(){
     for(unsigned int i = 0; i < enemies.size(); i++) {
         if(enemies[i]->getInUse()) { //enemies vector stores unused enemies
 
-            if(!static_cast<Enemy*>(enemies[i])->isImmune() && Util::magnitude(player->getX()-enemies[i]->getX(),player->getY()-enemies[i]->getY()) < static_cast<Enemy*>(enemies[i])->getRadius()) {
+            if(!static_cast<Enemy*>(enemies[i])->isImmune() && playerCollision(player->getX(),player->getY(),player->getXOld(),player->getYOld(),enemies[i]->getX(),enemies[i]->getY(),static_cast<Enemy*>(enemies[i])->getRadius())) {
                 player->modLife(-static_cast<Enemy*>(enemies[i])->getDamage(),true);
                 enemies[i]->modLife(-Player::RAM_DAMAGE,true);
                 static_cast<Enemy*>(enemies[i])->setImmune();
@@ -287,11 +287,32 @@ void ObjectManager::doPlayerPowerupCollisions(){
     for(unsigned int i = 0; i < powerups.size(); i++) {
         if(powerups[i]->getInUse()) { //enemies vector stores unused enemies
 
-            if(Util::magnitude(player->getX()-powerups[i]->getX(),player->getY()-powerups[i]->getY()) < static_cast<Powerup*>(powerups[i])->getRadius()) {
+            if(playerCollision(player->getX(),player->getY(),player->getXOld(),player->getYOld(), powerups[i]->getX(),powerups[i]->getY(),static_cast<Powerup*>(powerups[i])->getRadius())) {
                 //do player powerups collision
             }
         }
     }
+}
+
+bool ObjectManager::playerCollision(double px1, double py1, double px2, double py2, double ex, double ey, double radius) {
+
+    //haven't implemented vertical path case yet
+
+    if((px1 == px2) && (py1 == py2)) {
+
+       return Util::magnitude(px1-ex,py1-ey) < radius;
+    }
+
+    double m = (py2-py1)/(px2-px1);
+    double B = py1 - m*px1;
+
+    double a = py2-py1;
+    double b = px1-px2;
+    double c = -B*b;
+
+    double dist = fabs(a*ex+b*ey+c)/Util::magnitude(a,b);
+
+    return dist <= radius;
 }
 
 //spawning
