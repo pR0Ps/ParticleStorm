@@ -29,8 +29,8 @@ void Powerup::draw() const{
     glLoadIdentity();
     glTranslated(x, y, 0);
     glRotated(angle, 0, 0, 1);
-    Util::drawLine(-10, -10, 0, 10, clr);
-    Util::drawLine(-10, -10, 10, -10, clr);
+    Util::drawLine(-12, -10, 0, 10, clr);
+    Util::drawLine(-12, -10, 12, -10, clr);
     Util::drawLine(10, -10, 0, 10, clr);
     glPopMatrix();
 }
