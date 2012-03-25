@@ -107,6 +107,17 @@ void GameEngine::initializeGL(){
     objectManager = new ObjectManager();
 }
 
+//keyboard stuff
+void GameEngine::keyPressEvent(QKeyEvent * event){
+    if (keyMap.contains(event->key()))
+        currKeys[keyMap.value(event->key())] = true;
+}
+void GameEngine::keyReleaseEvent(QKeyEvent * event){
+    if (keyMap.contains(event->key()))
+        currKeys[keyMap.value(event->key())] = false;
+}
+
+QMap<int, int> keyMap;
 //resets the game
 void GameEngine::reset(){
     if (gameClock != 0){

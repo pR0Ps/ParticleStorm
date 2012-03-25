@@ -51,8 +51,8 @@ private:
     Qt::MouseButtons mouseState;
 
     //keyboard stuff
-    void keyPressEvent(QKeyEvent * event){currKeys[keyMap.value(event->key())] = true;}
-    void keyReleaseEvent(QKeyEvent * event){currKeys[keyMap.value(event->key())] = false;}
+    void keyPressEvent(QKeyEvent * event);
+    void keyReleaseEvent(QKeyEvent * event);
     QMap<int, int> keyMap;
     bool currKeys[CHGABILITY+1];
     bool oldKeys[CHGABILITY+1];

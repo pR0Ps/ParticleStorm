@@ -16,7 +16,7 @@ public:
     static const float AIR_RESIST = 1;
     static const float FORCE_DISSIPATION = 5;
     static const int FORCE_EXERT = 100000;
-    static const double INITITAL_TTL = 10;
+    static const double INITITAL_TTL = 20;
 
     void draw() const;
     void update(double deltaTime);
