@@ -33,40 +33,40 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         speed = 1;
         damage = 10;
         numShrapnel = 4;
-        shrapnelLen = 70;
-        radius = 35;
+        shrapnelLen = 40;
+        radius = 20;
     }
     else if(type == ObjectManager::HEALER){
         maxLife = life = 100;
         speed = 1;
         damage = 10;
         numShrapnel = 6;
-        shrapnelLen = 15;
-        radius = 20;
+        shrapnelLen = 10;
+        radius = 15;
     }
     else if(type == ObjectManager::TANK){
         maxLife = life = 300;
         speed = 0.5;
         damage = 10;
         numShrapnel = 8;
-        shrapnelLen = 30;
-        radius = 55;
+        shrapnelLen = 15;
+        radius = 30;
     }
     else if(type == ObjectManager::SPRINTER){
         maxLife = life = 100;
         speed = 2;
         damage = 10;
         numShrapnel = 4;
-        shrapnelLen = 50;
-        radius = 25;
+        shrapnelLen = 30;
+        radius = 15;
     }
     else if(type == ObjectManager::SHOOTER){
         maxLife = life = 75;
         speed = 1;
         damage = 10;
         numShrapnel = 4;
-        shrapnelLen = 40;
-        radius = 20;
+        shrapnelLen = 25;
+        radius = 12;
     }
     else if (type == ObjectManager::BULLET){
         maxLife = life = 10;
@@ -74,7 +74,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         damage = 10;
         numShrapnel = 0;
         shrapnelLen = 0;
-        radius = 15;
+        radius = 7;
     }
     else{
         qDebug() << "bad enemy type";
@@ -99,8 +99,8 @@ void Enemy::update(double deltaTime){
 }
 
 void Enemy::draw() const{
-    Util::drawOctagon(x, y, radius, false, clr);
-    //Util::drawBox(x-100,y-100,x+100,y+100,false,clr);
+    Util::drawOctagon(x, y, radius * 2, false, clr);
+    Util::drawBox(x-radius,y-radius,x+radius,y+radius,false,clr);
 }
 
 //pan the enemy (and their target)

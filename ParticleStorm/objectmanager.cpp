@@ -246,18 +246,11 @@ void ObjectManager::doEnemyParticleCollisions(){
     std::vector<GameObject*> enemies = getVector(ENEMY);
 
     for(unsigned int i = 0; i < enemies.size(); i++) {
-
-        //enemy = enemies[i];
-
         if(enemies[i]->getInUse()) { //enemies vector stores unused enemies
-
             for(unsigned int j = 0; j < particles.size(); j++) {
-
-                //particle = particles[j];
-
                 if(particles[j]->getInUse()) {
 
-                    if(Util::magnitude(particles[j]->getX()-enemies[i]->getX(),particles[j]->getY()-enemies[i]->getY()) < static_cast<Enemy*>(enemies[i])->getRadius()) {
+                    if(Util::distance(particles[j]->getX(), particles[j]->getY(), enemies[i]->getX(), enemies[i]->getY()) < static_cast<Enemy*>(enemies[i])->getRadius()) {
                         enemies[i]->modLife(-static_cast<Particle*>(particles[j])->getSpeedPercent() * Enemy::MAX_DAMAGE,true); //for death by damage
                         particles[j]->die();
                         //enemy isn't dead (that we know of) so no shrapnel yet
@@ -288,7 +281,12 @@ void ObjectManager::spawnParticle(const double x, const double y){
 }
 
 void ObjectManager::spawnPowerup (PowerupType t, double x, double y, double x_vel, double y_vel, int value){
-    static_cast<Powerup*>(getUnused(POWERUP))->startPowerup(t, x, y, x_vel, y_vel, value);
+    GameObject* temp = getUnused(POWERUP);
+    if (temp == NULL){
+        qDebug() << "allocated too many powerups";
+        exit(1);
+    }
+    static_cast<Powerup*>(temp)->startPowerup(t, x, y, x_vel, y_vel, value);
 }
 
 void ObjectManager::spawnEnemy(EnemyType t, const double x, const double y, const double x_tar, const double y_tar){
@@ -313,7 +311,12 @@ void ObjectManager::spawnEnemy(EnemyType t, const double x, const double y, cons
         y = 768;
     }
     */
-    static_cast<Enemy*>(getUnused(ENEMY))->startEnemy(t, x, y, x_tar, y_tar);
+    GameObject* temp = getUnused(ENEMY);
+    if (temp == NULL){
+        qDebug() << "allocated too many enemies";
+        exit(1);
+    }
+    static_cast<Enemy*>(temp)->startEnemy(t, x, y, x_tar, y_tar);
 }
 
 void ObjectManager::spawnShrapnel(const double x, const double y, const double x_vel, const double y_vel, const int num, const double len, const QColor *clr){

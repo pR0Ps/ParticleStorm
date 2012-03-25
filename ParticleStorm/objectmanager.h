@@ -19,7 +19,7 @@ public:
     ~ObjectManager();
 
     //constants (redeclare in implementation)
-    static const int MAX_PARTICLES = 200;
+    static const int MAX_PARTICLES = 500;
     static const int MAX_ENEMIES = 20;
     static const int MAX_POWERUPS = 20;
     static const int MAX_SHRAPNEL = 40;
