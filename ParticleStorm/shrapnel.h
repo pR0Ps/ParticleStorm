@@ -8,7 +8,8 @@ class Shrapnel : public GameObject
 public:
     //redeclare in cpp file
     static const int MAX_SHRAPNEL_SPEED = 100;
-    static const int INITIAL_PUSH = 100;
+    static const int INITIAL_PUSH_MIN = 40;
+    static const int INITIAL_PUSH_MAX = 140;
     static const int MAX_ROTATION_SPD = 600;
     static const double INITIAL_TTL = 1.5;
     static const int MAX_SHRAPNEL_LENGTH =10;

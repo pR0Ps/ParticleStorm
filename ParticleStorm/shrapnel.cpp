@@ -2,7 +2,8 @@
 #include "util.h"
 
 const int Shrapnel::MAX_SHRAPNEL_SPEED;
-const int Shrapnel::INITIAL_PUSH;
+const int Shrapnel::INITIAL_PUSH_MAX;
+const int Shrapnel::INITIAL_PUSH_MIN;
 const int Shrapnel::MAX_ROTATION_SPD;
 const double Shrapnel::INITIAL_TTL;
 const int Shrapnel::MAX_SHRAPNEL_LENGTH;
@@ -25,8 +26,8 @@ void Shrapnel::startShrapnel(double x, double y, double x_vel, double y_vel, dou
         tempx /= mag * MAX_SHRAPNEL_SPEED;
         tempy /= mag * MAX_SHRAPNEL_SPEED;
     }
-    this->x_vel = INITIAL_PUSH * Util::cosd(tempa) + tempx / 2.0f;
-    this->y_vel = INITIAL_PUSH * Util::sind(tempa) + tempy / 2.0f;
+    this->x_vel = Util::randInt(INITIAL_PUSH_MIN, INITIAL_PUSH_MAX)  * Util::cosd(tempa) + tempx / 2.0f;
+    this->y_vel = Util::randInt(INITIAL_PUSH_MIN, INITIAL_PUSH_MAX) * Util::sind(tempa) + tempy / 2.0f;
 
     this->spin = Util::randInt(-MAX_ROTATION_SPD, MAX_ROTATION_SPD);
     this->len = len;
