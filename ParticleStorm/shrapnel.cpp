@@ -63,12 +63,12 @@ void Shrapnel::draw() const{
 */
 
 
- //glPushMatrix();
- //glLoadIdentity();
- //glTranslated(x, y, 0);
- //glRotated(angle, 0, 0, 1);
- Util::drawLine(x,y, x+MAX_SHRAPNEL_LENGTH, y+MAX_SHRAPNEL_LENGTH, clr);
- //glPopMatrix();
+ glPushMatrix();
+ glLoadIdentity();
+ glTranslated(x, y, 0);
+ glRotated(angle, 0, 0, 1);
+ Util::drawLine(-10,-10, MAX_SHRAPNEL_LENGTH, MAX_SHRAPNEL_LENGTH, clr);
+ glPopMatrix();
 
 
     }
