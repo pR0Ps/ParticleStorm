@@ -40,12 +40,14 @@ private:
     GameEngine *engine;
 
     struct mStar{
-        double x;
-        double y;
+        double x, x_old;
+        double y, y_old;
         double dist;
         mStar(double x, double y, double dist){
             this->x = x;
             this->y = y;
+            x_old = x;
+            y_old = y;
             this->dist = dist;
         }
     };
@@ -53,12 +55,14 @@ private:
     std::vector<mStar*> *starVect;
 
     void fillStar();
+    const QColor *clr;
 
     static MainWindow *instance;
 
 protected:
     void initializeGL();
     void paintGL();
+    void update(double deltaTime);
 };
 
 #endif // MAINWINDOW_H

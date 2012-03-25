@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "gameengine.h"
+#include "util.h"
 
 MainWindow* MainWindow::instance = NULL;
 
@@ -11,9 +12,9 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
     engine = new GameEngine();
     engine->setMouseTracking(true);
 
-
-
+    clr = new QColor(255, 255, 255);
     fillStar();
+
 
     instance = this;
 
@@ -71,15 +72,27 @@ void MainWindow::initializeGL(){
 }
 
 void MainWindow::paintGL(){
+    for(int i = 0; i < NUM_STARS; i++){
+        Util::drawLine(starVect->at(i)->x, starVect->at(i)->y, starVect->at(i)->x_old, starVect->at(i)->y_old, clr);
+    }
+}
+
+
+void MainWindow::update(double deltaTime){
+    //update velocity
+    double x_vel = 10;
+    //move star
+    for(int i = 0; i < NUM_STARS; ++i){
+        starVect->at(i)->x_old =  starVect->at(i)->x;
+        starVect->at(i)->x += x_vel * deltaTime;
+    }
 
 }
 
-void MainWindow::fillStar()
-{
-    int i;
+void MainWindow::fillStar(){
     starVect = new vector<mStar*>;
     starVect->reserve(NUM_STARS);
-    for(i = 0; i < NUM_STARS; i++)
+    for(int i = 0; i < NUM_STARS; i++)
     {
         starVect->push_back(new mStar(qrand()%MAX_X, qrand()%MAX_Y, qrand()%MAX_DIST));
     }
