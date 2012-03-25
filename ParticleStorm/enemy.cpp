@@ -1,6 +1,7 @@
 #include "enemy.h"
 #include "gameengine.h"
 #include <QDebug>
+#include <cmath>
 
 const int Enemy::MAX_DAMAGE;
 
@@ -21,17 +22,25 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
     double x_dist = x_tar - x;
     double y_dist = y_tar - y;
 
-    //calculate angle
-    double theta = Util::atand(y_dist,x_dist);
+    //calculate angle in radians
+    double theta = atan(y_dist/x_dist);
 
     //calculating the x and y values to make a unit vector pointing at player
-    //x_vel = cos(theta);
-    //y_vel = sin(theta);
+    x_vel = cos(theta);
+    y_vel = sin(theta);
+    /*if(x_tar < x && y_tar < y){
+        x_vel = -x_vel;
+        y_vel = -y_vel;
+    }
+    else if(x_tar < x && y_tar > y)
+        x_vel = -x_vel;
+    else if(x_tar > x && y_tar < y)
+        y_vel = -y_vel;*/
 
     //give starting stats depending on type
     if(type == ObjectManager::GRUNT){
         maxLife = life = 100;
-        speed = 1;
+        speed = 100;
         damage = 10;
         numShrapnel = 4;
         shrapnelLen = 40;
@@ -39,7 +48,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
     }
     else if(type == ObjectManager::HEALER){
         maxLife = life = 100;
-        speed = 1;
+        speed = 100;
         damage = 10;
         numShrapnel = 6;
         shrapnelLen = 10;
@@ -47,7 +56,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
     }
     else if(type == ObjectManager::TANK){
         maxLife = life = 300;
-        speed = 0.5;
+        speed = 50;
         damage = 10;
         numShrapnel = 8;
         shrapnelLen = 15;
@@ -55,7 +64,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
     }
     else if(type == ObjectManager::SPRINTER){
         maxLife = life = 100;
-        speed = 2;
+        speed = 200;
         damage = 10;
         numShrapnel = 4;
         shrapnelLen = 30;
@@ -63,7 +72,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
     }
     else if(type == ObjectManager::SHOOTER){
         maxLife = life = 75;
-        speed = 1;
+        speed = 100;
         damage = 10;
         numShrapnel = 4;
         shrapnelLen = 25;
@@ -71,7 +80,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
     }
     else if (type == ObjectManager::BULLET){
         maxLife = life = 10;
-        speed = 10;
+        speed = 1000;
         damage = 10;
         numShrapnel = 0;
         shrapnelLen = 0;
