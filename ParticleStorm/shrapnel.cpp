@@ -6,6 +6,7 @@ const int Shrapnel::INITIAL_PUSH;
 const int Shrapnel::MAX_ROTATION_SPD;
 const double Shrapnel::INITIAL_TTL;
 const int Shrapnel::MAX_SHRAPNEL_LENGTH;
+const int Shrapnel::DECREMENT_SPEED;
 
 Shrapnel::Shrapnel():GameObject(){
 
@@ -34,18 +35,13 @@ void Shrapnel::startShrapnel(double x, double y, double x_vel, double y_vel, dou
     this->inUse = true;
 }
 
-void Shrapnel::draw() const{
-    /*int xdraw=x+10;
-    int ydraw=y+10;
-    Util::drawLine(x, y, xdraw, ydraw, clr);
-*/
-  //  */x_vel = x_vel-5;
-//    y_vel = y_vel-5;
-
-}
-
-
 void Shrapnel::update(double deltaTime){
+    x_vel -= x_vel * DECREMENT_SPEED * deltaTime;
+    y_vel -=y_vel *DECREMENT_SPEED*deltaTime;
+    x += x_vel * 5 *  deltaTime;
+    y += y_vel * 5 * deltaTime;
+
+
     //kill old shrapnel
     if (ttl <= 0)
         die();
@@ -53,6 +49,13 @@ void Shrapnel::update(double deltaTime){
         this->ttl -= deltaTime;
 
 }
+void Shrapnel::draw() const{
+    /*int xdraw=x+10;
+    int ydraw=y+10;
+    Util::drawLine(x, y, xdraw, ydraw, clr);
+*/
+    Util::drawLine(x,y, x+5, y+5, clr);
+    }
 
 void Shrapnel::applyForce(double x, double y, double mag){
 

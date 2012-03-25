@@ -10,8 +10,9 @@ public:
     static const int MAX_SHRAPNEL_SPEED = 100;
     static const int INITIAL_PUSH = 100;
     static const int MAX_ROTATION_SPD = 40;
-    static const double INITIAL_TTL = 5;
+    static const double INITIAL_TTL = 1;
     static const int MAX_SHRAPNEL_LENGTH =15;
+    static const int DECREMENT_SPEED = 5;
     Shrapnel();
 
     void draw() const;
