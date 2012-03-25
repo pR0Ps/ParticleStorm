@@ -24,34 +24,44 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
     double theta = Util::atand(y_dist,x_dist);
 
     //calculating the x and y values to make a unit vector pointing at player
-    x_vel = cos(theta);
-    y_vel = sin(theta);
+    //x_vel = cos(theta);
+    //y_vel = sin(theta);
 
     //give starting stats depending on type
     if(type == ObjectManager::GRUNT){ 			//grunt
         maxLife = life = 100;
         speed = 1;
         damage = 10;
+        numShrapnel = 4;
+        shrapnelLen = 10;
     }
     else if(type == ObjectManager::SHOOTER){ 	//shooter
         maxLife = life = 75;
         speed = 1;
         damage = 10;
+        numShrapnel = 4;
+        shrapnelLen = 4;
     }
     else if(type == ObjectManager::HEALER){ 		//healer
         maxLife = life = 100;
         speed = 1;
         damage = 10;
+        numShrapnel = 6;
+        shrapnelLen = 3;
     }
     else if(type == ObjectManager::TANK){ 		//tank
         maxLife = life = 300;
         speed = 0.5;
         damage = 10;
+        numShrapnel = 8;
+        shrapnelLen = 10;
     }
     else if(type == ObjectManager::SPRINTER){	//sprinter
         maxLife = life = 100;
         speed = 2;
         damage = 10;
+        numShrapnel = 4;
+        shrapnelLen = 8;
     }
 
     clr = ResourceManager::getInstance()->getColour(ResourceManager::RED);
@@ -86,4 +96,7 @@ void Enemy::pan(double x, double y){
 
 void Enemy::die(){
     inUse = false;
+
+    //enemy died, create some shrapnel with it's position and velocity
+    ObjectManager::getInstance()->spawnShrapnel(x, y, x_vel, y_vel, numShrapnel, shrapnelLen, clr);
 }

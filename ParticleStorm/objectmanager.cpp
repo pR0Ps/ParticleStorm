@@ -32,8 +32,9 @@ ObjectManager::ObjectManager(){
     initPool(SHRAPNEL, MAX_SHRAPNEL);
     initPool(STAR, MAX_STARS);
 
-    //set initial particle
+    //set initial index for non-essential entities
     cur_particle = 0;
+    cur_shrapnel = 0;
 
     //set self-reference
     instance = this;
@@ -218,9 +219,14 @@ GameObject* ObjectManager::getUnused(ObjectType t){
         return NULL;
     }
     else if (t == PARTICLE){
-        //special rules for particles (always reuse oldest)
+        //always reuse oldest
         cur_particle = ++cur_particle % particles->size();
         return particles->at(cur_particle);
+    }
+    else if (t == SHRAPNEL){
+        //always reuse oldest
+        cur_shrapnel = ++cur_shrapnel % shrapnel->size();
+        return shrapnel->at(cur_shrapnel);
     }
     else{
         std::vector<GameObject*> temp = getVector(t);
@@ -257,15 +263,11 @@ void ObjectManager::doEnemyParticleCollisions(){
                 //particle = particles[j];
 
                 if(particles[j]->getInUse()) {
-                    double collisionX = particles[j]->getX()- enemies[i]->getX();
-                    double collisionY = particles[j]->getY()- enemies[i]->getY();
-                    double shrapnelX = particles[j]->getX();
-                    double shrapnelY = particles[j]->getY();
-                    if(Util::magnitude(collisionX, collisionY) < enemyProxyRadius) {
+
+                    if(Util::magnitude(particles[j]->getX()-enemies[i]->getX(),particles[j]->getY()-enemies[i]->getY()) < enemyProxyRadius) {
                         enemies[i]->modLife(-static_cast<Particle*>(particles[j])->getSpeedPercent() * Enemy::MAX_DAMAGE,true); //for death by damage
                         particles[j]->die();
-                        spawnShrapnel(shrapnelX,shrapnelY);
-                        //shrapnel still needs to be implempented
+                        //enemy isn't dead (that we know of) so no shrapnel yet
                     }
                 }
             }
@@ -321,9 +323,12 @@ void ObjectManager::spawnEnemy(EnemyType t, const double x, const double y, cons
     static_cast<Enemy*>(getUnused(ENEMY))->startEnemy(t, x, y, x_tar, y_tar);
 }
 
-void ObjectManager::spawnShrapnel(const double x, const double y){
-    static_cast<Shrapnel*>(getUnused(SHRAPNEL))->makeShrapnel(x,y);
+void ObjectManager::spawnShrapnel(const double x, const double y, const double x_vel, const double y_vel, const int num, const double len, const QColor *clr){
+    for (int i = 0 ; i < num ; i++){
+        static_cast<Shrapnel*>(getUnused(SHRAPNEL))->startShrapnel(x, y, x_vel, y_vel, len, clr);
+    }
 }
+
 //Enemy* ObjectManager::getClosestEnemy(const double x, const double y, const double min_dist){
 //    return NULL;
 //}

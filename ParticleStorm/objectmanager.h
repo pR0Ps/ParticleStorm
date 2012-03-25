@@ -22,7 +22,7 @@ public:
     static const int MAX_PARTICLES = 200;
     static const int MAX_ENEMIES = 20;
     static const int MAX_POWERUPS = 20;
-    static const int MAX_SHRAPNEL = 200;
+    static const int MAX_SHRAPNEL = 40;
     static const int MAX_STARS = 250;
 
     //object types
@@ -82,7 +82,7 @@ public:
     void spawnParticle(double x, double y);
     void spawnPowerup (PowerupType t, double x, double y, double x_vel, double y_vel, int value);
     void spawnEnemy(EnemyType t, double x, double y, double x_tar = 0, double y_tar = 0);
-    void spawnShrapnel (double x, double y);
+    void spawnShrapnel (double x, double y, double x_vel, double y_vel, int num, double len, const QColor *clr);
 
     //enemy stuff
     //Enemy* getClosestEnemy(double x, double y, double min_dist = 1);
@@ -102,9 +102,9 @@ private:
     //self-reference
     static ObjectManager* instance;
 
-    //particle number
     //want to create in sequential order always
     unsigned int cur_particle;
+    unsigned int cur_shrapnel;
 
     //returns the address of the proper vector
     std::vector<GameObject*>& getVector(ObjectType t);

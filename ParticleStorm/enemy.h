@@ -36,6 +36,10 @@ private:
     double damage;
     int type;
     double x_tar, y_tar;
+
+    //shrapnel stuff
+    int numShrapnel;
+    double shrapnelLen;
 };
 
 #endif // ENEMY_H
