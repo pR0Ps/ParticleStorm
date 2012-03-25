@@ -155,12 +155,12 @@ void GameEngine::start(){
     gameClock = startTimer(1/(double)MAX_FPS*1000);
 
     //spawn some testing enemies
-    objectManager->spawnEnemy(ObjectManager::GRUNT, 100, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
-    objectManager->spawnEnemy(ObjectManager::HEALER, 200, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
-    objectManager->spawnEnemy(ObjectManager::TANK, 300, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
-    objectManager->spawnEnemy(ObjectManager::SPRINTER, 400, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
-    objectManager->spawnEnemy(ObjectManager::SHOOTER, 500, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
-    objectManager->spawnEnemy(ObjectManager::BULLET, 600, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
+    //objectManager->spawnEnemy(ObjectManager::GRUNT, 100, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
+    //objectManager->spawnEnemy(ObjectManager::HEALER, 200, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
+    //objectManager->spawnEnemy(ObjectManager::TANK, 300, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
+    //objectManager->spawnEnemy(ObjectManager::SPRINTER, 400, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
+    //objectManager->spawnEnemy(ObjectManager::SHOOTER, 500, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
+    //objectManager->spawnEnemy(ObjectManager::BULLET, 600, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
 }
 
 //fade the frame
@@ -191,13 +191,14 @@ void GameEngine::doFade(){
 
 //draws information for the player
 void GameEngine::drawHUD(){
-
+    /*
     //demo bars for health + mana
     Util::drawMeter(20, MAX_Y - 35, 220, MAX_Y - 20, objectManager->getPlayer()->getLifePercent(), false, resourceManager->getColour(ResourceManager::RED));
     Util::drawMeter(240, MAX_Y - 35, 440, MAX_Y - 20, objectManager->getPlayer()->getManaPercent(), false, resourceManager->getColour(ResourceManager::BLUE));
     //Score text (frames for now)
     Util::drawString("SCORE:", MAX_X - 260, MAX_Y - 25, resourceManager->getTexture(ResourceManager::TEXT), false, true);
     Util::drawString(Util::doubleToString(objectManager->getPlayer()->getScore(), 10, 0), MAX_X - 90, MAX_Y - 25, resourceManager->getTexture(ResourceManager::TEXT), true, true, 1, Util::getScaleByFrame(framecnt, 25, 1, 2));
+    */
     //FPS text
     Util::drawString("FPS: " + Util::doubleToString(fps, 4, 1), 0, 0, resourceManager->getTexture(ResourceManager::TEXT));
 }
