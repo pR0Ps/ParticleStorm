@@ -20,6 +20,9 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
     menuClock = startTimer(1/(double)GameEngine::MAX_FPS*1000);
     timer = new QTime();
 
+
+
+
     //Temporary starting event
     instance->setVisible(false);
     engine->setVisible(true);
@@ -75,6 +78,7 @@ void MainWindow::paintGL(){
     for(int i = 0; i < NUM_STARS; i++){
         Util::drawLine(starVect->at(i)->x, starVect->at(i)->y, starVect->at(i)->x_old, starVect->at(i)->y_old, clr);
     }
+    glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void MainWindow::timerEvent(QTimerEvent *){
@@ -85,13 +89,33 @@ void MainWindow::timerEvent(QTimerEvent *){
 
 void MainWindow::update(){
     double deltaTime = timer->restart()/(float)1000;
-    //update velocity
-    double x_vel = 10;
-    //move star
+
+    /*
+    //move star (NOT WORKING :()
+    double panx = 0.02 * deltaTime;
     for(int i = 0; i < NUM_STARS; ++i){
-        starVect->at(i)->x_old =  starVect->at(i)->x;
-        starVect->at(i)->x += x_vel * deltaTime;
+
+        starVect->at(i)->x_old = starVect->at(i)->x;
+        starVect->at(i)->x += panx/starVect->at(i)->dist;
+
+        if (starVect->at(i)->x > GameEngine::MAX_X){
+            starVect->at(i)->x = 0;
+            starVect->at(i)->x_old = 0;
+        }
+        else if (starVect->at(i)->x < 0){
+            starVect->at(i)->x = GameEngine::MAX_X;
+            starVect->at(i)->x_old = GameEngine::MAX_X;
+        }
+        if (starVect->at(i)->y > GameEngine::MAX_Y){
+            starVect->at(i)->y = 0;
+            starVect->at(i)->y_old = 0;
+        }
+        else if (starVect->at(i)->y < 0){
+            starVect->at(i)->y = GameEngine::MAX_Y;
+            starVect->at(i)->y_old = GameEngine::MAX_Y;
+        }
     }
+    */
 
 }
 
@@ -100,7 +124,7 @@ void MainWindow::fillStar(){
     starVect->reserve(NUM_STARS);
     for(int i = 0; i < NUM_STARS; i++)
     {
-        starVect->push_back(new mStar(qrand()%MAX_X, qrand()%MAX_Y, qrand()%MAX_DIST));
+        starVect->push_back(new mStar(qrand()%MAX_X, qrand()%MAX_Y, Util::randInt(1,10)));
     }
 
 }
