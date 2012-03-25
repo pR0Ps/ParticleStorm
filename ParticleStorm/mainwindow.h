@@ -21,9 +21,7 @@ public:
      * of the player's avatar.
      *
      * Note: can use the x and y member functions to get the individual
-     * coordinates of the QPoint returned. Also, this member function is declared
-     * static so that the Player class does not need a specific reference to get
-     * the location of the player's mouse cursor.
+     * coordinates of the QPoint returned.
      */
     QPoint getMousePos();
     Qt::MouseButtons getMouseState();

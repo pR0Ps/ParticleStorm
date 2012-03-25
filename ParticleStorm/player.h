@@ -2,7 +2,7 @@
  * Header file for the Player class.
  *
  * Last modified by: Luke
- * Last modified on: March 4, 2012
+ * Last modified on: March 25, 2012
  *
  * Notes:
  * - will add more documentation as I implement functions
@@ -85,6 +85,18 @@ public:
     long int getScore() const {return score;}
     void modScore(int amt, bool rel);
 
+    /*
+     * Modifies the player's mana by the specified amount. Adds the amount given
+     * to the player's mana so if you want to reduce the player's mana then pass
+     * a negative value to this function.
+     *
+     * Parameters:
+     * - the amount to add to the player's mana
+     * - whether or not the amount should be relative to the current mana
+     * (set vs mod)
+     */
+    void modMana(int amount, bool rel = true);
+
 private:
     // Data members.
     // These represent the location of the player on the last call to update.
@@ -98,20 +110,7 @@ private:
     // selected abiliity will be determined in the update function.
     // currentAbility;
 
-    // Private member functions. The init function does not need to be
-    // overridden and will likely be removed.
-    /*
-     * Modifies the player's mana by the specified amount. Adds the amount given
-     * to the player's mana so if you want to reduce the player's mana then pass
-     * a negative value to this function.
-     *
-     * Parameters:
-     * - the amount to add to the player's mana
-     * - whether or not the amount should be relative to the current mana
-     * (set vs mod)
-     */
-    void modMana(int amount, bool rel = true);
-
+    // Private member functions.
     /*
      * Determines if the given mouse position is within the bounds of the OpenGL
      * canvas. Used to determine if the current location of the player's mouse

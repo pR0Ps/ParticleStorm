@@ -40,7 +40,8 @@ Player::~Player() {
     // may need to delete more data members here
 }
 
-//resets all the player attributes to their original values
+//resets all the player attributes to their original values - this is called at
+// the end of the constructor
 void Player::reset(){
     // *This must be defined in the body of the constructor, since it is
     // inherited from the GameObject class (see the C++ Programming Tips page on
@@ -60,7 +61,7 @@ void Player::reset(){
     x_old = x;
     y_old = y;
 
-    //set initial score;
+    //set initial score
     score = 0;
 }
 
@@ -87,11 +88,14 @@ void Player::update(double deltaTime) {
     }
     // otherwise leave the avatar's position unchanged
 
-    if (mw->getMouseState() & Qt::LeftButton || mw->keyPressed(GameEngine::DROP)){
+    // Check to see if the drop particle ability has been activated.
+    if ((mw->getMouseState() & Qt::LeftButton) ||
+            mw->keyPressed(GameEngine::DROP)){
         //at least one particle (if staying still)
         o->spawnParticle(x, y);
 
-        //spawn a particle every PARTICLE_SPACING px along the line between the old a new pos
+        //spawn a particle every PARTICLE_SPACING px along the line between the
+        // old a new pos
         const double dist = Util::distance(x, y, x_old, y_old);
         const double tempX = (x - x_old) / dist;
         const double tempY = (y - y_old) / dist;
@@ -99,11 +103,17 @@ void Player::update(double deltaTime) {
             o->spawnParticle(x_old + tempX * i, y_old + tempY * i);
         }
     }
-    else if (mw->getMouseState() & Qt::RightButton || mw->keyPressed(GameEngine::PUSH)){
+
+    // Force push ability.
+    else if ((mw->getMouseState() & Qt::RightButton) ||
+             mw->keyPressed(GameEngine::PUSH)){
         o->applyForce(ObjectManager::PARTICLE, x, y, Particle::FORCE_EXERT);
         o->applyForce(ObjectManager::STAR, x, y, Star::FORCE_EXERT);
     }
-    else if (mw->getMouseState() & Qt::MiddleButton || mw->keyPressed(GameEngine::PULL)){
+
+    // Force pull.
+    else if ((mw->getMouseState() & Qt::MiddleButton) ||
+             mw->keyPressed(GameEngine::PULL)){
         o->applyForce(ObjectManager::PARTICLE, x, y, -Particle::FORCE_EXERT);
         o->applyForce(ObjectManager::STAR, x, y, -Star::FORCE_EXERT);
     }
@@ -119,14 +129,13 @@ void Player::draw() const {
 }
 
 //change the score
+// Note: there is no upper bound on the player's score.
 void Player::modScore(const int amt, const bool rel){
     if (rel)
         score = score + amt > 0 ? score + amt : 0;
     else
         score = amt > 0 ? amt : 0;
 }
-
-// Implementation of private member functions.
 
 void Player::modMana(int amt, bool rel) {
     // Perform bounds checking on what the new value of mana would be.
@@ -135,6 +144,8 @@ void Player::modMana(int amt, bool rel) {
     else
         mana = std::max(0, std::min (amt, MAX_MANA));
 }
+
+// Implementation of private member functions.
 
 bool Player::isValidMousePos(const QPoint& pos) {
     int mouseX(pos.x()), mouseY(pos.y());
