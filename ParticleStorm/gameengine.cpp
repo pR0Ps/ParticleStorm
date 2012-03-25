@@ -89,7 +89,7 @@ void GameEngine::initializeGL(){
     glDisable(GL_FOG);
     glDisable(GL_LIGHTING);
     glDisable(GL_LINE_SMOOTH); //could enable, but performance-heavy and not supported for all
-    glEnable(GL_POINT_SMOOTH); //same for this
+    glDisable(GL_POINT_SMOOTH); //same for this
     glDisable(GL_LINE_STIPPLE);
     glDisable(GL_SCISSOR_TEST);
     glDisable(GL_STENCIL_TEST);
