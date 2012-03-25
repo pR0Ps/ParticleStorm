@@ -55,13 +55,15 @@ private:
 
     void fillStar();
     const QColor *clr;
-
+    int menuClock;
+    QTime *timer;
     static MainWindow *instance;
 
 protected:
     void initializeGL();
     void paintGL();
-    void update(double deltaTime);
+    void timerEvent(QTimerEvent *);
+    void update();
 };
 
 #endif // MAINWINDOW_H

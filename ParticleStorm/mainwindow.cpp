@@ -17,17 +17,20 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
 
 
     instance = this;
-
+    menuClock = startTimer(1/(double)GameEngine::MAX_FPS*1000);
+    timer = new QTime();
 
     //Temporary starting event
     instance->setVisible(false);
     engine->setVisible(true);
     engine->start();
+
 }
 
 MainWindow::~MainWindow(){
     while(!starVect->empty()) delete starVect->back(), starVect->pop_back();
     delete starVect;
+    delete timer;
     delete engine;
 }
 
@@ -74,8 +77,14 @@ void MainWindow::paintGL(){
     }
 }
 
+void MainWindow::timerEvent(QTimerEvent *){
+    update();
+    updateGL();
+}
 
-void MainWindow::update(double deltaTime){
+
+void MainWindow::update(){
+    double deltaTime = timer->restart()/(float)1000;
     //update velocity
     double x_vel = 10;
     //move star
