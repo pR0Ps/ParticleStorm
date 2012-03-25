@@ -37,6 +37,9 @@ GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
         oldKeys[i] = currKeys[i] = false;
     }
 
+    //initially paused
+    paused = true;
+
     //initial garbage value for gameClock
     gameClock = 0;
 }
@@ -152,10 +155,12 @@ void GameEngine::start(){
     gameClock = startTimer(1/(double)MAX_FPS*1000);
 
     //spawn some testing enemies
-    objectManager->spawnEnemy(ObjectManager::GRUNT, 0, 300, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
-    objectManager->spawnEnemy(ObjectManager::GRUNT, 300, 0, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
-    objectManager->spawnEnemy(ObjectManager::GRUNT, 0, 600, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
-    objectManager->spawnEnemy(ObjectManager::GRUNT, 600, 0, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
+    objectManager->spawnEnemy(ObjectManager::GRUNT, 100, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
+    objectManager->spawnEnemy(ObjectManager::HEALER, 200, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
+    objectManager->spawnEnemy(ObjectManager::TANK, 300, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
+    objectManager->spawnEnemy(ObjectManager::SPRINTER, 400, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
+    objectManager->spawnEnemy(ObjectManager::SHOOTER, 500, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
+    objectManager->spawnEnemy(ObjectManager::BULLET, 600, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
 }
 
 //fade the frame
@@ -238,7 +243,6 @@ void GameEngine::update(){
     objectManager->pan(ObjectManager::POWERUP, panX, panY);
     objectManager->pan(ObjectManager::SHRAPNEL, panX, panY);
 
-
     //update everything
     objectManager->update(ObjectManager::PLAYER, deltaTime);
     objectManager->update(ObjectManager::PARTICLE, deltaTime);
@@ -247,7 +251,8 @@ void GameEngine::update(){
     objectManager->update(ObjectManager::POWERUP, deltaTime);
     objectManager->update(ObjectManager::SHRAPNEL, deltaTime);
 
-    objectManager->doEnemyParticleCollisions(); //not sure if this is where collision updates will be done
+    //do collisions after everything has updated into place
+    objectManager->doEnemyParticleCollisions();
 
     //testing game stuff
     objectManager->modPlayerScore(1);

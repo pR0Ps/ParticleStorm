@@ -31,11 +31,14 @@ public:
     void pan(double x, double y);
     void die();
 
+    double getRadius() const {return radius;}
+
 private:
     double speed;
     double damage;
     int type;
     double x_tar, y_tar;
+    double radius;
 
     //shrapnel stuff
     int numShrapnel;

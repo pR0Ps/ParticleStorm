@@ -242,29 +242,22 @@ GameObject* ObjectManager::getUnused(ObjectType t){
 //collisions
 void ObjectManager::doEnemyParticleCollisions(){
 
-    //int numEnemies = this->getNumObjects(ENEMY);
-    //int numParticles = this->getNumObjects(PARTICLE);
-
     std::vector<GameObject*> particles = getVector(PARTICLE);
     std::vector<GameObject*> enemies = getVector(ENEMY);
-    //Particle* particle;
-    //Enemy* enemy;
 
-    int enemyProxyRadius = 100; //need to get each enemy's radius based on type
-
-    for(unsigned int i=0; i<enemies.size(); i++) {
+    for(unsigned int i = 0; i < enemies.size(); i++) {
 
         //enemy = enemies[i];
 
         if(enemies[i]->getInUse()) { //enemies vector stores unused enemies
 
-            for(unsigned int j=0; j<particles.size(); j++) {
+            for(unsigned int j = 0; j < particles.size(); j++) {
 
                 //particle = particles[j];
 
                 if(particles[j]->getInUse()) {
 
-                    if(Util::magnitude(particles[j]->getX()-enemies[i]->getX(),particles[j]->getY()-enemies[i]->getY()) < enemyProxyRadius) {
+                    if(Util::magnitude(particles[j]->getX()-enemies[i]->getX(),particles[j]->getY()-enemies[i]->getY()) < static_cast<Enemy*>(enemies[i])->getRadius()) {
                         enemies[i]->modLife(-static_cast<Particle*>(particles[j])->getSpeedPercent() * Enemy::MAX_DAMAGE,true); //for death by damage
                         particles[j]->die();
                         //enemy isn't dead (that we know of) so no shrapnel yet

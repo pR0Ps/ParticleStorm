@@ -28,42 +28,58 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
     //y_vel = sin(theta);
 
     //give starting stats depending on type
-    if(type == ObjectManager::GRUNT){ 			//grunt
+    if(type == ObjectManager::GRUNT){
         maxLife = life = 100;
         speed = 1;
         damage = 10;
         numShrapnel = 4;
-        shrapnelLen = 10;
+        shrapnelLen = 70;
+        radius = 35;
     }
-    else if(type == ObjectManager::SHOOTER){ 	//shooter
-        maxLife = life = 75;
-        speed = 1;
-        damage = 10;
-        numShrapnel = 4;
-        shrapnelLen = 4;
-    }
-    else if(type == ObjectManager::HEALER){ 		//healer
+    else if(type == ObjectManager::HEALER){
         maxLife = life = 100;
         speed = 1;
         damage = 10;
         numShrapnel = 6;
-        shrapnelLen = 3;
+        shrapnelLen = 15;
+        radius = 20;
     }
-    else if(type == ObjectManager::TANK){ 		//tank
+    else if(type == ObjectManager::TANK){
         maxLife = life = 300;
         speed = 0.5;
         damage = 10;
         numShrapnel = 8;
-        shrapnelLen = 10;
+        shrapnelLen = 30;
+        radius = 55;
     }
-    else if(type == ObjectManager::SPRINTER){	//sprinter
+    else if(type == ObjectManager::SPRINTER){
         maxLife = life = 100;
         speed = 2;
         damage = 10;
         numShrapnel = 4;
-        shrapnelLen = 8;
+        shrapnelLen = 50;
+        radius = 25;
     }
-
+    else if(type == ObjectManager::SHOOTER){
+        maxLife = life = 75;
+        speed = 1;
+        damage = 10;
+        numShrapnel = 4;
+        shrapnelLen = 40;
+        radius = 20;
+    }
+    else if (type == ObjectManager::BULLET){
+        maxLife = life = 10;
+        speed = 10;
+        damage = 10;
+        numShrapnel = 0;
+        shrapnelLen = 0;
+        radius = 15;
+    }
+    else{
+        qDebug() << "bad enemy type";
+        exit(1);
+    }
     clr = ResourceManager::getInstance()->getColour(ResourceManager::RED);
 }
 
@@ -83,7 +99,8 @@ void Enemy::update(double deltaTime){
 }
 
 void Enemy::draw() const{
-    Util::drawBox(x-100,y-100,x+100,y+100,false,clr);
+    Util::drawOctagon(x, y, radius, false, clr);
+    //Util::drawBox(x-100,y-100,x+100,y+100,false,clr);
 }
 
 //pan the enemy (and their target)
