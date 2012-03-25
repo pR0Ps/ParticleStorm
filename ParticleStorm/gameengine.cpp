@@ -257,6 +257,8 @@ void GameEngine::update(){
 
     //do collisions after everything has updated into place
     objectManager->doEnemyParticleCollisions();
+    objectManager->doPlayerEnemyCollisions();
+    //objectManager->doPlayerPowerupCollisions();
 
     //testing game stuff
     objectManager->modPlayerScore(1);

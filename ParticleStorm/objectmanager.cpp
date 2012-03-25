@@ -1,7 +1,9 @@
 #include <QDebug>
 #include "math.h"
-
+#include <iostream>
 #include "objectmanager.h"
+
+using namespace std;
 
 ObjectManager* ObjectManager::instance = NULL;
 
@@ -271,6 +273,7 @@ void ObjectManager::doPlayerEnemyCollisions(){
             if(Util::magnitude(player->getX()-enemies[i]->getX(),player->getY()-enemies[i]->getY()) < static_cast<Enemy*>(enemies[i])->getRadius()) {
                 player->modLife(-static_cast<Enemy*>(enemies[i])->getDamage(),true);
                 enemies[i]->modLife(-Player::RAM_DAMAGE,true);
+
             }
         }
     }
