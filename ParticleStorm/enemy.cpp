@@ -99,7 +99,7 @@ void Enemy::update(double deltaTime){
     }
 
     if(collisionBufferTime > 0)
-        collisionBufferTime -= deltatime;
+        collisionBufferTime -= deltaTime;
 
 }
 
