@@ -43,6 +43,10 @@ GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
 
     //initial garbage value for gameClock
     gameClock = 0;
+
+    //initial values for the managers
+    objectManager = NULL;
+    resourceManager = NULL;
 }
 
 //destructor
@@ -51,8 +55,8 @@ GameEngine::~GameEngine(){
     delete fbo;
 
     //managers
-    delete objectManager;
-    delete resourceManager;
+    if (objectManager != NULL) delete objectManager;
+    if (resourceManager != NULL) delete resourceManager;
 
     //timer
     delete timer;
