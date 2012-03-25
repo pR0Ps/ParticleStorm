@@ -162,16 +162,15 @@ void Util::drawMeter(const double x1, const double y1, const double x2, const do
     else drawBox(x1 + 2, y1 + 2, x2 - 2, y1 + 2 + (y2 - y1 - 4) * amt, true, clr);
 }
 
-void Util::drawOctagon(double x, double y, double size, const bool fill, const QColor *clr){
+void Util::drawOctagon(double x, double y, const double diameter, const bool fill, const QColor *clr){
     //colour stuff
     if (clr != NULL){
         glPushAttrib(GL_CURRENT_BIT);
         glColor3d(clr->red(), clr->green(), clr->blue());
     }
 
-    size /=2.0;
-
-    const double temp = magnitude(size, size) - size;
+    const double rad = diameter/2.0f;
+    const double temp = magnitude(rad, rad) - rad;
 
     if (!fill){
         //weirdness with the LINE_LOOP
@@ -181,14 +180,14 @@ void Util::drawOctagon(double x, double y, double size, const bool fill, const Q
     }
     else glBegin(GL_POLYGON);
     //start drawing
-        glVertex2d(x - temp, y - size);
-        glVertex2d(x + temp, y - size);
-        glVertex2d(x + size, y - temp);
-        glVertex2d(x + size, y + temp);
-        glVertex2d(x + temp, y + size);
-        glVertex2d(x - temp, y + size);
-        glVertex2d(x - size, y + temp);
-        glVertex2d(x - size, y - temp);
+        glVertex2d(x - temp, y - rad);
+        glVertex2d(x + temp, y - rad);
+        glVertex2d(x + rad, y - temp);
+        glVertex2d(x + rad, y + temp);
+        glVertex2d(x + temp, y + rad);
+        glVertex2d(x - temp, y + rad);
+        glVertex2d(x - rad, y + temp);
+        glVertex2d(x - rad, y - temp);
     glEnd();
 
     //restore old color
