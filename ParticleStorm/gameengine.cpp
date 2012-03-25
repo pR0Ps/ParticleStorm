@@ -160,15 +160,6 @@ void GameEngine::start(){
     gameClock = startTimer(1/(double)MAX_FPS*1000);
 
     //spawn some testing enemies
-    //objectManager->spawnEnemy(ObjectManager::GRUNT, 100, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
-    //objectManager->spawnEnemy(ObjectManager::HEALER, 200, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
-    //objectManager->spawnEnemy(ObjectManager::TANK, 300, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
-    //objectManager->spawnEnemy(ObjectManager::SPRINTER, 400, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
-    //objectManager->spawnEnemy(ObjectManager::SHOOTER, 500, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
-    objectManager->spawnEnemy(ObjectManager::SHOOTER, 400, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
-    objectManager->spawnEnemy(ObjectManager::SHOOTER, 300, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
-    //objectManager->spawnEnemy(ObjectManager::BULLET, 600, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
-
     LevelManager level;
     level.startLevel();
 
@@ -279,6 +270,11 @@ void GameEngine::update(){
     /*if (getMouseState() & Qt::RightButton){
         objectManager->modPlayerLife(-5);
     }*/
+    LevelManager level;
+    //qDebug("This should be zero %d", ObjectManager::getInstance()->getNumObjects(ObjectManager::ENEMY));
+    if (level.isFinished()) {
+        level.startLevel();
+    }
 }
 
 //draws everything - automatically called by timer
