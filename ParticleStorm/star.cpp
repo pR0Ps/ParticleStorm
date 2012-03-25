@@ -48,53 +48,6 @@ void Star::update(double deltaTime){
         this->y_old = GameEngine::MAX_Y + EXTRA_BOUNDS;
     }
 
-    /*
-    //foreground stars
-    //  if (array[1-100])
-    if(count<100){
-    //if(x_pos<100||x_pos>800 && y_pos<100||y_pos>800)// is it on the edge
-        if((x<100 || x>800) && (y<100 || y>800)){
-        x_vel -= FOREGROUND_SPEED_EDGE*x_vel*deltaTime;
-        y_vel -= FOREGROUND_SPEED_EDGE*y_vel*deltaTime;
-        //positions
-        x += x_vel *SPEED_MULTIPLIER*deltaTime;
-        y += y_vel *SPEED_MULTIPLIER*deltaTime;
-        }
-
-    //else
-    else{
-        x_vel -= FOREGROUND_SPEED_CENTER*x_vel*deltaTime;
-        y_vel -= FOREGROUND_SPEED_CENTER*y_vel*deltaTime;
-        //positions
-        x += x_vel *SPEED_MULTIPLIER*deltaTime;
-        y += y_vel *SPEED_MULTIPLIER*deltaTime;
-    }
-}
-  /////////////////////////////////////////
-    //speed of background stars
-    else{
-         //if(x_pos<100||x_pos>800 && y_pos<100||y_pos>800)// is it on the edge
-        if((x<100||x>800) && (y<100||y>100)){
-            x_vel -= FOREGROUND_SPEED_EDGE*x_vel*deltaTime;
-            y_vel -= FOREGROUND_SPEED_EDGE*y_vel*deltaTime;
-            //positions
-            x += x_vel *SPEED_MULTIPLIER*deltaTime;
-            y += y_vel *SPEED_MULTIPLIER*deltaTime;
-        }
-            //else
-            else {
-            x_vel -= FOREGROUND_SPEED_CENTER*x_vel*deltaTime;
-            y_vel -= FOREGROUND_SPEED_CENTER*y_vel*deltaTime;
-            //positions
-            x += x_vel *SPEED_MULTIPLIER*deltaTime;
-            y += y_vel *SPEED_MULTIPLIER*deltaTime;
-        }
-
-    }
-    if(count<250){
-    count++;}
-    else{count=0;}
-    */
 }
 
 void Star::pan(double x, double y){
