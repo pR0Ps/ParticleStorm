@@ -1,5 +1,6 @@
 #include "gameengine.h"
 #include "mainwindow.h"
+#include "levelmanager.h"
 #include "util.h"
 #include <time.h>
 #include <QDebug>
@@ -163,10 +164,13 @@ void GameEngine::start(){
     //objectManager->spawnEnemy(ObjectManager::HEALER, 200, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
     //objectManager->spawnEnemy(ObjectManager::TANK, 300, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
     //objectManager->spawnEnemy(ObjectManager::SPRINTER, 400, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
-    objectManager->spawnEnemy(ObjectManager::SHOOTER, 500, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
+    //objectManager->spawnEnemy(ObjectManager::SHOOTER, 500, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
     objectManager->spawnEnemy(ObjectManager::SHOOTER, 400, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
     objectManager->spawnEnemy(ObjectManager::SHOOTER, 300, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
     //objectManager->spawnEnemy(ObjectManager::BULLET, 600, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
+
+    LevelManager level;
+    level.startLevel();
 
     objectManager->spawnPowerup(ObjectManager::HEALTH, 700, 100, 50, 50, 50);
 }
