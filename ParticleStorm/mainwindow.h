@@ -29,7 +29,6 @@ public:
     QPoint getMousePos();
     Qt::MouseButtons getMouseState();
     bool keyPressed(GameEngine::Keys k);
-    bool keyClicked(GameEngine::Keys k);
 
     //get this instance
     static MainWindow* getInstance(){return instance;}

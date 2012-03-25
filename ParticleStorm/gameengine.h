@@ -39,7 +39,6 @@ public:
 
     //access key state
     bool keyPressed(Keys k){return currKeys[k];}
-    bool keyClicked(Keys k){return currKeys[k] && !oldKeys[k];}
 
     //control the game engine
     void reset();
@@ -56,7 +55,6 @@ private:
     void keyReleaseEvent(QKeyEvent * event);
     QMap<int, int> keyMap;
     bool currKeys[EXIT+1];
-    bool oldKeys[EXIT+1];
 
     //call the main frameloop
     void timerEvent(QTimerEvent *);

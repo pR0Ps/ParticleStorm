@@ -35,7 +35,7 @@ GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
 
     //init keypress arrays
     for (int i = 0 ; i < EXIT+1 ; i++){
-        oldKeys[i] = currKeys[i] = false;
+        currKeys[i] = false;
     }
 
     //initially paused
@@ -237,9 +237,6 @@ void GameEngine::update(){
     //game stuff
 
     //deal with keyboard input
-    for (int i = 0 ; i < EXIT+1 ; i++){
-        oldKeys[i] = currKeys[i];
-    }
     //should add a pause option here as well
     if (keyPressed(EXIT)){
         exit(0);

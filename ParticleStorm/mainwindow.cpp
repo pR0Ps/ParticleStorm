@@ -43,9 +43,6 @@ Qt::MouseButtons MainWindow::getMouseState(){
 bool MainWindow::keyPressed(GameEngine::Keys k){
     return engine->keyPressed(k);
 }
-bool MainWindow::keyClicked(GameEngine::Keys k){
-    return engine->keyClicked(k);
-}
 
 void MainWindow::doneGame(const unsigned int score){
     engine->setVisible(false);
