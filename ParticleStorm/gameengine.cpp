@@ -197,6 +197,11 @@ void GameEngine::drawHUD(){
     //demo bars for health + mana
     Util::drawMeter(20, MAX_Y - 35, 220, MAX_Y - 20, objectManager->getPlayer()->getLifePercent(), false, resourceManager->getColour(ResourceManager::RED));
     Util::drawMeter(240, MAX_Y - 35, 440, MAX_Y - 20, objectManager->getPlayer()->getManaPercent(), false, resourceManager->getColour(ResourceManager::BLUE));
+
+    // Display the player's currently selected ability at the top of the screen.
+    Util::drawString("ABILITY: " + objectManager->getPlayer()->getAbilityString(), 480,
+        MAX_Y - 25, resourceManager->getTexture(ResourceManager::TEXT), false, true);
+
     //Score text (frames for now)
     Util::drawString("SCORE:", MAX_X - 260, MAX_Y - 25, resourceManager->getTexture(ResourceManager::TEXT), false, true);
     Util::drawString(Util::doubleToString(objectManager->getPlayer()->getScore(), 10, 0), MAX_X - 90, MAX_Y - 25, resourceManager->getTexture(ResourceManager::TEXT), true, true, 1, Util::getScaleByFrame(framecnt, 25, 1, 2));

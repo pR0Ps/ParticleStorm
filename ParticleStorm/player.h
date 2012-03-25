@@ -29,6 +29,7 @@
 
 #include <QPoint>
 #include "gameobject.h"
+using namespace std;
 
 class Player : public GameObject {
 public:
@@ -50,6 +51,15 @@ public:
 
     //size of the rings around the player
     static const int RING_SIZE = 4;
+
+    // Enumeration for the player's special abilities.
+    enum ability {
+        VORTEX,
+        SPRAY,
+        REPULSE,
+        LIGHTNING,
+        SHOCKWAVE
+    };
 
     // Constructor/destructor.
     Player();
@@ -97,18 +107,19 @@ public:
      */
     void modMana(int amount, bool rel = true);
 
+    /*
+     * Returns a string representation of the player's currently selected ability for
+     * display in the game HUD.
+     */
+    string getAbilityString() const;
+
 private:
     // Data members.
     // These represent the location of the player on the last call to update.
     double x_old, y_old;
     int mana;
     long int score;
-
-    // Not sure what type to use for this yet - will likely use enum constants.
-    // This may be unnecessary actually - may be simpler to just call the
-    // useAbility function with the ability as an argument. The currently
-    // selected abiliity will be determined in the update function.
-    // currentAbility;
+    int currentAbility; // the player's currently selected special ability
 
     // Private member functions.
     /*
@@ -123,12 +134,20 @@ private:
     static bool isValidMousePos(const QPoint& pos);
 
     /*
-     *
+     * Polls the user's input and performs the appropriate ability if one has
+     * been activated.
+     */
+    void performAbility();
+
+    /*
+     * Performs the player's currently selected special ability when the special
+     * ability button is pressed.
      */
     void useAbility() const; // not sure yet if this will modify the object
 
     /*
-     *
+     * Advances the player's currently selected special ability to the next one
+     * in the sequence when the change ability button is pressed.
      */
     void changeAbility();
 };

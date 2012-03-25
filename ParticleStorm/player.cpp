@@ -88,35 +88,8 @@ void Player::update(double deltaTime) {
     }
     // otherwise leave the avatar's position unchanged
 
-    // Check to see if the drop particle ability has been activated.
-    if ((mw->getMouseState() & Qt::LeftButton) ||
-            mw->keyPressed(GameEngine::DROP)){
-        //at least one particle (if staying still)
-        o->spawnParticle(x, y);
-
-        //spawn a particle every PARTICLE_SPACING px along the line between the
-        // old a new pos
-        const double dist = Util::distance(x, y, x_old, y_old);
-        const double tempX = (x - x_old) / dist;
-        const double tempY = (y - y_old) / dist;
-        for (int i = 0 ; i < dist ; i+= PARTICLE_SPACING){
-            o->spawnParticle(x_old + tempX * i, y_old + tempY * i);
-        }
-    }
-
-    // Force push ability.
-    else if ((mw->getMouseState() & Qt::RightButton) ||
-             mw->keyPressed(GameEngine::PUSH)){
-        o->applyForce(ObjectManager::PARTICLE, x, y, Particle::FORCE_EXERT);
-        o->applyForce(ObjectManager::STAR, x, y, Star::FORCE_EXERT);
-    }
-
-    // Force pull.
-    else if ((mw->getMouseState() & Qt::MiddleButton) ||
-             mw->keyPressed(GameEngine::PULL)){
-        o->applyForce(ObjectManager::PARTICLE, x, y, -Particle::FORCE_EXERT);
-        o->applyForce(ObjectManager::STAR, x, y, -Star::FORCE_EXERT);
-    }
+    // Perform an ability if any have been activated.
+    performAbility();
 }
 
 //draw the player
@@ -145,6 +118,23 @@ void Player::modMana(int amt, bool rel) {
         mana = std::max(0, std::min (amt, MAX_MANA));
 }
 
+string Player::getAbilityString() const {
+    switch (currentAbility) {
+    case VORTEX:
+        return "VORTEX";
+    case SPRAY:
+        return "SPRAY";
+    case REPULSE:
+        return "REPULSE";
+    case LIGHTNING:
+        return "LIGHTNING";
+    case SHOCKWAVE:
+        return "SHOCKWAVE";
+    }
+
+    return "NONE"; // dummy return statement to remove compilation warning
+}
+
 // Implementation of private member functions.
 
 bool Player::isValidMousePos(const QPoint& pos) {
@@ -153,10 +143,71 @@ bool Player::isValidMousePos(const QPoint& pos) {
             (mouseY >= 0 && mouseY <= GameEngine::MAX_Y);
 }
 
-void Player::useAbility() const {
+void Player::performAbility() {
+    // Refetch the object manager and main window instances.
+    ObjectManager* manager = ObjectManager::getInstance();
+    MainWindow* window = MainWindow::getInstance();
 
+    // Check to see if the drop particle ability has been activated.
+    if ((window->getMouseState() & Qt::LeftButton) ||
+            window->keyPressed(GameEngine::DROP)){
+        //at least one particle (if staying still)
+        manager->spawnParticle(x, y);
+
+        // spawn a particle every PARTICLE_SPACING px along the line between the
+        // old a new pos
+        // Note: may want to use the time since the last update for this
+        // instead.
+        const double dist = Util::distance(x, y, x_old, y_old);
+        const double tempX = (x - x_old) / dist;
+        const double tempY = (y - y_old) / dist;
+        for (int i = 0 ; i < dist ; i+= PARTICLE_SPACING)
+            manager->spawnParticle(x_old + tempX * i, y_old + tempY * i);
+    }
+
+    // Force push ability. Force push and force pull are only applied to
+    // particles and stars.
+    else if ((window->getMouseState() & Qt::RightButton) ||
+             window->keyPressed(GameEngine::PUSH)){
+        manager->applyForce(ObjectManager::PARTICLE, x, y, Particle::FORCE_EXERT);
+        manager->applyForce(ObjectManager::STAR, x, y, Star::FORCE_EXERT);
+    }
+
+    // Force pull.
+    else if ((window->getMouseState() & Qt::MiddleButton) ||
+             window->keyPressed(GameEngine::PULL)){
+        manager->applyForce(ObjectManager::PARTICLE, x, y, -Particle::FORCE_EXERT);
+        manager->applyForce(ObjectManager::STAR, x, y, -Star::FORCE_EXERT);
+    }
+
+    // Use special ability.
+    else if (window->keyPressed(GameEngine::ABILITY))
+        useAbility();
+
+    // Change special ability.
+    else if (window->keyPressed(GameEngine::CHGABILITY))
+        changeAbility();
+}
+
+void Player::useAbility() const {
+    switch (currentAbility) {
+    case VORTEX:
+        break;
+    case SPRAY:
+        break;
+    case REPULSE:
+        break;
+    case LIGHTNING:
+        break;
+    case SHOCKWAVE:
+        break;
+    }
 }
 
 void Player::changeAbility() {
-
+    if (currentAbility == SHOCKWAVE)
+        // then wraparound back to vortex
+        currentAbility = VORTEX;
+    else
+        currentAbility++;
 }
