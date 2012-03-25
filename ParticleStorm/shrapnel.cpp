@@ -34,9 +34,11 @@ void Shrapnel::startShrapnel(double x, double y, double x_vel, double y_vel, dou
 }
 
 void Shrapnel::draw() const{
-    int xdraw=x+10;
+    /*int xdraw=x+10;
     int ydraw=y+10;
     Util::drawLine(x, y, xdraw, ydraw, clr);
+*/
+
 }
 
 
