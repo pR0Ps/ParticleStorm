@@ -33,6 +33,7 @@ void Shrapnel::startShrapnel(double x, double y, double x_vel, double y_vel, dou
     this->clr = clr;
     this->ttl = INITIAL_TTL;
     this->inUse = true;
+    this->angle =0;
 }
 
 void Shrapnel::update(double deltaTime){
@@ -41,6 +42,11 @@ void Shrapnel::update(double deltaTime){
     x += x_vel * 5 *  deltaTime;
     y += y_vel * 5 * deltaTime;
 
+    angle += spin*deltaTime;
+    if (angle>360)
+       {
+        angle = angle - 360;
+        }
 
     //kill old shrapnel
     if (ttl <= 0)
@@ -50,11 +56,21 @@ void Shrapnel::update(double deltaTime){
 
 }
 void Shrapnel::draw() const{
+
     /*int xdraw=x+10;
     int ydraw=y+10;
     Util::drawLine(x, y, xdraw, ydraw, clr);
 */
-    Util::drawLine(x,y, x+5, y+5, clr);
+
+
+ //glPushMatrix();
+ //glLoadIdentity();
+ //glTranslated(x, y, 0);
+ //glRotated(angle, 0, 0, 1);
+ Util::drawLine(x,y, x+MAX_SHRAPNEL_LENGTH, y+MAX_SHRAPNEL_LENGTH, clr);
+ //glPopMatrix();
+
+
     }
 
 void Shrapnel::applyForce(double x, double y, double mag){
