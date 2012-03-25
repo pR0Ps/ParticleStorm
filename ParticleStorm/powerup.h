@@ -19,7 +19,6 @@ public:
     void draw() const;
     void update(double deltaTime);
     void applyForce(double x, double y, double mag){}
-    void die();
 
     double getRadius() const {return radius;}
     //Dies after a specific amount of time, or when player collides
