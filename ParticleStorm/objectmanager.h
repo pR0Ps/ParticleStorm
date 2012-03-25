@@ -22,7 +22,7 @@ public:
 
     //constants (redeclare in implementation)
     static const int MAX_PARTICLES = 500;
-    static const int MAX_ENEMIES = 20;
+    static const int MAX_ENEMIES = 50;
     static const int MAX_POWERUPS = 20;
     static const int MAX_SHRAPNEL = 40;
     static const int MAX_STARS = 250;
