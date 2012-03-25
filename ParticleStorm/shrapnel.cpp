@@ -39,6 +39,8 @@ void Shrapnel::draw() const{
     int ydraw=y+10;
     Util::drawLine(x, y, xdraw, ydraw, clr);
 */
+  //  */x_vel = x_vel-5;
+//    y_vel = y_vel-5;
 
 }
 
@@ -49,6 +51,7 @@ void Shrapnel::update(double deltaTime){
         die();
     else
         this->ttl -= deltaTime;
+
 }
 
 void Shrapnel::applyForce(double x, double y, double mag){
