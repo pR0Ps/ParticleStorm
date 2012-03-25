@@ -5,6 +5,7 @@ const int Shrapnel::MAX_SHRAPNEL_SPEED;
 const int Shrapnel::INITIAL_PUSH;
 const int Shrapnel::MAX_ROTATION_SPD;
 const double Shrapnel::INITIAL_TTL;
+const int Shrapnel::MAX_SHRAPNEL_LENGTH;
 
 Shrapnel::Shrapnel():GameObject(){
 
