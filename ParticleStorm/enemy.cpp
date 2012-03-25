@@ -29,6 +29,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         numShrapnel = 4;
         shrapnelLen = 40;
         radius = 20;
+        clr = ResourceManager::getInstance()->getColour(ResourceManager::BLUE);
 
         //calculating the x and y distance from enemy spawn and current player position
         x_dist = x_tar - x;
@@ -56,6 +57,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         numShrapnel = 6;
         shrapnelLen = 10;
         radius = 15;
+        clr = ResourceManager::getInstance()->getColour(ResourceManager::GREEN);
     }
     else if(type == ObjectManager::TANK){
         maxLife = life = 300;
@@ -64,6 +66,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         numShrapnel = 8;
         shrapnelLen = 15;
         radius = 30;
+        clr = ResourceManager::getInstance()->getColour(ResourceManager::GREEN);
 
         //calculating the x and y distance from enemy spawn and current player position
         x_dist = x_tar - x;
@@ -91,6 +94,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         numShrapnel = 4;
         shrapnelLen = 30;
         radius = 15;
+        clr = ResourceManager::getInstance()->getColour(ResourceManager::ORANGE);
 
         //calculating the x and y distance from enemy spawn and current player position
         x_dist = x_tar - x;
@@ -118,6 +122,8 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         numShrapnel = 4;
         shrapnelLen = 25;
         radius = 12;
+        clr = ResourceManager::getInstance()->getColour(ResourceManager::YELLOW);
+
         horVert = qrand() % 2;
     }
     else if (type == ObjectManager::BULLET){
@@ -127,12 +133,12 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         numShrapnel = 0;
         shrapnelLen = 0;
         radius = 7;
+        clr = ResourceManager::getInstance()->getColour(ResourceManager::RED);
     }
     else{
         qDebug() << "bad enemy type";
         exit(1);
     }
-    clr = ResourceManager::getInstance()->getColour(ResourceManager::RED);
 }
 
 void Enemy::update(double deltaTime){
@@ -237,6 +243,9 @@ void Enemy::update(double deltaTime){
 void Enemy::draw() const{
     Util::drawOctagon(x, y, radius * 2, false, clr);
     Util::drawBox(x-radius,y-radius,x+radius,y+radius,false,clr);
+    if (type == ObjectManager::GRUNT){
+
+    }
 }
 
 //pan the enemy (and their target)

@@ -26,6 +26,7 @@ public:
         RED,
         GREEN,
         BLUE,
+        ORANGE,
         BLACK
     };
 
@@ -55,6 +56,7 @@ private:
     const QColor *red;
     const QColor *green;
     const QColor *blue;
+    const QColor *orange;
     const QColor *black;
 
     //self-reference

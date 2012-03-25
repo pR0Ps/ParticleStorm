@@ -46,6 +46,7 @@ ResourceManager::ResourceManager()
     red = new QColor(255, 0, 0);
     green = new QColor(0, 255, 0);
     blue = new QColor(0, 0, 255);
+    orange = new QColor (255, 165, 0);
     black = new QColor(0, 0, 0);
 
     //set up self reference
@@ -126,6 +127,8 @@ const QColor* ResourceManager::getColour(Colours c){
         return green;
     else if (c == BLUE)
         return blue;
+    else if (c == ORANGE)
+        return orange;
     else
         return black;
 }
