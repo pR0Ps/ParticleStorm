@@ -270,10 +270,10 @@ void ObjectManager::doPlayerEnemyCollisions(){
     for(unsigned int i = 0; i < enemies.size(); i++) {
         if(enemies[i]->getInUse()) { //enemies vector stores unused enemies
 
-            if(Util::magnitude(player->getX()-enemies[i]->getX(),player->getY()-enemies[i]->getY()) < static_cast<Enemy*>(enemies[i])->getRadius()) {
+            if(!static_cast<Enemy*>(enemies[i])->isImmune() && Util::magnitude(player->getX()-enemies[i]->getX(),player->getY()-enemies[i]->getY()) < static_cast<Enemy*>(enemies[i])->getRadius()) {
                 player->modLife(-static_cast<Enemy*>(enemies[i])->getDamage(),true);
                 enemies[i]->modLife(-Player::RAM_DAMAGE,true);
-
+                static_cast<Enemy*>(enemies[i])->setImmune();
             }
         }
     }
