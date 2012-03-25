@@ -12,7 +12,6 @@ public:
     static const int INITIAL_PUSH_MAX = 140;
     static const int MAX_ROTATION_SPD = 600;
     static const double INITIAL_TTL = 1.5;
-    static const int MAX_SHRAPNEL_LENGTH =10;
     static const int DECREMENT_SPEED = 5;
     Shrapnel();
 

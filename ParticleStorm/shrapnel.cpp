@@ -6,7 +6,6 @@ const int Shrapnel::INITIAL_PUSH_MAX;
 const int Shrapnel::INITIAL_PUSH_MIN;
 const int Shrapnel::MAX_ROTATION_SPD;
 const double Shrapnel::INITIAL_TTL;
-const int Shrapnel::MAX_SHRAPNEL_LENGTH;
 const int Shrapnel::DECREMENT_SPEED;
 
 Shrapnel::Shrapnel():GameObject(){
@@ -68,7 +67,7 @@ void Shrapnel::draw() const{
  glLoadIdentity();
  glTranslated(x, y, 0);
  glRotated(angle, 0, 0, 1);
- Util::drawLine(-10,-10, MAX_SHRAPNEL_LENGTH, MAX_SHRAPNEL_LENGTH, clr);
+ Util::drawLine(-10,-10, len, len, clr);
  glPopMatrix();
 
 
