@@ -55,6 +55,10 @@ public:
     Player();
     ~Player();
 
+    // Accessors for the x_old and y_old data members.
+    double getXOld() const { return x_old; }
+    double getYOld() const { return y_old; }
+
     //resets the player
     void reset();
 
@@ -85,15 +89,14 @@ private:
     // Data members.
     // These represent the location of the player on the last call to update.
     double x_old, y_old;
+    int mana;
+    long int score;
+
     // Not sure what type to use for this yet - will likely use enum constants.
     // This may be unnecessary actually - may be simpler to just call the
     // useAbility function with the ability as an argument. The currently
     // selected abiliity will be determined in the update function.
     // currentAbility;
-    int mana;
-
-    //player score
-    long int score;
 
     // Private member functions. The init function does not need to be
     // overridden and will likely be removed.
@@ -102,8 +105,10 @@ private:
      * to the player's mana so if you want to reduce the player's mana then pass
      * a negative value to this function.
      *
-     * Parameter: the amount to add to the player's mana.
-     * Parameter: amount is reletive to current mana or not (set vs mod)
+     * Parameters:
+     * - the amount to add to the player's mana
+     * - whether or not the amount should be relative to the current mana
+     * (set vs mod)
      */
     void modMana(int amount, bool rel = true);
 
@@ -115,10 +120,6 @@ private:
      * Parameter: the position of the player's mouse, stored as a QPoint. This
      * should be given relative to the canvas widget, as opposed to in absolute
      * screen coordinates.
-     *
-     * Note: may need to take the size of the player's avatar into consideration
-     * as well, at least until the player's movements can be used to move the
-     * entire environment.
      */
     static bool isValidMousePos(const QPoint& pos);
 
