@@ -161,6 +161,8 @@ void GameEngine::start(){
     objectManager->spawnEnemy(ObjectManager::SPRINTER, 400, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
     objectManager->spawnEnemy(ObjectManager::SHOOTER, 500, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
     objectManager->spawnEnemy(ObjectManager::BULLET, 600, 100, objectManager->getPlayer()->getX(), objectManager->getPlayer()->getY());
+
+    objectManager->spawnPowerup(ObjectManager::HEALTH, 700, 100, 50, 50, 50);
 }
 
 //fade the frame

@@ -3,6 +3,7 @@
 
 const float Powerup::AIR_RESIST;
 const int Powerup::MAX_ROTATION_SPD;
+const int Powerup::MIN_ROTATION_SPD;
 const double Powerup::INITIAL_TTL;
 
 Powerup::Powerup():GameObject(){
@@ -16,19 +17,36 @@ void Powerup::startPowerup(int type, double x, double y, double x_vel, double y_
     this->y = y;
     this->x_vel = x_vel;
     this->y_vel = y_vel;
+    this->spin = Util::randInt(MIN_ROTATION_SPD, MAX_ROTATION_SPD) * ((qrand() % 2) * 2 - 1);
+    this->angle = 0;
     this->ttl = INITIAL_TTL;
+    this->clr = ResourceManager::getInstance()->getColour(ResourceManager::WHITE);
     this->inUse = true;
 }
 
 void Powerup::draw() const{
-
+    glPushMatrix();
+    glLoadIdentity();
+    glTranslated(x, y, 0);
+    glRotated(angle, 0, 0, 1);
+    Util::drawLine(-10, -10, 0, 10, clr);
+    Util::drawLine(-10, -10, 10, -10, clr);
+    Util::drawLine(10, -10, 0, 10, clr);
+    glPopMatrix();
 }
 
 void Powerup::update(double deltaTime){
-
+    //adjust velocity
     x_vel -= AIR_RESIST * x_vel * deltaTime;
     y_vel -= AIR_RESIST * y_vel * deltaTime;
 
+    //spin the particle
+    angle += deltaTime * spin;
+    if (angle > 360) angle = angle - 360;
+
+    //change position
+    x += x_vel * deltaTime;
+    y += y_vel * deltaTime;
 
     //kill old powerups
     if (ttl <= 0)

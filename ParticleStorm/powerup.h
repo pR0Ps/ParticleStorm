@@ -9,8 +9,9 @@ class Powerup : public GameObject
 public:
     Powerup();
 
-    static const float AIR_RESIST = 0.1;
-    static const int MAX_ROTATION_SPD = 10;
+    static const float AIR_RESIST = 1;
+    static const int MAX_ROTATION_SPD = 1080;
+    static const int MIN_ROTATION_SPD = 720;
     static const double INITIAL_TTL = 10;
 
     void startPowerup(int type, double x, double y, double x_vel, double y_vel, int value);
@@ -18,6 +19,7 @@ public:
     void draw() const;
     void update(double deltaTime);
     void applyForce(double x, double y, double mag){}
+    void die();
 
     double getRadius() const {return radius;}
     //Dies after a specific amount of time, or when player collides
