@@ -2,18 +2,21 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QtOpenGL>
+#include <GL/glu.h>
+#include <GL/gl.h>
+#include <vector>
 #include "gameengine.h"
 
-namespace Ui {
-    class MainWindow;
-}
-
-class MainWindow : public QMainWindow{
-    Q_OBJECT
-
+class MainWindow : public QGLWidget{
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+    static const int MAX_X = 600;
+    static const int MAX_Y = 600;
+    static const int MAX_DIST = 10;
+    static const int NUM_STARS = 255;
 
     /*
      * This function returns the position of the mouse relative to the OpenGL
@@ -33,16 +36,29 @@ public:
 
     void doneGame(unsigned int score);
 
-private slots:
-    void on_actionQuit_triggered();
-
-    void on_actionStart_triggered();
-
 private:
-    Ui::MainWindow *ui;
     GameEngine *engine;
 
+    struct mStar{
+        double x;
+        double y;
+        double dist;
+        mStar(double x, double y, double dist){
+            this->x = x;
+            this->y = y;
+            this->dist = dist;
+        }
+    };
+
+    std::vector<mStar*> *starVect;
+
+    void fillStar();
+
     static MainWindow *instance;
+
+protected:
+    void initializeGL();
+    void paintGL();
 };
 
 #endif // MAINWINDOW_H

@@ -1,22 +1,32 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 #include "gameengine.h"
 
 MainWindow* MainWindow::instance = NULL;
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow){
-    ui->setupUi(this);
-    setWindowTitle("Particle Storm");
+MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
 
+    setWindowTitle("Particle Storm");
+    setFixedSize(MAX_X,MAX_Y);
     //set up the game engine
     engine = new GameEngine();
     engine->setMouseTracking(true);
 
+
+
+    fillStar();
+
     instance = this;
+
+
+    //Temporary starting event
+    instance->setVisible(false);
+    engine->setVisible(true);
+    engine->start();
 }
 
 MainWindow::~MainWindow(){
-    delete ui;
+    while(!starVect->empty()) delete starVect->back(), starVect->pop_back();
+    delete starVect;
     delete engine;
 }
 
@@ -44,12 +54,34 @@ void MainWindow::doneGame(const unsigned int score){
     //highscores(score)
 }
 
-void MainWindow::on_actionQuit_triggered(){
-    exit(0);
+void MainWindow::initializeGL(){
+    //get current OpenGL context
+    makeCurrent();
+
+    //current version of OpenGL
+    qDebug() << "Current OpenGL version:" << (char*)glGetString(GL_VERSION);
+
+    //window stuff
+    glViewport(0, 0, MAX_X, MAX_Y);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0, MAX_X, 0, MAX_Y); //orthogonal, not perspective
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
 }
 
-void MainWindow::on_actionStart_triggered(){
-    instance->setVisible(false);
-    engine->setVisible(true);
-    engine->start();
+void MainWindow::paintGL(){
+
+}
+
+void MainWindow::fillStar()
+{
+    int i;
+    starVect = new vector<mStar*>;
+    starVect->reserve(NUM_STARS);
+    for(i = 0; i < NUM_STARS; i++)
+    {
+        starVect->push_back(new mStar(qrand()%MAX_X, qrand()%MAX_Y, qrand()%MAX_DIST));
+    }
+
 }

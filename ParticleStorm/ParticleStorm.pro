@@ -37,7 +37,7 @@ HEADERS  += mainwindow.h \
     gameengine.h \
     resourcemanager.h
 
-FORMS    += mainwindow.ui
+FORMS    +=
 
 RESOURCES += \
     Resources/resources.qrc
