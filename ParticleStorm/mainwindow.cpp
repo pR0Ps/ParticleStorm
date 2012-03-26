@@ -24,7 +24,10 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
     //init stars
     initStars();
 
-    playButton = new Button(212, 200, 388, 275);
+    //Buttons relative to texture centers
+    levelButton = new Button(150, 275, 450, 325);
+    endlessButton = new Button(100, 175, 500, 225);
+    zenButton = new Button(175, 75, 425, 125);
 
     //timing stuff
     timer = new QTime();
@@ -37,7 +40,9 @@ MainWindow::~MainWindow(){
     delete stars;
     delete starClr;
     delete timer;
-    delete playButton;
+    delete levelButton;
+    delete zenButton;
+    delete endlessButton;
     delete engine;
 }
 
@@ -54,20 +59,37 @@ bool MainWindow::getKeyPressed(int k){
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event){
-    if (playButton->mouseOver(currMousePos)){
-        playButton->down = true;
+    if (levelButton->mouseOver(currMousePos)){
+        levelButton->down = true;
+    }
+    else if (endlessButton->mouseOver(currMousePos)){
+        endlessButton->down = true;
+    }
+    else if (zenButton->mouseOver(currMousePos)){
+        zenButton->down = true;
     }
 }
 void MainWindow::mouseReleaseEvent(QMouseEvent *event){
-    if (playButton->mouseOver(currMousePos) && playButton->down){
-        //start the game
+    if (levelButton->mouseOver(currMousePos) && levelButton->down){
         instance->setVisible(false);
         engine->setVisible(true);
-        engine->start();
-      //will play some music here eventually
+        engine->start(LevelManager::LEVELED);
     }
+    else if(endlessButton->mouseOver(currMousePos) && endlessButton->down){
+        instance->setVisible(false);
+        engine->setVisible(true);
+        engine->start(LevelManager::NONSTOP);
+    }
+    else if(zenButton->mouseOver(currMousePos) && zenButton->down){
+        instance->setVisible(false);
+        engine->setVisible(true);
+        engine->start(LevelManager::ZEN);
+    }
+
     //reset button states
-    playButton->down = false;
+    levelButton->down = false;
+    endlessButton->down = false;
+    zenButton->down = false;
 }
 
 void MainWindow::doneGame(const unsigned int score){
@@ -92,7 +114,7 @@ void MainWindow::initializeGL(){
     glEnable(GL_BLEND);
 
     //load textures
-    playTex = loadTexture(":/Images/PLAY.png");
+    fontTex = loadTexture(":/Images/font.png");
     titleTex = loadTexture(":/Images/TITLE2.png");
 }
 
@@ -111,7 +133,7 @@ void MainWindow::update(){
     currMousePos.setY(MAX_Y - currMousePos.y());
 
     //hovering stuff
-    if (playButton->mouseOver(currMousePos)){
+    if (levelButton->mouseOver(currMousePos)){
         //draw cursor image
     }
 
@@ -149,8 +171,10 @@ void MainWindow::paintGL(){
     }
     glEnd();
 
-    //draw the button
-    Util::drawTexture(playButton->x1, playButton->y1, playButton->x2, playButton->y2, playTex);
+    //draw the button options
+    Util::drawString("LEVEL MODE", 300, 300, fontTex, true, true, 2, 2, true);
+    Util::drawString("ENDLESS PLAY", 300, 200, fontTex, true, true, 2, 2, true);
+    Util::drawString("ZEN MODE", 300, 100, fontTex, true, true, 2, 2, true);
 
     //draw the title ew ew hard code. IMG has width 552, height 106
     Util::drawTexture((MAX_X-552)/2, (MAX_Y-50-106), (((MAX_X-552)/2)+552), (MAX_Y-50), titleTex);

@@ -79,12 +79,14 @@ private:
         double y2;
         bool down;
     };
-    Button *playButton;
+    Button *levelButton;
+    Button *endlessButton;
+    Button *zenButton;
 
     QPoint currMousePos;
 
     //textures
-    GLuint playTex;
+    GLuint fontTex;
     GLuint titleTex;
 
     void initStars();

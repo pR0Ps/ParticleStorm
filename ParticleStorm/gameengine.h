@@ -19,7 +19,7 @@ public:
 
     //constants (redeclare in implementation)
     static const int MAX_X = 1024;
-    static const int MAX_Y = 768;
+    static const int MAX_Y = 680;
     static const int MAX_FPS = 120;
     static const int FPS_COUNT_FRAME_INTERVAL = 50;
     static const int LINES_PER_FADE = 200;
