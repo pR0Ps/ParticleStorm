@@ -34,7 +34,34 @@ void LevelManager::startEnemies(){
         }
     }
     else if (currType == LEVELED){
-        //make some legit levels (use case stmts without breaks to stack)
+        switch(currLvl){
+        case 25:
+        case 24:
+        case 23:
+        case 22:
+        case 21:
+        case 20:
+        case 19:
+        case 18:
+        case 17:
+        case 16:
+        case 15:
+        case 14:
+        case 13:
+        case 12:
+        case 11:
+        case 10:
+        case 9:
+        case 8:
+        case 7:
+        case 6:
+        case 5:
+        case 4:
+        case 3:
+        case 2:
+        case 1:
+            om->spawnEnemy(ObjectManager::GRUNT, 0, 0);
+        }
     }
     else if (currType == ZEN){
         //zen mode, no enemies ever
@@ -57,7 +84,7 @@ void LevelManager::update(double deltaTime) {
     }
 
     //check for the end of the level
-    if (enemiesStarted && enemyCheck_ttl <= 0) {
+    if (enemiesStarted && currType != ZEN && enemyCheck_ttl <= 0) {
         enemyCheck_ttl = ENEMY_CHECK_RATE;
         levelDone = ObjectManager::getInstance()->getNumObjects(ObjectManager::ENEMY) == 0;
     }
@@ -65,7 +92,15 @@ void LevelManager::update(double deltaTime) {
 
 void LevelManager::drawNoFade() const{
     if (text_ttl > 0){
-        Util::drawString("LEVEL: " + Util::doubleToString((double) currLvl,0,0), GameEngine::MAX_X/2, GameEngine::MAX_Y/2, ResourceManager::getInstance()->getTexture(ResourceManager::TEXT), true, true, 3,3);
+        if (currType == NONSTOP){
+            Util::drawString(currLvl > 1 ? "NEXT WAVE!" : "FIRST WAVE!", GameEngine::MAX_X/2, GameEngine::MAX_Y/2, ResourceManager::getInstance()->getTexture(ResourceManager::TEXT), true, true, 3,3);
+        }
+        else if (currType == LEVELED){
+            Util::drawString("LEVEL: " + Util::doubleToString((double) currLvl,0,0), GameEngine::MAX_X/2, GameEngine::MAX_Y/2, ResourceManager::getInstance()->getTexture(ResourceManager::TEXT), true, true, 3,3);
+        }
+        else if (currType == ZEN){
+            Util::drawString("ZEN MODE", GameEngine::MAX_X/2, GameEngine::MAX_Y/2, ResourceManager::getInstance()->getTexture(ResourceManager::TEXT), true, true, 3,3);
+        }
     }
 }
 

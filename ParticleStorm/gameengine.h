@@ -45,7 +45,7 @@ public:
 
     //control the game engine
     void reset();
-    void start();
+    void start(int type);
 
 private:
     //mouse stuff
@@ -83,6 +83,7 @@ private:
     //game modifiers
     bool paused;
     double gameOverTimer;
+    int gameMode;
 
     //flag for initially clearing the framebuffer
     bool initialClear;

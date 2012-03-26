@@ -62,8 +62,9 @@ void ObjectManager::reset(){
     //reset the player
     player->reset();
 
-    //reset the particle counter
+    //reset the counters
     cur_particle = 0;
+    cur_shrapnel = 0;
 
     //reset the objects
     deactivateAll(PARTICLE);
@@ -370,6 +371,7 @@ void ObjectManager::spawnPowerup (PowerupType t, double x, double y, double x_ve
     static_cast<Powerup*>(temp)->startPowerup(t, x, y, x_vel, y_vel, value);
 }
 
+//spawn an enemy
 void ObjectManager::spawnEnemy(EnemyType t, const double x, const double y, const double x_tar, const double y_tar){
     GameObject* temp = getUnused(ENEMY);
     if (temp == NULL){
@@ -378,7 +380,9 @@ void ObjectManager::spawnEnemy(EnemyType t, const double x, const double y, cons
     }
     static_cast<Enemy*>(temp)->startEnemy(t, x, y, x_tar, y_tar);
 }
-
+void ObjectManager::spawnEnemy(EnemyType t, double x, double y){
+    spawnEnemy(t, x, y, getPlayer()->getX(), getPlayer()->getY());
+}
 void ObjectManager::spawnEnemy(double x, double y){
     spawnEnemy((EnemyType)Util::randInt(GRUNT, SHOOTER), x, y, getPlayer()->getX(), getPlayer()->getY());
 }

@@ -23,7 +23,7 @@ public:
 
     //constants (redeclare in implementation)
     static const int MAX_PARTICLES = 500;
-    static const int MAX_ENEMIES = 50;
+    static const int MAX_ENEMIES = 100;
     static const int MAX_POWERUPS = 50;
     static const int MAX_SHRAPNEL = 40;
     static const int MAX_STARS = 250;
@@ -88,7 +88,8 @@ public:
     void spawnParticle(double x, double y, double x_vel, double y_vel);
     void spawnParticle(double x, double y);
     void spawnPowerup (PowerupType t, double x, double y, double x_vel, double y_vel, int value);
-    void spawnEnemy(EnemyType t, double x, double y, double x_tar = 0, double y_tar = 0);
+    void spawnEnemy(EnemyType t, double x, double y, double x_tar, double y_tar);
+    void spawnEnemy(EnemyType t, double x, double y);
     void spawnEnemy(double x, double y);
     void spawnShrapnel (double x, double y, double x_vel, double y_vel, int num, double len, const QColor *clr);
 

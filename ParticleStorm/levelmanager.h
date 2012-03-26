@@ -20,7 +20,7 @@ public:
     static const double TEXT_DISPLAY_TIME = 5;
     static const double ENEMY_CHECK_RATE = 5;
 
-    static const int MAX_ENEMIES = 50;
+    static const int MAX_ENEMIES = 70;
     static const int MIN_ENEMIES = 5;
     static const int ENEMY_GROWTH = 3;
 

@@ -151,10 +151,14 @@ void GameEngine::reset(){
 }
 
 //starts a game
-void GameEngine::start(){
+void GameEngine::start(int mode){
     //game states
     paused = false;
     gameOverTimer = 0;
+
+    //set game type
+    if (mode < 0 || mode > 2) mode = 0;
+    gameMode = (LevelManager::LevelType)mode;
 
     //FPS stuff
     framecnt = 0;
@@ -172,7 +176,7 @@ void GameEngine::start(){
     gameClock = startTimer(1/(double)MAX_FPS*1000);
 
     //start the game
-    levelManager->startLevel(LevelManager::NONSTOP, 1);
+    levelManager->startLevel((LevelManager::LevelType)gameMode, 1);
 }
 
 //fade the frame
@@ -204,17 +208,20 @@ void GameEngine::doFade(){
 //draws information for the player
 void GameEngine::drawHUD(){
 
-    //demo bars for health + mana
-    Util::drawMeter(20, MAX_Y - 35, 220, MAX_Y - 20, objectManager->getPlayer()->getLifePercent(), false, resourceManager->getColour(ResourceManager::RED));
-    Util::drawMeter(240, MAX_Y - 35, 440, MAX_Y - 20, objectManager->getPlayer()->getManaPercent(), false, resourceManager->getColour(ResourceManager::BLUE));
+    if (gameMode != LevelManager::ZEN){
+        //bars for health + mana
+        Util::drawMeter(20, MAX_Y - 35, 220, MAX_Y - 20, objectManager->getPlayer()->getLifePercent(), false, resourceManager->getColour(ResourceManager::RED));
+        Util::drawMeter(240, MAX_Y - 35, 440, MAX_Y - 20, objectManager->getPlayer()->getManaPercent(), false, resourceManager->getColour(ResourceManager::BLUE));
+
+        //Score text
+        Util::drawString("SCORE:", MAX_X - 260, MAX_Y - 25, resourceManager->getTexture(ResourceManager::TEXT), false, true);
+        Util::drawString(Util::doubleToString(objectManager->getPlayer()->getScore(), 10, 0), MAX_X - 90, MAX_Y - 25, resourceManager->getTexture(ResourceManager::TEXT), true, true, 1, Util::getScaleByFrame(framecnt, 25, 1, 2));
+    }
 
     // Display the player's currently selected ability at the top of the screen.
-    Util::drawString("ABILITY: " + objectManager->getPlayer()->getAbilityString(), 480,
-        MAX_Y - 25, resourceManager->getTexture(ResourceManager::TEXT), false, true);
+    Util::drawString("ABILITY: " + objectManager->getPlayer()->getAbilityString(), MAX_X - 270,
+        0, resourceManager->getTexture(ResourceManager::TEXT));
 
-    //Score text (frames for now)
-    Util::drawString("SCORE:", MAX_X - 260, MAX_Y - 25, resourceManager->getTexture(ResourceManager::TEXT), false, true);
-    Util::drawString(Util::doubleToString(objectManager->getPlayer()->getScore(), 10, 0), MAX_X - 90, MAX_Y - 25, resourceManager->getTexture(ResourceManager::TEXT), true, true, 1, Util::getScaleByFrame(framecnt, 25, 1, 2));
     //FPS text
     Util::drawString("FPS: " + Util::doubleToString(fps, 4, 1), 0, 0, resourceManager->getTexture(ResourceManager::TEXT));
 }
@@ -272,7 +279,7 @@ void GameEngine::update(){
     //do collisions after everything has updated into place
     objectManager->doEnemyParticleCollisions();
     objectManager->doPlayerEnemyCollisions();
-    //objectManager->doPlayerPowerupCollisions();
+    objectManager->doPlayerPowerupCollisions();
 
     //testing game stuff
     objectManager->modPlayerScore(1);
