@@ -311,9 +311,7 @@ void GameEngine::paintGL(){
         objectManager->draw(ObjectManager::SHRAPNEL);
         objectManager->draw(ObjectManager::POWERUP);
         objectManager->draw(ObjectManager::PARTICLE);
-        if (getMouseState() & Qt::LeftButton || keyPressed(GameEngine::DROP)){
-            objectManager->draw(ObjectManager::PLAYER);
-        }
+        objectManager->draw(ObjectManager::PLAYER);
 
         fbo->release();
         //all draw commands after here go to screen
@@ -324,7 +322,6 @@ void GameEngine::paintGL(){
         //draw objects that shouldn't be faded
         objectManager->draw(ObjectManager::STAR);
         objectManager->draw(ObjectManager::ENEMY);
-        objectManager->draw(ObjectManager::PLAYER);
 
         //draw the interface and information
         drawHUD();
