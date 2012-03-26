@@ -39,7 +39,7 @@ HEADERS  += mainwindow.h \
     resourcemanager.h \
     levelmanager.h
 
-FORMS    += mainwindow.ui
+FORMS    +=
 
 RESOURCES += \
     Resources/resources.qrc
