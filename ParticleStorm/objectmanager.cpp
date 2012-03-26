@@ -318,7 +318,6 @@ void ObjectManager::doPlayerPowerupCollisions(){
 
     for(unsigned int i = 0; i < powerups.size(); i++) {
         if(powerups[i]->getInUse()) { //enemies vector stores unused enemies
-
             if(playerCollision(player->getX(),player->getY(),player->getXOld(),player->getYOld(), powerups[i]->getX(),powerups[i]->getY(),static_cast<Powerup*>(powerups[i])->getRadius())) {
                 //do player powerups collision
             }

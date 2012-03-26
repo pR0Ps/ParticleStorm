@@ -20,6 +20,10 @@ GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
     setWindowTitle("Particle Storm");
     setAutoFillBackground(false);
 
+    QRect frect = frameGeometry();
+    frect.moveCenter(QDesktopWidget().availableGeometry().center());
+    move(frect.topLeft());
+
     //pseudo-randomness
     qsrand((unsigned int)time(NULL));    
 

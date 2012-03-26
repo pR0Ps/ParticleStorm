@@ -16,6 +16,10 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
     setWindowTitle("Particle Storm");
     setFixedSize(MAX_X,MAX_Y);
 
+    QRect frect = frameGeometry();
+    frect.moveCenter(QDesktopWidget().availableGeometry().center());
+    move(frect.topLeft());
+
     //set up the game engine
     engine = new GameEngine();
     engine->setMouseTracking(true);
