@@ -3,6 +3,7 @@
 
 #include <QtOpenGL/QGLWidget>
 #include <QImage>
+#include <QSound>
 
 class ResourceManager
 {
@@ -29,6 +30,12 @@ public:
         ORANGE,
         BLACK
     };
+    enum Sound{
+        music
+
+
+
+  };
 
     //get instance
     static ResourceManager* getInstance(){return instance;}
@@ -43,12 +50,16 @@ public:
 private:
     //the files to load textures from
     static const char* tex_files[];
+    static const char* music_sounds[];
 
     //the array of textures
     std::vector<GLuint> *textures;
 
     //holds array of colours
     std::vector<const QColor*> *colours;
+
+   //holds the sounds
+    std::vector<QSound*> *sound;
 
     //static colours
     const QColor *white;

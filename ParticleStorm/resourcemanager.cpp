@@ -1,6 +1,7 @@
 #include "resourcemanager.h"
 #include <QImage>
 #include <QtOpenGL>
+#include <QSound>
 
 ResourceManager* ResourceManager::instance = NULL;
 
@@ -18,11 +19,19 @@ ResourceManager::ResourceManager()
         ":/Images/font.png",
         ":/Images/Player.png"
     };
-
+    const char* music_sounds[] ={
+        "../ParticleStorm/Resources/base-loop.wav"
+    };
     //load the textures
     textures = new std::vector<GLuint>;
     for (unsigned int i = 0 ; i < sizeof(tex_files)/sizeof(char*) ; i++){
         textures->push_back(loadTextureFromFile(tex_files[i]));
+    }
+
+    //music
+    sound = new std::vector<QSound*>;
+    for (unsigned int i = 0; i<sizeof(music_sounds)/sizeof(char*); i++){
+        sound->push_back(new QSound(music_sounds[i]));
     }
 
     //init colour arrays
@@ -103,6 +112,7 @@ GLuint ResourceManager::getTexture(Texture t){
     return textures->at(t);
 }
 
+
 //return the stored colour of the specified gradient
 const QColor* ResourceManager::getColourScale(const float f){
     if (f < 0){
@@ -132,3 +142,4 @@ const QColor* ResourceManager::getColour(Colours c){
     else
         return black;
 }
+

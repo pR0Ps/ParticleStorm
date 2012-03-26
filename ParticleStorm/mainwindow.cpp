@@ -19,18 +19,6 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
     //set up the game engine
     engine = new GameEngine();
     engine->setMouseTracking(true);
-
-    //try and do music
-    //QSound music("C://Users//Daniel//CISC 320//ParticleStorm//Resources//base-loop.wav");
-    //music.play();
-    //QSound music("./Images/base-loop.wav");
-    //QSound music("../ParticleStorm/Resources/base-loop.wav");
-    //music.play();
-
-    //QString str = QDir::homePath();
-    //printf("%s\n", str.toAscii().constData());
-    //music.play();
-
     instance = this;
 
     //init stars
@@ -76,6 +64,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
         instance->setVisible(false);
         engine->setVisible(true);
         engine->start();
+      //will play some music here eventually
     }
     //reset button states
     playButton->down = false;
