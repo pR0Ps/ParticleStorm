@@ -162,10 +162,8 @@ void GameEngine::start(){
     //start the timer (sets off the frameloop via timerEvent)
     gameClock = startTimer(1/(double)MAX_FPS*1000);
 
-    //spawn some testing enemies
+    //start the game
     levelManager->startLevel(1);
-
-    objectManager->spawnPowerup(ObjectManager::HEALTH, 700, 100, 50, 50, 50);
 }
 
 //fade the frame
@@ -272,10 +270,6 @@ void GameEngine::update(){
     /*if (getMouseState() & Qt::RightButton){
         objectManager->modPlayerLife(-5);
     }*/
-    if (framecnt%50==0) {
-       // qDebug("Current Level %d", levelManager->currLvl);
-        qDebug("This should be zero %d", ObjectManager::getInstance()->getNumObjects(ObjectManager::ENEMY));
-    }
     levelManager->update(deltaTime);
 }
 
@@ -327,6 +321,8 @@ void GameEngine::paintGL(){
 
         //draw the interface and information
         drawHUD();
+
+        //draw the level number display
         if (levelManager->isFinished())
             levelManager->draw();
     }

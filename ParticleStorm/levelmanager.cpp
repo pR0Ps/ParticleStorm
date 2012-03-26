@@ -37,8 +37,8 @@ void LevelManager::nextLevel() {
 void LevelManager::update(double deltaTime) {
     if (isFinished() && ttl >= 0) {
         ttl -= deltaTime;
-        qDebug() << "dTime" << deltaTime;
-        qDebug() << "ttl" << ttl;
+        //qDebug() << "dTime" << deltaTime;
+        //qDebug() << "ttl" << ttl;
     }
     else if (isFinished() && ttl <= 0) {
         nextLevel();
