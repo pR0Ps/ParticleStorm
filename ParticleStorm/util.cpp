@@ -27,6 +27,35 @@ double Util::min(double x, double y) {
     return y;
 }
 
+//returns the point of intersection between the lines spaning p1-p2 and p3-p4
+QPointF* Util::lineIntersect(const double x1, const double y1, const double x2, const double y2,
+                             const double x3, const double y3, const double x4, double y4) {
+    //for rounding errors
+    const float epsilon = 1e-5;
+
+    double dist = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+    //If dist is zero, there is no intersection
+    if (dist == 0) return NULL;
+
+    // Get the x and y
+    double pre = (x1 * y2 - y1 * x2);
+    double post = (x3*y4 - y3*x4);
+    double x = (pre * (x3 - x4) - (x1 - x2) * post) / dist;
+    double y = (pre * (y3 - y4) - (y1 - y2) * post) / dist;
+
+    // Check if the x and y coordinates are within both lines
+    if (x < std::min(x1, x2) - epsilon || x > std::max(x1, x2) + epsilon ||
+        x < std::min(x3, x4) - epsilon || x > std::max(x3, x4) + epsilon) return NULL;
+    if (y < std::min(y1, y2) - epsilon || y > std::max(y1, y2) + epsilon||
+        y < std::min(y3, y4) - epsilon || y > std::max(y3, y4) + epsilon) return NULL;
+
+    // Return the point of intersection
+    QPointF* ret = new QPointF();
+    ret->setX(x);
+    ret->setY(y);
+    return ret;
+}
+
 //returns the amount of scale to apply based on the # frames elapsed to make an object pulse
 float Util::getScaleByFrame(unsigned long int frame, unsigned int steps,
                             const float min, const float max, const bool cycle){

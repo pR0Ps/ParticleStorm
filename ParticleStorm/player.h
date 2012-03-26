@@ -31,7 +31,6 @@
 #include "mainwindow.h"
 #include "gameobject.h"
 #include "enemy.h"
-using namespace std;
 
 // Forward declarations needed for compilation.
 class MainWindow;
@@ -131,7 +130,7 @@ public:
      * Returns a string representation of the player's currently selected
      * ability for display in the game HUD.
      */
-    string getAbilityString() const;
+    std::string getAbilityString() const;
 
 private:
     // Data members.

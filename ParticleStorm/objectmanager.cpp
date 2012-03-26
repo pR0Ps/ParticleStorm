@@ -3,8 +3,6 @@
 #include <iostream>
 #include "objectmanager.h"
 
-using namespace std;
-
 ObjectManager* ObjectManager::instance = NULL;
 
 const int ObjectManager::MAX_PARTICLES;

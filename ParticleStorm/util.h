@@ -42,6 +42,10 @@ public:
     static double max(double x, double y);
     static double min(double x, double y);
 
+    //calculate the intersection point between 2 lines (if any)
+    static QPointF* lineIntersect(const double x1, const double y1, const double x2, const double y2,
+                                 const double x3, const double y3, const double x4, double y4);
+
     //for pulsing objects (scale amount per frame)
     static float getScaleByFrame(unsigned long int frame, unsigned int steps,
                                  float min, float max, bool smooth = true);

@@ -47,7 +47,7 @@ void LevelManager::update(double deltaTime) {
 }
 
 void LevelManager::draw() {
-    string strLvl = "LEVEL: " + Util::doubleToString((double) currLvl,0,0);
+    std::string strLvl = "LEVEL: " + Util::doubleToString((double) currLvl,0,0);
     Util::drawString(strLvl, GameEngine::MAX_X/2, GameEngine::MAX_Y/2, ResourceManager::getInstance()->getTexture(ResourceManager::TEXT), true, true, 3,3);
 }
 

@@ -143,7 +143,7 @@ void MainWindow::update(){
 }
 
 void MainWindow::fillStar(){
-    starVect = new vector<mStar*>;
+    starVect = new std::vector<mStar*>;
     starVect->reserve(NUM_STARS);
     for(int i = 0; i < NUM_STARS; i++)
     {

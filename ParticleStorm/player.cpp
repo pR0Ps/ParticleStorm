@@ -156,7 +156,7 @@ void Player::modMana(double amount, bool rel) {
         mana = Util::max(0, Util::min (amount, MAX_MANA));
 }
 
-string Player::getAbilityString() const {
+std::string Player::getAbilityString() const {
     switch (currentAbility) {
     case VORTEX:
         return "VORTEX";
