@@ -70,6 +70,9 @@ public:
     // be changed when the change ability button is held down continuously.
     static const double TIME_BETWEEN_CHG_ABILITY = 0.5; // measured in seconds
 
+    // Dummy values are used for the ability constants at the moment - these can
+    // be tinkered with in the future to modify the game difficulty.
+
     // Constants for the lightning ability.
     static const int LIGHTNING_RANGE = 250;
     static const int LIGHTNING_DPS = 50; // DPS - damage per second
@@ -78,6 +81,10 @@ public:
     // the player since the drawJaggedLine function may cause the program to
     // crash otherwise.
     static const int MIN_LIGHTNING_DRAW_DISTANCE = 10;
+
+    // Constants for the spray ability.
+    static const int PARTICLES_SPAWNED_PER_SEC = 50;
+    static const int SPRAY_MANA_COST = 50;
 
     // Constructor/destructor.
     Player();
@@ -187,6 +194,12 @@ private:
      * current ObjectManager.
      */
     void lightningAbility(double deltaTime, ObjectManager* manager);
+
+    /*
+     * Implements the spray abililty. This is essentially just a combination of
+     * the drop particle and force push abilities.
+     */
+    void sprayAbility(double deltaTime, ObjectManager* manager);
 
     /*
      * Advances the player's currently selected special ability to the next one

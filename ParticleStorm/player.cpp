@@ -24,6 +24,8 @@ const int Player::LIGHTNING_RANGE;
 const int Player::LIGHTNING_DPS;
 const int Player::LIGHTNING_MANA_COST;
 const int Player::MIN_LIGHTNING_DRAW_DISTANCE;
+const int Player::PARTICLES_SPAWNED_PER_SEC;
+const int Player::SPRAY_MANA_COST;
 
 // Implementation of constructor and destructor.
 
@@ -133,13 +135,14 @@ void Player::drawLightning() const {
             // colour that we want for drawing the effect.
             ResourceManager* manager = ResourceManager::getInstance();
             Util::drawJaggedLine(x, y, enemyX, enemyY,
-                                 manager->getColour(ResourceManager::WHITE));
+                                 manager->getColour(ResourceManager::YELLOW));
         }
     }
 }
 
 //change the score
-// Note: there is no upper bound on the player's score.
+// Note: there is no upper bound on the player's score, unlike the player's
+// mana.
 void Player::modScore(const int amt, const bool rel){
     if (rel)
         score = score + amt > 0 ? score + amt : 0;
@@ -147,7 +150,6 @@ void Player::modScore(const int amt, const bool rel){
         score = amt > 0 ? amt : 0;
 }
 
-// *Changed mana to a double temporarily.
 void Player::modMana(double amount, bool rel) {
     // Perform bounds checking on what the new value of mana would be.
     if (rel)
@@ -186,7 +188,7 @@ void Player::performAbility(double deltaTime, ObjectManager* manager,
     // Check to see if the drop particle ability has been activated.
     if ((window->getMouseState() & Qt::LeftButton) ||
             window->keyPressed(GameEngine::DROP)){
-        //at least one particle (if staying still)
+        // spwan at least one particle (if staying still)
         manager->spawnParticle(x, y);
 
         // spawn a particle every PARTICLE_SPACING px along the line between the
@@ -199,7 +201,6 @@ void Player::performAbility(double deltaTime, ObjectManager* manager,
         for (int i = 0 ; i < dist ; i+= PARTICLE_SPACING)
             manager->spawnParticle(x_old + tempX * i, y_old + tempY * i);
     }
-
     // Force push ability. Force push and force pull are only applied to
     // particles and stars.
     else if ((window->getMouseState() & Qt::RightButton) ||
@@ -207,33 +208,33 @@ void Player::performAbility(double deltaTime, ObjectManager* manager,
         manager->applyForce(ObjectManager::PARTICLE, x, y, Particle::FORCE_EXERT);
         manager->applyForce(ObjectManager::STAR, x, y, Star::FORCE_EXERT);
     }
-
     // Force pull.
     else if ((window->getMouseState() & Qt::MiddleButton) ||
              window->keyPressed(GameEngine::PULL)){
         manager->applyForce(ObjectManager::PARTICLE, x, y, -Particle::FORCE_EXERT);
         manager->applyForce(ObjectManager::STAR, x, y, -Star::FORCE_EXERT);
     }
-
     // Use special ability.
     else if (window->keyPressed(GameEngine::ABILITY))
         useAbility(deltaTime, manager);
-
     // Change special ability.
     else if (window->keyPressed(GameEngine::CHGABILITY))
         changeAbility(deltaTime);
 
+    // Perform any clean-up required for when a special ability has not been
+    // activated.
+    if (!window->keyPressed(GameEngine::ABILITY)) {
+        // Reset the lightning target to prevent the lightning effect from
+        // continuing to be drawn if this ability was activated on the last call
+        // to update.
+        lightningTarget = NULL;
+    }
     // If the change ability button is not pressed, then reset the variables for
     // keeping track of how often the player's special ability can be changed.
-    // (This should possibly be in a separate if statement instead of an else.)
-    else {
+    // *Should rename these variable slightly.
+    if (!window->keyPressed(GameEngine::CHGABILITY)) {
         chgAbilityActivatedOnLastUpdate = false;
         timeSinceLastChgAbility = 0;
-    }
-
-    if (!window->keyPressed(GameEngine::ABILITY)) {
-        // perform any clean-up for when a special ability is not activated
-        lightningTarget = NULL;
     }
 }
 
@@ -242,6 +243,7 @@ void Player::useAbility(double deltaTime, ObjectManager* manager) {
     case VORTEX:
         break;
     case SPRAY:
+        sprayAbility(deltaTime, manager);
         break;
     case REPULSE:
         break;
@@ -273,6 +275,39 @@ void Player::lightningAbility(double deltaTime, ObjectManager* manager) {
         // reset the current target of the lightning ability to null so that the
         // lightning effect will not be drawn
         lightningTarget = NULL;
+}
+
+// A first pass at the spray ability. The way it works now, it is essentially
+// just a combination of the drop particle and force push abilities. The mana
+// cost for this ability is justified since only one of these abilities can be
+// activated at a time individually, but this abilitiy allows the player to
+// apply force to spawned particles immediately.
+// As I have programmed it now, a few particles are spawned at the player's
+// current location on every call to update and force is applied to the
+// particles right away. It may be better to take the approach that Carey used
+// for the implementation of the drop particle ability, which is to spawn
+// particles along the line that the player travelled since the last call to
+// update (although delta t should be used in some way in this function).
+void Player::sprayAbility(double deltaTime, ObjectManager *manager) {
+    // First check to see if the player has enough mana to perform the ability.
+    // *It may make more sense to move this check into the useAbility function
+    // since all special abilities consume mana.
+    double manaCost = deltaTime * SPRAY_MANA_COST;
+
+    if (manaCost <= mana) {
+        modMana(-manaCost);
+
+        // Spawn numParticles at the player's current position and apply force
+        // to them immediately.
+        double numParticles = deltaTime * PARTICLES_SPAWNED_PER_SEC;
+        for (int particleCount = 0; particleCount < numParticles;
+             particleCount++) {
+            manager->spawnParticle(x,y);
+            manager->applyForce(ObjectManager::PARTICLE, x, y,
+                                Particle::FORCE_EXERT);
+            // Note: should also apply force to stars here.
+        }
+    }
 }
 
 void Player::changeAbility(double deltaTime) {
