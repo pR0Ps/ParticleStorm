@@ -99,12 +99,11 @@ void Enemy::update(double deltaTime){
 
     const Player* player = ObjectManager::getInstance()->getPlayer();
 
-    if(x >= ((GameEngine::MAX_X) || x <= 0 || y >= (GameEngine::MAX_Y) || y <= 0) && type != ObjectManager::BULLET){
-        findDirection(x, y, player->getX(), player->getY());
-    }
-
     if(type == ObjectManager::GRUNT || type == ObjectManager::TANK || type == ObjectManager::SPRINTER){
 
+        if(x >= (GameEngine::MAX_X) || x <= 0 || y >= (GameEngine::MAX_Y) || y <= 0){
+            findDirection(x, y, player->getX(), player->getY());
+        }
         x += x_vel * speed * deltaTime;
         y += y_vel * speed * deltaTime;
 
@@ -120,17 +119,17 @@ void Enemy::update(double deltaTime){
         }
 
         if(x < 40){
-            x += 3 * speed * deltaTime;
+            x += 2 * speed * deltaTime;
         }
         else if(x > 984){
-            x -= 3 * speed * deltaTime;
+            x -= 2 * speed * deltaTime;
         }
 
         if(y < 40){
-            y += 3 * speed * deltaTime;
+            y += 2 * speed * deltaTime;
         }
         else if(y > 728){
-            y -= 3* speed * deltaTime;
+            y -= 2 * speed * deltaTime;
         }
 
         if(Util::distance(x, y, player->getX(), player->getY()) < 500){
@@ -140,19 +139,19 @@ void Enemy::update(double deltaTime){
             y -= y_vel * speed * deltaTime;
         }
     }
-    else if(type = ObjectManager::HEALER){
+    else if(type == ObjectManager::HEALER){
         if(x < 40){
-            x += 3 * speed * deltaTime;
+            x += 2 * speed * deltaTime;
         }
         else if(x > 984){
-            x -= 3 * speed * deltaTime;
+            x -= 2 * speed * deltaTime;
         }
 
         if(y < 40){
-            y += 3 * speed * deltaTime;
+            y += 2 * speed * deltaTime;
         }
         else if(y > 728){
-            y -= 3* speed * deltaTime;
+            y -= 2* speed * deltaTime;
         }
 
         if(Util::distance(x, y, player->getX(), player->getY()) < 500){
@@ -160,6 +159,15 @@ void Enemy::update(double deltaTime){
 
             x -= x_vel * speed * deltaTime;
             y -= y_vel * speed * deltaTime;
+        }
+    }
+    else if(type == ObjectManager::BULLET){
+        qDebug() << "is it working";
+        x += x_vel * speed * deltaTime;
+        y += y_vel * speed * deltaTime;
+
+        if(x >= (GameEngine::MAX_X)*2 || y >= (GameEngine::MAX_Y)*2){
+            die();
         }
     }
 
