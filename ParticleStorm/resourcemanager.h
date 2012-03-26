@@ -46,6 +46,7 @@ public:
     //get colours
     const QColor* getColourScale(float f);
     const QColor* getColour (Colours c);
+    void playMainMusic(double deltaTime);
 
 private:
     //the files to load textures from

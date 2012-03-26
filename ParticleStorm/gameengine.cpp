@@ -234,6 +234,8 @@ void GameEngine::drawHUD(){
 void GameEngine::update(){
     //get time (in seconds) since last update
     double deltaTime = timer->restart()/(float)1000;
+    // play main music
+     ResourceManager::getInstance()->playMainMusic(deltaTime);
 
     //FPS monitoring
     framecnt++;

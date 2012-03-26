@@ -89,16 +89,11 @@ void Player::reset(){
 
 
 // Implementation of pure virtual functions.
-//throwing in Music here for now because I'm a rebel
-double totalDeltaTime = 35;
+
+
+
 void Player::update(double deltaTime) {
 
-    totalDeltaTime = totalDeltaTime+deltaTime;
-    if (totalDeltaTime > 35){
-     QSound music("../ParticleStorm/Resources/base-loop.wav");
-    music.play();
-    totalDeltaTime =0;
-    }
     // Update the previous coordinates of the avatar with the current
     // coordinates.
     x_old = x;

@@ -143,3 +143,14 @@ const QColor* ResourceManager::getColour(Colours c){
         return black;
 }
 
+double totalDeltaTime = 35;
+void ResourceManager::playMainMusic(double deltaTime){
+
+totalDeltaTime = totalDeltaTime+deltaTime;
+    if (totalDeltaTime > 35){
+     QSound music("../ParticleStorm/Resources/base-loop.wav");
+    music.play();
+    totalDeltaTime =0;
+    }
+
+}
