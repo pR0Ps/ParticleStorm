@@ -89,9 +89,10 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         numShrapnel = 0;
         shrapnelLen = 0;
         radius = 7;
+        clr = ResourceManager::getInstance()->getColour(ResourceManager::RED);
 
         findDirection(x, y, x_tar, y_tar);
-        clr = ResourceManager::getInstance()->getColour(ResourceManager::RED);
+
     }
     else{
         qDebug() << "bad enemy type";
@@ -194,6 +195,11 @@ void Enemy::update(double deltaTime){
 }
 
 void Enemy::draw() const{
+
+    //draw healer lightning
+    if (currentEnemy != NULL && timerActive && type == ObjectManager::HEALER){
+        Util::drawJaggedLine(x, y, currentEnemy->getX(), currentEnemy->getY(), clr);
+    }
 
     //draw indicators for enemies that are off-screen
     if (!Util::coordInRect(x, y, 0, 0, GameEngine::MAX_X, GameEngine::MAX_Y)){
