@@ -57,7 +57,7 @@ Qt::MouseButtons MainWindow::getMouseState(){
 }
 
 //keyboard stuff
-bool MainWindow::keyPressed(GameEngine::Keys k){
+bool MainWindow::keyPressed(int k){
     return engine->keyPressed(k);
 }
 

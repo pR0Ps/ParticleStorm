@@ -14,6 +14,7 @@
 
 class ObjectManager;
 class Enemy; // forward declaration of Enemy class (needed for compilation)
+class Player; // same for the Player class
 
 class ObjectManager{
 public:
@@ -68,8 +69,8 @@ public:
 
     //player stuff
     const Player* getPlayer(){return player;}
-    void modPlayerLife(int amt, bool rel = true){player->modLife(amt, rel);}
-    void modPlayerScore(int amt, bool rel = true){player->modScore(amt, rel);}
+    void modPlayerLife(int amt, bool rel = true);
+    void modPlayerScore(int amt, bool rel = true);
 
     //get unused object to modify
     GameObject* getUnused(ObjectType t);

@@ -8,6 +8,7 @@
 #include "player.h"
 #include "gameengine.h"
 #include "mainwindow.h"
+#include "resourcemanager.h"
 
 
 // Declaration of constants. Some of these can be modified to alter the
@@ -19,6 +20,10 @@ const int Player::RING_SIZE;
 const int Player::PARTICLE_SPACING;
 const int Player::RAM_DAMAGE;
 const double Player::TIME_BETWEEN_CHG_ABILITY;
+const int Player::LIGHTNING_RANGE;
+const int Player::LIGHTNING_DPS;
+const int Player::LIGHTNING_MANA_COST;
+const int Player::MIN_LIGHTNING_DRAW_DISTANCE;
 
 // Implementation of constructor and destructor.
 
@@ -70,6 +75,8 @@ void Player::reset(){
     // used.
     chgAbilityActivatedOnLastUpdate = false;
     timeSinceLastChgAbility = 0;
+
+    lightningTarget = NULL;
 }
 
 
@@ -96,7 +103,7 @@ void Player::update(double deltaTime) {
     // otherwise leave the avatar's position unchanged
 
     // Perform an ability if any have been activated.
-    performAbility(deltaTime);
+    performAbility(deltaTime, o, mw);
 }
 
 //draw the player
@@ -106,6 +113,29 @@ void Player::draw() const {
         Util::drawOctagon(x, y, 2 + (i + 1) * RING_SIZE, true, ResourceManager::getInstance()->getColourScale(1 - (i/(float)(RING_SIZE+1))));
     }
     Util::drawLine(x, y, x_old, y_old, ResourceManager::getInstance()->getColour(ResourceManager::BLUE));
+
+    drawLightning();
+}
+
+void Player::drawLightning() const {
+    // If a target for the lightning ability has been selected then the ability
+    // was activated in the current frame.
+    if (lightningTarget != NULL) {
+        // Perform bounds checking on the distance to the enemy.
+        double enemyX = lightningTarget->getX();
+        double enemyY = lightningTarget->getY();
+        double enemyDistance = Util::distance(x, y, enemyX, enemyY);
+
+        if (enemyDistance > MIN_LIGHTNING_DRAW_DISTANCE) {
+            // then the lightning effect can be safely drawn
+
+            // Get a reference to the ResourceManager since this contains the
+            // colour that we want for drawing the effect.
+            ResourceManager* manager = ResourceManager::getInstance();
+            Util::drawJaggedLine(x, y, enemyX, enemyY,
+                                 manager->getColour(ResourceManager::WHITE));
+        }
+    }
 }
 
 //change the score
@@ -117,12 +147,22 @@ void Player::modScore(const int amt, const bool rel){
         score = amt > 0 ? amt : 0;
 }
 
-void Player::modMana(int amt, bool rel) {
+// *Changed mana to a double temporarily.
+void Player::modMana(double amt, bool rel) {
     // Perform bounds checking on what the new value of mana would be.
+    if (mana + amt < 0)
+        mana = 0;
+    else if (mana + amt > MAX_MANA)
+        mana = MAX_MANA;
+    else
+        mana+= amt;
+
+    /*
     if (rel)
         mana = std::max(0, std::min (mana + amt, MAX_MANA));
     else
         mana = std::max(0, std::min (amt, MAX_MANA));
+    */
 }
 
 string Player::getAbilityString() const {
@@ -150,12 +190,8 @@ bool Player::isValidMousePos(const QPoint& pos) {
             (mouseY >= 0 && mouseY <= GameEngine::MAX_Y);
 }
 
-void Player::performAbility(double deltaT) {
-    // Refetch the object manager and main window instances.
-    // (Should pass these as parameters.)
-    ObjectManager* manager = ObjectManager::getInstance();
-    MainWindow* window = MainWindow::getInstance();
-
+void Player::performAbility(double deltaTime, ObjectManager* manager,
+                            MainWindow* window) {
     // Check to see if the drop particle ability has been activated.
     if ((window->getMouseState() & Qt::LeftButton) ||
             window->keyPressed(GameEngine::DROP)){
@@ -190,13 +226,11 @@ void Player::performAbility(double deltaT) {
 
     // Use special ability.
     else if (window->keyPressed(GameEngine::ABILITY))
-        useAbility();
+        useAbility(deltaTime, manager);
 
     // Change special ability.
-    else if (window->keyPressed(GameEngine::CHGABILITY)) {
-        changeAbility(deltaT);
-        chgAbilityActivatedOnLastUpdate = true;
-    }
+    else if (window->keyPressed(GameEngine::CHGABILITY))
+        changeAbility(deltaTime);
 
     // If the change ability button is not pressed, then reset the variables for
     // keeping track of how often the player's special ability can be changed.
@@ -205,9 +239,14 @@ void Player::performAbility(double deltaT) {
         chgAbilityActivatedOnLastUpdate = false;
         timeSinceLastChgAbility = 0;
     }
+
+    if (!window->keyPressed(GameEngine::ABILITY)) {
+        // perform any clean-up for when a special ability is not activated
+        lightningTarget = NULL;
+    }
 }
 
-void Player::useAbility() const {
+void Player::useAbility(double deltaTime, ObjectManager* manager) {
     switch (currentAbility) {
     case VORTEX:
         break;
@@ -216,13 +255,34 @@ void Player::useAbility() const {
     case REPULSE:
         break;
     case LIGHTNING:
+        lightningAbility(deltaTime, manager);
         break;
     case SHOCKWAVE:
         break;
     }
 }
 
-void Player::changeAbility(double deltaT) {
+// Need to check if the player has enough mana left first.
+void Player::lightningAbility(double deltaTime, ObjectManager* manager) {
+    Enemy* closestEnemy = manager->getClosestEnemy(x, y, 0, LIGHTNING_RANGE);
+
+    if (closestEnemy != NULL) {
+        // then an enemy is in range of the lightning ability
+        double damage = deltaTime * LIGHTNING_DPS;
+        double manaCost = deltaTime * LIGHTNING_MANA_COST;
+
+        closestEnemy->modLife(-damage);
+        modMana(-manaCost);
+
+        lightningTarget = closestEnemy;
+    }
+    else
+        // reset the current target of the lightning ability to null so that the
+        // lightning effect will not be drawn
+        lightningTarget = NULL;
+}
+
+void Player::changeAbility(double deltaTime) {
     // If the change ability button was not pressed on the last update or the
     // button has been held down long enough to change the ability again then go
     // ahead and change it.
@@ -237,5 +297,7 @@ void Player::changeAbility(double deltaT) {
         timeSinceLastChgAbility = 0;
     }
     else
-        timeSinceLastChgAbility += deltaT;
+        timeSinceLastChgAbility += deltaTime;
+
+    chgAbilityActivatedOnLastUpdate = true;
 }

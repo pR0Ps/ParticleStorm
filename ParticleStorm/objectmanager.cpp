@@ -406,3 +406,11 @@ Enemy* ObjectManager::getClosestEnemy(double x, double y, double minDistance,
 
     return closestEnemy;
 }
+
+void ObjectManager::modPlayerLife(int amt, bool rel) {
+    player->modLife(amt, rel);
+}
+
+void ObjectManager::modPlayerScore(int amt, bool rel) {
+    player->modScore(amt, rel);
+}

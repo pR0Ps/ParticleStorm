@@ -8,6 +8,7 @@
 #include <vector>
 #include <QImage>
 #include "gameengine.h"
+class GameEngine;
 
 class MainWindow : public QGLWidget{
 public:
@@ -29,7 +30,7 @@ public:
      */
     QPoint getMousePos();
     Qt::MouseButtons getMouseState();
-    bool keyPressed(GameEngine::Keys k);
+    bool keyPressed(int k);
 
     //get this instance
     static MainWindow* getInstance(){return instance;}

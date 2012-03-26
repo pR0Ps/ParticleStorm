@@ -38,7 +38,7 @@ public:
     QPoint getMousePos(){return mapFromGlobal(QCursor::pos());}
 
     //access key state
-    bool keyPressed(Keys k){return currKeys[k];}
+    bool keyPressed(int k){return currKeys[k];}
 
     //control the game engine
     void reset();

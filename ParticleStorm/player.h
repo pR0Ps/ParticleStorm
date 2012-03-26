@@ -28,8 +28,14 @@
 #define PLAYER_H
 
 #include <QPoint>
+#include "mainwindow.h"
 #include "gameobject.h"
+#include "enemy.h"
 using namespace std;
+
+// Forward declarations needed for compilation.
+class MainWindow;
+class Enemy;
 
 class Player : public GameObject {
 public:
@@ -64,6 +70,15 @@ public:
     // The amount of time that must pass before the player's special ability can
     // be changed when the change ability button is held down continuously.
     static const double TIME_BETWEEN_CHG_ABILITY = 0.5; // measured in seconds
+
+    // Constants for the lightning ability.
+    static const int LIGHTNING_RANGE = 250;
+    static const int LIGHTNING_DPS = 50; // DPS - damage per second
+    static const int LIGHTNING_MANA_COST = 50; // mana consumed per second
+    // Don't draw the lightning effect if the enemy is closer than 10 pixels to
+    // the player since the drawJaggedLine function may cause the program to
+    // crash otherwise.
+    static const int MIN_LIGHTNING_DRAW_DISTANCE = 10;
 
     // Constructor/destructor.
     Player();
@@ -110,7 +125,7 @@ public:
      * - whether or not the amount should be relative to the current mana
      * (set vs mod)
      */
-    void modMana(int amount, bool rel = true);
+    void modMana(double amount, bool rel = true);
 
     /*
      * Returns a string representation of the player's currently selected
@@ -131,6 +146,10 @@ private:
     bool chgAbilityActivatedOnLastUpdate;
     double timeSinceLastChgAbility; // measured in seconds
 
+    // Used to determine when jagged lines should be drawn in the Player's draw
+    // method for the lightning ability.
+    Enemy* lightningTarget;
+
     // Private member functions.
     /*
      * Determines if the given mouse position is within the bounds of the OpenGL
@@ -147,15 +166,28 @@ private:
      * Polls the user's input and performs the appropriate ability if one has
      * been activated.
      *
-     * Parameter: the time since the last call to update.
+     * Parameters: the time since the last call to update, and pointers to the
+     * current ObjectManager and MainWindow.
      */
-    void performAbility(double deltaT);
+    void performAbility(double deltaTime, ObjectManager* manager,
+                        MainWindow* window);
 
     /*
      * Performs the player's currently selected special ability when the special
      * ability button is pressed.
+     *
+     * Parameters: the time since the last call to update and a pointer to the
+     * current ObjectManager.
      */
-    void useAbility() const; // not sure yet if this will modify the object
+    void useAbility(double deltaTime, ObjectManager* manager);
+
+    /*
+     * Contains the logic necessary to perform the lightning ability.
+     *
+     * Parameters: the time since the last call to update and a pointer to the
+     * current ObjectManager.
+     */
+    void lightningAbility(double deltaTime, ObjectManager* manager);
 
     /*
      * Advances the player's currently selected special ability to the next one
@@ -165,7 +197,13 @@ private:
      *
      * Parameter: the time since the last call to update.
      */
-    void changeAbility(double deltaT);
+    void changeAbility(double deltaTime);
+
+    /*
+     * Draws the lightning effect when the ability has been activated, so long
+     * as the target enemy is not too close to the player.
+     */
+    void drawLightning() const;
 };
 
 #endif // PLAYER_H
