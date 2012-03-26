@@ -72,7 +72,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         shrapnelLen = 30;
         radius = 15;
         timerActive = false;
-        currTimer = maxTimer = (1 + (qrand()%2))/(1 + (qrand()%2));
+        currTimer = maxTimer = (3 + (qrand()%2))/(3 + (qrand()%2));
         moving = false;
         clr = ResourceManager::getInstance()->getColour(ResourceManager::ORANGE);
 
