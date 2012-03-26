@@ -99,6 +99,17 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
 
 void Enemy::update(double deltaTime){
 
+    if(this->getX() > 1024 || this->getX() < 0 || this->getY() > 768 || this->getY() < 0){
+        if(this->getX() > 1024 || this->getY() > 768)
+            Util::drawRoundShape(Util::min(1024, this->getX()), Util::min(768, this->getY()), 10, 3, false);
+        else if(this->getX() > 1024 || this->getY() < 0)
+            Util::drawRoundShape(Util::min(1024, this->getX()), Util::max(0, this->getY()), 10, 3, false);
+        else if(this->getX() < 0 || this->getY() > 768)
+            Util::drawRoundShape(Util::max(0, this->getX()), Util::min(768, this->getY()), 10, 3, false);
+        else if(this->getX() < 0 || this->getY() < 0)
+            Util::drawRoundShape(Util::max(0, this->getX()), Util::max(0, this->getY()), 10, 3, false);
+    }
+
     const Player* player = ObjectManager::getInstance()->getPlayer();
 
     if(type == ObjectManager::GRUNT || type == ObjectManager::TANK || type == ObjectManager::SPRINTER){
