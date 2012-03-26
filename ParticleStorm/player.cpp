@@ -110,7 +110,7 @@ void Player::update(double deltaTime) {
 void Player::draw() const {
     //draw concentric octagons that represent health
     for (int i = MAX_DIAMETER / RING_SIZE * getLifePercent(); i >= 0 ; i--){
-        Util::drawOctagon(x, y, 2 + (i + 1) * RING_SIZE, true, ResourceManager::getInstance()->getColourScale(1 - (i/(float)(RING_SIZE+1))));
+        Util::drawRoundShape(x, y, 2 + (i + 1) * RING_SIZE, 8, true, ResourceManager::getInstance()->getColourScale(1 - (i/(float)(RING_SIZE+1))));
     }
     Util::drawLine(x, y, x_old, y_old, ResourceManager::getInstance()->getColour(ResourceManager::BLUE));
 

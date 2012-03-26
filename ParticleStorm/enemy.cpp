@@ -197,26 +197,26 @@ void Enemy::draw() const{
     }
     else if (type == ObjectManager::HEALER){
         //temp
-        Util::drawOctagon(0, 0, radius * 2, false, clr);
+        Util::drawRoundShape(0, 0, radius * 2, 8, false, clr);
         Util::drawBox(-radius, -radius, radius, radius, false, clr);
     }
     else if (type == ObjectManager::TANK){
         //temp
-        Util::drawOctagon(0, 0, radius * 2, false, clr);
-        Util::drawBox(-radius, -radius, radius, radius, false, clr);
+        Util::drawRoundShape(0, 0, radius * 2, 5, false, clr);
+        //Util::drawBox(-radius, -radius, radius, radius, false, clr);
     }
     else if (type == ObjectManager::SPRINTER){
         //temp
-        Util::drawOctagon(0, 0, radius * 2, false, clr);
+        Util::drawRoundShape(0, 0, radius * 2, 8, false, clr);
         Util::drawBox(-radius, -radius, radius, radius, false, clr);
     }
     else if (type == ObjectManager::SHOOTER){
         //temp
-        Util::drawOctagon(0, 0, radius * 2, false, clr);
+        Util::drawRoundShape(0, 0, radius * 2, 8, false, clr);
         Util::drawBox(-radius, -radius, radius, radius, false, clr);
     }
     else{//bullet
-        Util::drawOctagon(0, 0, radius * 2, false, clr);
+        Util::drawRoundShape(0, 0, radius * 2, 8, false, clr);
     }
     glPopMatrix();
 }

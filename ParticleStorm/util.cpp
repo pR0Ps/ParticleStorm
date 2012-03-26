@@ -174,7 +174,8 @@ void Util::drawMeter(const double x1, const double y1, const double x2, const do
     else drawBox(x1 + 2, y1 + 2, x2 - 2, y1 + 2 + (y2 - y1 - 4) * amt, true, clr);
 }
 
-void Util::drawOctagon(double x, double y, const double diameter, const bool fill, const QColor *clr){
+//draw a n-sided shape
+void Util::drawRoundShape(double x, double y, const double diameter, const int numSides, const bool fill, const QColor *clr){
     //colour stuff
     if (clr != NULL){
         glPushAttrib(GL_CURRENT_BIT);
@@ -182,7 +183,42 @@ void Util::drawOctagon(double x, double y, const double diameter, const bool fil
     }
 
     const double rad = diameter/2.0f;
-    const double temp = magnitude(rad, rad) - rad;
+    double prevX = x;
+    double prevY = y + rad;
+    double currX, currY;
+
+    if (!fill){
+        //weirdness with the LINE_LOOP
+        x += 1;
+        y -= 1;
+        glBegin(GL_LINE_LOOP);
+    }
+    else glBegin(GL_POLYGON);
+
+    //start drawing
+    for (int i = 0 ; i <= 360 ; i+= 360 / numSides){
+        currX = x + sind(i) * rad;
+        currY = y + cosd(i) * rad;
+        glVertex2d(prevX, prevY);
+        glVertex2d(currX, currY);
+        prevX = currX;
+        prevY = currY;
+    }
+    glEnd();
+
+    //restore old color
+    if (clr != NULL) glPopAttrib();
+}
+
+//draw a gem
+void Util::drawGem(double x, double y, const double diameter, const bool fill, const QColor *clr){
+    //colour stuff
+    if (clr != NULL){
+        glPushAttrib(GL_CURRENT_BIT);
+        glColor3d(clr->red(), clr->green(), clr->blue());
+    }
+
+    const double temp = diameter/8.0f;
 
     if (!fill){
         //weirdness with the LINE_LOOP
@@ -192,14 +228,12 @@ void Util::drawOctagon(double x, double y, const double diameter, const bool fil
     }
     else glBegin(GL_POLYGON);
     //start drawing
-        glVertex2d(x - temp, y - rad);
-        glVertex2d(x + temp, y - rad);
-        glVertex2d(x + rad, y - temp);
-        glVertex2d(x + rad, y + temp);
-        glVertex2d(x + temp, y + rad);
-        glVertex2d(x - temp, y + rad);
-        glVertex2d(x - rad, y + temp);
-        glVertex2d(x - rad, y - temp);
+        glVertex2d(x - diameter/2.0f, y - diameter/8.0f);
+        glVertex2d(x, y - diameter/2.0f);
+        glVertex2d(x + diameter/2.0f, y - diameter/2.0f);
+        glVertex2d(x + diameter/2.0f, y + diameter/8.0f);
+        glVertex2d(x, y + diameter/2.0f);
+        glVertex2d(x - diameter/2.0f, y + diameter/2.0f);
     glEnd();
 
     //restore old color
