@@ -19,7 +19,8 @@ public:
     static const int FORCE_EXERT = 100000;
     static const double INITITAL_TTL = 20;
 
-    void draw() const;
+    void drawNoFade() const{}
+    void drawFaded() const;
     void update(double deltaTime);
     void applyForce(double x, double y, double mag);
     void die();

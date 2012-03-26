@@ -55,23 +55,17 @@ void Shrapnel::update(double deltaTime){
         this->ttl -= deltaTime;
 
 }
-void Shrapnel::draw() const{
+void Shrapnel::drawFaded() const{
 
-    /*int xdraw=x+10;
-    int ydraw=y+10;
-    Util::drawLine(x, y, xdraw, ydraw, clr);
-*/
+    const double hLen = len/2.0f;
 
-
- glPushMatrix();
- glLoadIdentity();
- glTranslated(x, y, 0);
- glRotated(angle, 0, 0, 1);
- Util::drawLine(-10,-10, len, len, clr);
- glPopMatrix();
-
-
-    }
+     glPushMatrix();
+     glLoadIdentity();
+     glTranslated(x, y, 0);
+     glRotated(angle, 0, 0, 1);
+     Util::drawLine(-hLen, 0, hLen, 0, clr);
+     glPopMatrix();
+}
 
 void Shrapnel::applyForce(double x, double y, double mag){
 

@@ -108,7 +108,7 @@ void Enemy::update(double deltaTime){
     if (timerActive && currTimer > 0)
         currTimer -= deltaTime;
 
-    if(type == ObjectManager::GRUNT || type == ObjectManager::TANK){
+    if(type == ObjectManager::GRUNT){
 
         if(x >= (GameEngine::MAX_X) || x <= 0 || y >= (GameEngine::MAX_Y) || y <= 0){
             findDirection(x, y, player->getX(), player->getY());
@@ -116,6 +116,9 @@ void Enemy::update(double deltaTime){
         x += x_vel * speed * deltaTime;
         y += y_vel * speed * deltaTime;
 
+    }
+    else if (type == ObjectManager::TANK){
+        //apply force to particles
     }
     else if (type == ObjectManager::SPRINTER){
         //pick a place near the enemy and lunge to it
@@ -194,12 +197,7 @@ void Enemy::update(double deltaTime){
 
 }
 
-void Enemy::draw() const{
-
-    //draw healer lightning
-    if (currentEnemy != NULL && timerActive && type == ObjectManager::HEALER){
-        Util::drawJaggedLine(x, y, currentEnemy->getX(), currentEnemy->getY(), clr);
-    }
+void Enemy::drawNoFade() const{
 
     //draw indicators for enemies that are off-screen
     if (!Util::coordInRect(x, y, 0, 0, GameEngine::MAX_X, GameEngine::MAX_Y)){
@@ -257,6 +255,13 @@ void Enemy::draw() const{
         Util::drawRoundShape(0, 0, radius * 2, 8, false, clr);
     }
     glPopMatrix();
+}
+
+void Enemy::drawFaded() const{
+    //draw healer lightning
+    if (currentEnemy != NULL && timerActive && type == ObjectManager::HEALER){
+        Util::drawJaggedLine(x, y, currentEnemy->getX(), currentEnemy->getY(), clr);
+    }
 }
 
 //pan the enemy (and their target)

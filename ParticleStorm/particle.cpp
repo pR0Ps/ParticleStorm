@@ -39,7 +39,7 @@ void Particle::update(double deltaTime) {
 
 }
 
-void Particle::draw() const{
+void Particle::drawFaded() const{
     //'tail' should take into account current speed
     //should be roughly the same location where the particle was last frame
     Util::drawLine(x, y, x_old, y_old, clr);

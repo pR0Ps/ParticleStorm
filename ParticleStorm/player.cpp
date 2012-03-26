@@ -110,14 +110,24 @@ void Player::update(double deltaTime) {
 }
 
 //draw the player
-void Player::draw() const {
+void Player::drawNoFade() const {
+    if (!(MainWindow::getInstance()->getMouseState() & Qt::LeftButton)){
+        drawPlayer();
+    }
+}
+void Player::drawFaded() const {
+    if (MainWindow::getInstance()->getMouseState() & Qt::LeftButton){
+        drawPlayer();
+    }
+    drawLightning();
+}
+
+void Player::drawPlayer() const {
     //draw concentric octagons that represent health
     for (int i = MAX_DIAMETER / RING_SIZE * getLifePercent(); i >= 0 ; i--){
         Util::drawRoundShape(x, y, 2 + (i + 1) * RING_SIZE, 8, true, ResourceManager::getInstance()->getColourScale(1 - (i/(float)(RING_SIZE+1))));
     }
     Util::drawLine(x, y, x_old, y_old, ResourceManager::getInstance()->getColour(ResourceManager::BLUE));
-
-    drawLightning();
 }
 
 void Player::drawLightning() const {

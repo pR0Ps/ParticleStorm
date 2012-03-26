@@ -89,16 +89,49 @@ std::vector<GameObject*>& ObjectManager::getVector(ObjectType t){
         throw "bad enum type passed to getVector()";
 }
 
+//convenience function for drawing all the objects
+void ObjectManager::drawAll(bool faded){
+    if (faded){
+        drawFaded(SHRAPNEL);
+        drawFaded(POWERUP);
+        drawFaded(ENEMY);
+        drawFaded(PARTICLE);
+        drawFaded(PLAYER);
+        //drawFaded(STAR);
+    }
+    else{
+        drawNoFade(STAR);
+        drawNoFade(ENEMY);
+        drawNoFade(PLAYER);
+        //drawNoFade(PARTICLE);
+        //drawNoFade(POWERUP);
+        //drawNoFade(SHRAPNEL);
+    }
+}
+
 //apply to all objects
-void ObjectManager::draw(ObjectType t){
+void ObjectManager::drawNoFade(ObjectType t){
     if (t == PLAYER){
-        player->draw();
+        player->drawNoFade();
     }
     else{
         std::vector<GameObject*> temp = getVector(t);
         for (unsigned int i = 0 ; i < temp.size() ; i++){
             if (temp.at(i)->getInUse()){
-                temp.at(i)->draw();
+                temp.at(i)->drawNoFade();
+            }
+        }
+    }
+}
+void ObjectManager::drawFaded(ObjectType t){
+    if (t == PLAYER){
+        player->drawFaded();
+    }
+    else{
+        std::vector<GameObject*> temp = getVector(t);
+        for (unsigned int i = 0 ; i < temp.size() ; i++){
+            if (temp.at(i)->getInUse()){
+                temp.at(i)->drawFaded();
             }
         }
     }

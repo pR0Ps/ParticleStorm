@@ -24,7 +24,7 @@ void Powerup::startPowerup(int type, double x, double y, double x_vel, double y_
     this->inUse = true;
 }
 
-void Powerup::draw() const{
+void Powerup::drawFaded() const{
     glPushMatrix();
     glLoadIdentity();
     glTranslated(x, y, 0);

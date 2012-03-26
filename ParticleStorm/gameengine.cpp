@@ -313,10 +313,7 @@ void GameEngine::paintGL(){
         doFade();
 
         //draw blurred objects
-        objectManager->draw(ObjectManager::SHRAPNEL);
-        objectManager->draw(ObjectManager::POWERUP);
-        objectManager->draw(ObjectManager::PARTICLE);
-        objectManager->draw(ObjectManager::PLAYER);
+        objectManager->drawAll(true);
 
         fbo->release();
         //all draw commands after here go to screen
@@ -325,8 +322,7 @@ void GameEngine::paintGL(){
         Util::drawTexture(0, 0, MAX_X, MAX_Y, fbo->texture());
 
         //draw objects that shouldn't be faded
-        objectManager->draw(ObjectManager::STAR);
-        objectManager->draw(ObjectManager::ENEMY);
+        objectManager->drawAll(false);
 
         //draw the interface and information
         drawHUD();

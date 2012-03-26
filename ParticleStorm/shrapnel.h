@@ -15,7 +15,8 @@ public:
     static const int DECREMENT_SPEED = 5;
     Shrapnel();
 
-    void draw() const;
+    void drawNoFade() const{}
+    void drawFaded() const;
     void update(double deltaTime);
     void applyForce(double x, double y, double mag);
     void startShrapnel(double x, double y, double x_vel, double y_vel, double len, const QColor *clr);

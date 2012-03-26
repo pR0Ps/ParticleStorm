@@ -55,8 +55,12 @@ public:
     //resets all the objects
     void reset();
 
+    //convenience function for drawing everything
+    void drawAll(bool faded);
+
     //apply to all the objects in the OM individually
-    void draw(ObjectType t);
+    void drawNoFade(ObjectType t);
+    void drawFaded(ObjectType t);
     void pan(ObjectType t, double x, double y);
     void update(ObjectType t, double deltaTime);
     void applyForce(ObjectType t, double x, double y, double mag);

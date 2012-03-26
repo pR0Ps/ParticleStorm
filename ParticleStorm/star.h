@@ -17,7 +17,8 @@ public:
 
     Star();
 
-    void draw() const;
+    void drawNoFade() const;
+    void drawFaded() const{}
     void pan(double x, double y);
     void update(double deltaTime);
     void applyForce(double x, double y, double mag);

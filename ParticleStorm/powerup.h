@@ -16,7 +16,8 @@ public:
 
     void startPowerup(int type, double x, double y, double x_vel, double y_vel, int value);
 
-    void draw() const;
+    void drawNoFade() const{}
+    void drawFaded() const;
     void update(double deltaTime);
     void applyForce(double, double, double){}
 

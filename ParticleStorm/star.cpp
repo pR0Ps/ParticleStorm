@@ -68,6 +68,6 @@ void Star::applyForce(double x, double y, double mag){
     y_vel += (this->y - y) * mag / ((dist * dist) * FORCE_DISSIPATION * this->dist);
 }
 
-void Star::draw() const{
+void Star::drawNoFade() const{
     Util::drawLine(x, y, x_old, y_old, clr);
 }

@@ -23,7 +23,8 @@ public:
     void move(double x, double y);
 
     //draw enemy
-    void draw() const;
+    void drawNoFade() const;
+    void drawFaded() const;
 
     //reset an enemy (almost identical to constructor)
     //y u no enemy type?

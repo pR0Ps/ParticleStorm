@@ -12,7 +12,8 @@ public:
     ~GameObject();
 
     //draw the object
-    virtual void draw() const = 0;
+    virtual void drawNoFade() const = 0;
+    virtual void drawFaded() const = 0;
 
     //pan the object with the screen
     virtual void pan(double x, double y);

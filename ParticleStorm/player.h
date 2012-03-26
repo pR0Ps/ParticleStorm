@@ -105,7 +105,8 @@ public:
     // Note: do not use the virutal keyword in the implementation of these
     // functions.
     void update(double deltaTime);
-    void draw() const;
+    void drawNoFade() const;
+    void drawFaded() const;
 
     //Have to override to do nothing
     void applyForce(double x, double y, double mag){}
@@ -160,6 +161,10 @@ private:
     Enemy* lightningTarget;
 
     // Private member functions.
+
+    //draw the player
+    void drawPlayer() const;
+
     /*
      * Determines if the given mouse position is within the bounds of the OpenGL
      * canvas. Used to determine if the current location of the player's mouse
