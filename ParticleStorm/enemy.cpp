@@ -52,7 +52,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         clr = ResourceManager::getInstance()->getColour(ResourceManager::GREEN);
     }
     else if(type == ObjectManager::TANK){
-        maxLife = life = 300;
+        maxLife = life = 600;
         speed = 75;
         damage = 10;
         points = 23;
