@@ -19,6 +19,8 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
     //QSound music("C://Users//Daniel//CISC 320//ParticleStorm//Resources//base-loop.wav");
     //music.play();
     //QSound music("./Images/base-loop.wav");
+    QSound music("../ParticleStorm/Resources/base-loop.wav");
+    music.play();
 
     QString str = QDir::homePath();
     printf("%s\n", str.toAscii().constData());
