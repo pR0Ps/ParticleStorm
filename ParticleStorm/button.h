@@ -5,13 +5,12 @@ class Button{
 public:
     Button();
     //~Button();
-    Button(double width, double height, double centerX, double centerY);
+    Button(double x1, double y1, double x2, double y2);
     bool mouseHover();
-private:
-    double centerX;
-    double centerY;
-    double width;
-    double height;
+    double x1;
+    double y1;
+    double x2;
+    double y2;
 };
 
 #endif // BUTTON_H

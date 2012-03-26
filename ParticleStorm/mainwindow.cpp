@@ -32,7 +32,8 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
     menuClock = startTimer(1/(double)GameEngine::MAX_FPS*1000);
     timer = new QTime();
 
-    playButton = new Button(176, 75, 300, 300);
+    playButton = new Button(212, 200, 388, 275);
+    qDebug() << "x1 = " << playButton->x1 << " x2 = " << playButton->x2 << " y1 = " << playButton->y1 << " y2 = " << playButton->y2;
 
     instance->setVisible(false);
     engine->setVisible(true);
@@ -92,6 +93,8 @@ void MainWindow::paintGL(){
     }
     glClear(GL_COLOR_BUFFER_BIT);
 
+    Util::drawBox(playButton->x1, playButton->y1, playButton->x2, playButton->y2, false, clr);
+
 
     Util::drawTexture(212, 200, 388, 275, loadTexture(":/Images/PLAY.png"));
 }
@@ -107,10 +110,6 @@ void MainWindow::update(){
 
     if (playButton->mouseHover()&&(mouseState & Qt::LeftButton)){
         qDebug() << "HOVERING";
-        //Temporary starting event
-        /*
-
-        */
     }
     /*
     //move star (NOT WORKING :()
