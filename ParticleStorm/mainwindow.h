@@ -85,6 +85,7 @@ private:
 
     //textures
     GLuint playTex;
+    GLuint titleTex;
 
     void initStars();
 

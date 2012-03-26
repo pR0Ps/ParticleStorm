@@ -93,6 +93,7 @@ void MainWindow::initializeGL(){
 
     //load textures
     playTex = loadTexture(":/Images/PLAY.png");
+    titleTex = loadTexture(":/Images/TITLE2.png");
 }
 
 
@@ -149,8 +150,10 @@ void MainWindow::paintGL(){
     glEnd();
 
     //draw the button
-    Util::drawBox(playButton->x1, playButton->y1, playButton->x2, playButton->y2, false, starClr);
     Util::drawTexture(playButton->x1, playButton->y1, playButton->x2, playButton->y2, playTex);
+
+    //draw the title ew ew hard code. IMG has width 552, height 106
+    Util::drawTexture((MAX_X-552)/2, (MAX_Y-50-106), (((MAX_X-552)/2)+552), (MAX_Y-50), titleTex);
 }
 
 //init the stars
