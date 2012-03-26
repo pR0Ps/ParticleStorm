@@ -42,6 +42,9 @@ public:
     static double max(double x, double y);
     static double min(double x, double y);
 
+    //point in rectangle
+    static bool coordInRect(double px1, double py1, double rx1, double ry1, double rx2, double ry2);
+
     //calculate the intersection point between 2 lines (if any)
     static QPointF* lineIntersect(const double x1, const double y1, const double x2, const double y2,
                                  const double x3, const double y3, const double x4, double y4);

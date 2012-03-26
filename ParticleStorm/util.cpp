@@ -27,6 +27,13 @@ double Util::min(double x, double y) {
     return y;
 }
 
+//returns true if the point is in the rectangle
+static bool coordInRect(double px1, double py1, double rx1, double ry1, double rx2, double ry2){
+    qDebug() << "not implemented yet";
+    exit(1);
+    return false;
+}
+
 //returns the point of intersection between the lines spaning p1-p2 and p3-p4
 QPointF* Util::lineIntersect(const double x1, const double y1, const double x2, const double y2,
                              const double x3, const double y3, const double x4, double y4) {

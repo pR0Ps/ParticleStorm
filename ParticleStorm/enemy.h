@@ -45,12 +45,12 @@ private:
     double x_tar, y_tar;
     double radius;
     double collisionBufferTime;
-    //shooter stuff
-    int shotCounter;
-    //healer stuff
-    int healCounter;
-    bool healStart;
     Enemy *currentEnemy;
+
+    //timer stuff
+    double currTimer;
+    double maxTimer;
+    bool timerActive;
 
     //spin stuff
     double spin;

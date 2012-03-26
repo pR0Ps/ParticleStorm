@@ -13,18 +13,17 @@ Enemy::Enemy():GameObject(){
 
 //y u no enemytype?
 void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
-    inUse = true;
-    type = t;
+    this->type = t;
     this->x=x;
     this->y=y;
     this->x_tar = x_tar;
     this->y_tar = y_tar;
-    this->collisionBufferTime = 0;
-    this->shotCounter = 0;
-    this->healCounter = 0;
-    this->angle = 0;
-    this->spin = Util::randInt(MIN_ROTATION_SPD, MAX_ROTATION_SPD) * ((qrand() % 2) * 2 - 1);
+
+    collisionBufferTime = 0;
+    angle = 0;
+    spin = Util::randInt(MIN_ROTATION_SPD, MAX_ROTATION_SPD) * ((qrand() % 2) * 2 - 1);
     currentEnemy = NULL;
+    inUse = true;
 
     //give starting stats depending on type
     if(type == ObjectManager::GRUNT){
@@ -45,9 +44,9 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         numShrapnel = 6;
         shrapnelLen = 10;
         radius = 15;
-        healStart = true;
+        timerActive = true;
+        currTimer = maxTimer = 5; //5 seconds
         clr = ResourceManager::getInstance()->getColour(ResourceManager::GREEN);
-        const Enemy* enemy;
     }
     else if(type == ObjectManager::TANK){
         maxLife = life = 300;
@@ -78,6 +77,8 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         numShrapnel = 4;
         shrapnelLen = 25;
         radius = 12;
+        currTimer = maxTimer = 2;
+        timerActive = true;
         clr = ResourceManager::getInstance()->getColour(ResourceManager::YELLOW);
     }
     else if (type == ObjectManager::BULLET){
@@ -101,7 +102,11 @@ void Enemy::update(double deltaTime){
 
     const Player* player = ObjectManager::getInstance()->getPlayer();
 
-    if(type == ObjectManager::GRUNT || type == ObjectManager::TANK || type == ObjectManager::SPRINTER){
+    //update the action timer
+    if (timerActive && currTimer > 0)
+        currTimer -= deltaTime;
+
+    if(type == ObjectManager::GRUNT || type == ObjectManager::TANK){
 
         if(x >= (GameEngine::MAX_X) || x <= 0 || y >= (GameEngine::MAX_Y) || y <= 0){
             findDirection(x, y, player->getX(), player->getY());
@@ -110,13 +115,14 @@ void Enemy::update(double deltaTime){
         y += y_vel * speed * deltaTime;
 
     }
+    else if (type == ObjectManager::SPRINTER){
+        //pick a place near the enemy and lunge to it
+    }
     else if(type == ObjectManager::SHOOTER){
 
-        shotCounter++;
-
-        //if shotCount reaches its limit, fire a shot
-        if(shotCounter == 120){
-            shotCounter = 0;
+        //if the timer permits, fire a shot
+        if(currTimer <= 0){
+            currTimer = maxTimer;
             ObjectManager::getInstance()->spawnEnemy(ObjectManager::BULLET, x, y, player->getX(), player->getY());
         }
 
@@ -143,20 +149,22 @@ void Enemy::update(double deltaTime){
     }
     else if(type == ObjectManager::HEALER){
 
-        healCounter++;
-        if(healCounter == 360 || healStart == true){
-            healStart = false;
-            healCounter = 0;
+        //go to the next enemy when the timer runs out (or when not doing anything else)
+        if((currTimer <= 0 && timerActive) || currentEnemy == NULL){
+            currTimer = maxTimer;
+            timerActive = false; //don't start running the timer until an enemy is getting healed
             currentEnemy = ObjectManager::getInstance()->getClosestEnemy(x, y);
         }
 
-        if(currentEnemy->inUse == true && Util::distance(x, y, currentEnemy->getX(), currentEnemy->getY()) > 50){
+        //moving towards a target
+        if(currentEnemy->inUse && Util::distance(x, y, currentEnemy->getX(), currentEnemy->getY()) > 50){
             findDirection(x, y, currentEnemy->getX(), currentEnemy->getY());
             x += x_vel * speed * deltaTime;
             y += y_vel * speed * deltaTime;
         }
-        else if(currentEnemy->inUse == true && Util::distance(x, y, currentEnemy->getX(), currentEnemy->getY()) <= 50){
+        else if(currentEnemy->inUse && Util::distance(x, y, currentEnemy->getX(), currentEnemy->getY()) <= 50){
             currentEnemy->modLife(10*deltaTime, true);
+            timerActive = true; //start the timer
         }
         else{
             currentEnemy = ObjectManager::getInstance()->getClosestEnemy(x, y);
@@ -167,6 +175,7 @@ void Enemy::update(double deltaTime){
         x += x_vel * speed * deltaTime;
         y += y_vel * speed * deltaTime;
 
+        //TODO: Bounds checking with Util::coordInRect
         if(x >= (GameEngine::MAX_X)*2 || y >= (GameEngine::MAX_Y)*2){
             die();
         }
