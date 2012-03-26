@@ -109,12 +109,13 @@ void Player::update(double deltaTime) {
     performAbility(deltaTime, o, mw);
 }
 
-//draw the player
+//draw the player - these are called in the GameEngine
 void Player::drawNoFade() const {
     if (!(MainWindow::getInstance()->getMouseState() & Qt::LeftButton)){
         drawPlayer();
     }
 }
+
 void Player::drawFaded() const {
     if (MainWindow::getInstance()->getMouseState() & Qt::LeftButton){
         drawPlayer();
@@ -196,35 +197,19 @@ bool Player::isValidMousePos(const QPoint& pos) {
 
 void Player::performAbility(double deltaTime, ObjectManager* manager,
                             MainWindow* window) {
-    // Check to see if the drop particle ability has been activated.
+    // Check to see if the drop particles ability has been activated.
     if ((window->getMouseState() & Qt::LeftButton) ||
-            window->getKeyPressed(GameEngine::DROP)){
-        // spwan at least one particle (if staying still)
-        manager->spawnParticle(x, y);
-
-        // spawn a particle every PARTICLE_SPACING px along the line between the
-        // old a new pos
-        // Note: may want to use the time since the last update for this
-        // instead.
-        const double dist = Util::distance(x, y, x_old, y_old);
-        const double tempX = (x - x_old) / dist;
-        const double tempY = (y - y_old) / dist;
-        for (int i = 0 ; i < dist ; i+= PARTICLE_SPACING)
-            manager->spawnParticle(x_old + tempX * i, y_old + tempY * i);
-    }
+            window->getKeyPressed(GameEngine::DROP))
+        dropParticles(manager);
     // Force push ability. Force push and force pull are only applied to
     // particles and stars.
     else if ((window->getMouseState() & Qt::RightButton) ||
-             window->getKeyPressed(GameEngine::PUSH)){
-        manager->applyForce(ObjectManager::PARTICLE, x, y, Particle::FORCE_EXERT);
-        manager->applyForce(ObjectManager::STAR, x, y, Star::FORCE_EXERT);
-    }
+             window->getKeyPressed(GameEngine::PUSH))
+        forcePush(manager);
     // Force pull.
     else if ((window->getMouseState() & Qt::MiddleButton) ||
-             window->getKeyPressed(GameEngine::PULL)){
-        manager->applyForce(ObjectManager::PARTICLE, x, y, -Particle::FORCE_EXERT);
-        manager->applyForce(ObjectManager::STAR, x, y, -Star::FORCE_EXERT);
-    }
+             window->getKeyPressed(GameEngine::PULL))
+        forcePull(manager);
     // Use special ability.
     else if (window->getKeyPressed(GameEngine::ABILITY))
         useAbility(deltaTime, manager);
@@ -247,6 +232,31 @@ void Player::performAbility(double deltaTime, ObjectManager* manager,
         chgAbilityActivatedOnLastUpdate = false;
         timeSinceLastChgAbility = 0;
     }
+}
+
+void Player::dropParticles(ObjectManager* manager) const {
+    // spwan at least one particle (if staying still)
+    manager->spawnParticle(x, y);
+
+    // spawn a particle every PARTICLE_SPACING px along the line between the
+    // old a new pos
+    // Note: may want to use the time since the last update for this
+    // instead.
+    const double dist = Util::distance(x, y, x_old, y_old);
+    const double tempX = (x - x_old) / dist;
+    const double tempY = (y - y_old) / dist;
+    for (int i = 0 ; i < dist ; i+= PARTICLE_SPACING)
+        manager->spawnParticle(x_old + tempX * i, y_old + tempY * i);
+}
+
+void Player::forcePush(ObjectManager* manager) const {
+    manager->applyForce(ObjectManager::PARTICLE, x, y, Particle::FORCE_EXERT);
+    manager->applyForce(ObjectManager::STAR, x, y, Star::FORCE_EXERT);
+}
+
+void Player::forcePull(ObjectManager* manager) const {
+    manager->applyForce(ObjectManager::PARTICLE, x, y, -Particle::FORCE_EXERT);
+    manager->applyForce(ObjectManager::STAR, x, y, -Star::FORCE_EXERT);
 }
 
 void Player::useAbility(double deltaTime, ObjectManager* manager) {

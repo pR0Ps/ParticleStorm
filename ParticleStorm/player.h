@@ -187,6 +187,27 @@ private:
                         MainWindow* window);
 
     /*
+     * Performs the drop particles ability. Particles are dropped along the line
+     * between the player's position on the last call to update and their current
+     * position.
+     */
+    void dropParticles(ObjectManager* manager) const;
+
+    /*
+     * Applies force to all nearby enemies and star objects, pushing them away
+     * from the player's current position.
+     *
+     * Note: force push and force pull are applied only to particles and stars.
+     */
+    void forcePush(ObjectManager* manager) const;
+
+    /*
+     * Applies force to all nearby enemies and stars, pulling them towards the
+     * player's current position.
+     */
+    void forcePull(ObjectManager* manager) const;
+
+    /*
      * Performs the player's currently selected special ability when the special
      * ability button is pressed.
      *
