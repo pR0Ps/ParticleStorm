@@ -49,8 +49,12 @@ private:
     double text_ttl;
     double enemyCheck_ttl;
 
-    //finished flag
+    //flags
     bool levelDone;
+    bool enemiesStarted;
+
+    //start the enemies
+    void startEnemies();
 };
 
 #endif // LEVELMANAGER_H
