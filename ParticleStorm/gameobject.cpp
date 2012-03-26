@@ -1,4 +1,5 @@
 #include "gameobject.h"
+#include "util.h"
 #include "QtOpenGL"
 
 //basic prototype of the GameObject class
@@ -25,11 +26,11 @@ void GameObject::die(){
     inUse = false;
 }
 
-void GameObject::modLife(const int amt, const bool rel){
+void GameObject::modLife(const double amt, const bool rel){
     if (rel)
-        life = std::max(0, std::min (life + amt, maxLife));
+        life = Util::max(0, Util::min (life + amt, maxLife));
     else
-        life = std::max(0, std::min (amt, maxLife));
+        life = Util::max(0, Util::min (amt, maxLife));
 
     if(life <= 0)
         this->die();

@@ -30,7 +30,7 @@ public:
 
     //set
     void setInUse (bool inUse){this->inUse = inUse;}
-    void modLife(int amt, bool rel = true);
+    void modLife(double amt, bool rel = true);
     void setMaxLife (int maxLife){this->maxLife = maxLife;}
     void setX(int x){this->x = x;}
     void setY(int y){this->y = y;}
@@ -39,8 +39,8 @@ public:
 
     //get
     bool getInUse() const {return inUse;}
-    int getLife() const {return life;}
-    int getMaxLife() const {return maxLife;}
+    double getLife() const {return life;}
+    double getMaxLife() const {return maxLife;}
     float getLifePercent() const {return life/(float)maxLife;}
     double getX() const {return x;}
     double getY() const {return y;}
@@ -51,7 +51,7 @@ protected:
     //properties
     double x, y;
     double x_vel, y_vel;
-    int life, maxLife;
+    double life, maxLife;
     const QColor *clr; //never need to modify it, just switch pointers
     bool inUse;
 };
