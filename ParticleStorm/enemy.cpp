@@ -7,6 +7,7 @@ const int Enemy::MAX_DAMAGE;
 const double Enemy::MAX_COLLISION_BUFFER_TIME;
 const int Enemy::MIN_ROTATION_SPD;
 const int Enemy::MAX_ROTATION_SPD;
+const int Enemy::OOB_LIMIT;
 
 Enemy::Enemy():GameObject(){
 }
@@ -175,8 +176,7 @@ void Enemy::update(double deltaTime){
         x += x_vel * speed * deltaTime;
         y += y_vel * speed * deltaTime;
 
-        //TODO: Bounds checking with Util::coordInRect
-        if(x >= (GameEngine::MAX_X)*2 || y >= (GameEngine::MAX_Y)*2){
+        if (!Util::coordInRect(x, y, -OOB_LIMIT, -OOB_LIMIT, GameEngine::MAX_X + OOB_LIMIT, GameEngine::MAX_Y + OOB_LIMIT)){
             die();
         }
     }

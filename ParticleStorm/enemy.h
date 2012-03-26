@@ -13,6 +13,7 @@ public:
     static const double MAX_COLLISION_BUFFER_TIME = 1.0;
     static const int MAX_ROTATION_SPD = 360;
     static const int MIN_ROTATION_SPD = 45;
+    static const int OOB_LIMIT = 400;
 
     Enemy();
 

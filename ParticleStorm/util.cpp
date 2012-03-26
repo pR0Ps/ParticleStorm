@@ -28,10 +28,9 @@ double Util::min(double x, double y) {
 }
 
 //returns true if the point is in the rectangle
-static bool coordInRect(double px1, double py1, double rx1, double ry1, double rx2, double ry2){
-    qDebug() << "not implemented yet";
-    exit(1);
-    return false;
+bool Util::coordInRect(double px, double py, double rx1, double ry1, double rx2, double ry2){
+    return ((px >= rx1 && px <= rx2) || (px <= rx1 && px >= rx2)) && //check x
+            ((py >= ry1 && py <= ry2) || (py <= ry1 && py >= ry2));  //check y
 }
 
 //returns the point of intersection between the lines spaning p1-p2 and p3-p4
