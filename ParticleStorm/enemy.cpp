@@ -169,7 +169,6 @@ void Enemy::update(double deltaTime){
             x += 2 * speed * deltaTime;
         else if(x > 984)
             x -= 2 * speed * deltaTime;
-
         if(y < 40)
             y += 2 * speed * deltaTime;
         else if(y > 728)
@@ -206,7 +205,6 @@ void Enemy::update(double deltaTime){
                 currentEnemy = ObjectManager::getInstance()->getClosestEnemy(x, y);
         }
         else{
-            qDebug() << "are we here?";
             findDirection(x, y, player->getX(), player->getY());
             x += x_vel * speed * deltaTime;
             y += y_vel * speed * deltaTime;

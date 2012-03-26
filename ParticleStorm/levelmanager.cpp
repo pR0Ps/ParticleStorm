@@ -21,7 +21,7 @@ void LevelManager::startLevel(LevelType t, int lvl) {
     ObjectManager *om = ObjectManager::getInstance();
 
     //start the enemies for the level
-    if (t == INFINITE){
+    if (t == NONSTOP){
         for (int i = 0; i < std::min((currLvl * ENEMY_GROWTH) + MIN_ENEMIES, MAX_ENEMIES) ; i++) {
             om->spawnEnemy(qrand() % GameEngine::MAX_X, qrand() % GameEngine::MAX_Y);
         }

@@ -13,7 +13,7 @@ public:
     enum LevelType{
         ZEN,
         LEVELED,
-        INFINITE
+        NONSTOP
     };
 
     //constants

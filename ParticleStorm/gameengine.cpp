@@ -172,7 +172,7 @@ void GameEngine::start(){
     gameClock = startTimer(1/(double)MAX_FPS*1000);
 
     //start the game
-    levelManager->startLevel(LevelManager::INFINITE, 1);
+    levelManager->startLevel(LevelManager::NONSTOP, 1);
 }
 
 //fade the frame
