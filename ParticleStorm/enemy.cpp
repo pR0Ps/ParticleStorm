@@ -194,45 +194,29 @@ void Enemy::update(double deltaTime){
 void Enemy::draw() const{
 
     //draw indicators for enemies that are off-screen
-    if(this->getX() > 1024 || this->getX() < 0 || this->getY() > 768 || this->getY() < 0){
-        if(this->getX() > 1024 || this->getY() > 768){
-            if(this->getX() > 1024 && this->getY() < 768)
-                Util::drawRoundShape(Util::min(1024, this->getX()), Util::min(768, this->getY()), (sqrt((this->getX() - 1024)*(this->getX() - 1024) + (768 - this->getY())*(768 - this->getY())))/50, 3, true, clr);
-            else if(this->getX() > 1024 && this->getY() > 768)
-                Util::drawRoundShape(Util::min(1024, this->getX()), Util::min(768, this->getY()), (sqrt((this->getX() - 1024)*(this->getX() - 1024) + (this->getY() - 768)*(this->getY() - 768)))/50, 3, true, clr);
-            else if(this->getX() < 1024 && this->getY() > 768)
-                Util::drawRoundShape(Util::min(1024, this->getX()), Util::min(768, this->getY()), (sqrt((1024 - this->getX())*(1024 - this->getX()) + (this->getY() - 768)*(this->getY() - 768)))/50, 3, true, clr);
-            else if(this->getX() > 1024 && this->getY() > 768)
-                Util::drawRoundShape(Util::min(1024, this->getX()), Util::min(768, this->getY()), (sqrt((this->getX() - 1024)*(this->getX() - 1024) + (this->getY() - 768)*(this->getY() - 768)))/50, 3, true, clr);
-        }
-        else if(this->getX() > 1024 || this->getY() < 0){
-            if(this->getX() > 1024 && this->getY() < 768)
-                Util::drawRoundShape(Util::min(1024, this->getX()), Util::max(0, this->getY()), (sqrt((this->getX() - 1024)*(this->getX() - 1024) + (768 - this->getY())*(768 - this->getY())))/50, 3, true, clr);
-            else if(this->getX() > 1024 && this->getY() > 768)
-                Util::drawRoundShape(Util::min(1024, this->getX()), Util::max(0, this->getY()), (sqrt((this->getX() - 1024)*(this->getX() - 1024) + (this->getY() - 768)*(this->getY() - 768)))/50, 3, true, clr);
-            else if(this->getX() < 1024 && this->getY() < 0)
-                Util::drawRoundShape(Util::min(1024, this->getX()), Util::max(0, this->getY()), (sqrt((1024 - this->getX())*(1024 - this->getX()) + (-(this->getY()))*(-(this->getY()))))/50, 3, true, clr);
-            else if(this->getX() > 1024 && this->getY() < 0)
-                Util::drawRoundShape(Util::min(1024, this->getX()), Util::max(0, this->getY()), (sqrt((this->getX() - 1024)*(this->getX() - 1024) + (-(this->getY()))*(-(this->getY()))))/50, 3, true, clr);
-        }
-        else if(this->getX() < 0 || this->getY() > 768){
-            if(this->getX() > 1024 && this->getY() < 768)
-                Util::drawRoundShape(Util::max(0, this->getX()), Util::min(768, this->getY()), 20, 3, false, clr);
-            else if(this->getX() < 1024 && this->getY() > 768)
-                Util::drawRoundShape(Util::max(0, this->getX()), Util::min(768, this->getY()), 20, 3, false, clr);
-            else if(this->getX() > 1024 && this->getY() > 768)
-                Util::drawRoundShape(Util::max(0, this->getX()), Util::min(768, this->getY()), 20, 3, false, clr);
-        }
-        else if(this->getX() < 0 || this->getY() < 0){
-            if(this->getX() > 1024 && this->getY() < 768)
-                Util::drawRoundShape(Util::max(0, this->getX()), Util::max(0, this->getY()), 20, 3, false, clr);
-            else if(this->getX() < 1024 && this->getY() > 768)
-                Util::drawRoundShape(Util::max(0, this->getX()), Util::max(0, this->getY()), 20, 3, false, clr);
-            else if(this->getX() > 1024 && this->getY() > 768)
-                Util::drawRoundShape(Util::max(0, this->getX()), Util::max(0, this->getY()), 20, 3, false, clr);
-        }
-    }
+    if (!Util::coordInRect(x, y, 0, 0, GameEngine::MAX_X, GameEngine::MAX_Y)){
 
+        const double hsx = GameEngine::MAX_X / 2.0f;
+        const double hsy = GameEngine::MAX_Y / 2.0f;
+
+        QPointF *temp;
+        //find intersection between player-enemy line and the edge of the screen
+        temp = Util::lineIntersect(hsx, hsy, x, y, 0, 0, GameEngine::MAX_X, 0);
+        if (temp == NULL) temp = Util::lineIntersect(hsx, hsy, x, y, GameEngine::MAX_X, 0, GameEngine::MAX_X, GameEngine::MAX_Y);
+        if (temp == NULL) temp = Util::lineIntersect(hsx, hsy, x, y, 0, GameEngine::MAX_Y, GameEngine::MAX_X, GameEngine::MAX_Y);
+        if (temp == NULL) temp = Util::lineIntersect(hsx, hsy, x, y, 0, 0, 0, GameEngine::MAX_Y);
+        if (temp != NULL){
+            //found intersection point, draw marker
+            Util::drawRoundShape(temp->x(), temp->y(),
+                                 //1000 is the distance the enemy has to be to be off by in order to get the biggest circle
+                                 //10 is the minimum size circle
+                                 //60 (50 + 10) is the maximum size circle
+                                 Util::min(Util::distance(temp->x(), temp->y(), x, y), 1000)/1000.0f * 50 + 10,
+                                 10, false, ResourceManager::getInstance()->getColour(ResourceManager::WHITE));
+        }
+        //clean up
+        delete temp;
+    }
 
     //set up a new matrix for drawing
     glPushMatrix();
@@ -280,6 +264,10 @@ void Enemy::die(){
 
     //enemy died, create some shrapnel with it's position and velocity
     ObjectManager::getInstance()->spawnShrapnel(x, y, x_vel, y_vel, numShrapnel, shrapnelLen, clr);
+
+    //powerup (use the maxLife to dertermine value of powerup (harder = better powerup)
+    if (type != ObjectManager::BULLET && qrand() % 3 == 0)
+        ObjectManager::getInstance()->spawnPowerup(ObjectManager::HEALTH, x, y, x_vel, y_vel, maxLife);
 }
 
 void Enemy::findDirection(double x2, double y2, double x_tar2, double y_tar2){
