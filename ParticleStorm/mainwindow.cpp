@@ -1,6 +1,9 @@
 #include "mainwindow.h"
 #include "gameengine.h"
 #include "util.h"
+#include <QSound>
+#include <QDir>
+#include <iostream>
 
 MainWindow* MainWindow::instance = NULL;
 
@@ -11,6 +14,18 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
     //set up the game engine
     engine = new GameEngine();
     engine->setMouseTracking(true);
+    //try and do music
+
+    //QSound music("C://Users//Daniel//CISC 320//ParticleStorm//Resources//base-loop.wav");
+    //music.play();
+    //QSound music("./Images/base-loop.wav");
+
+    QString str = QDir::homePath();
+    printf("%s\n", str.toAscii().constData());
+    //music.play();
+
+
+
 
     clr = new QColor(255, 255, 255);
     fillStar();
