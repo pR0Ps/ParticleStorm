@@ -193,26 +193,21 @@ void Enemy::draw() const{
     if (type == ObjectManager::GRUNT){
        Util::drawBox(-radius, -radius, radius, radius, false, clr);
        glRotated(45, 0, 0, 1);
-       Util::drawBox(-radius + 6, -radius + 6, radius - 6, radius - 6, false, clr);
+       const double temp = sqrt(radius);
+       Util::drawBox(-radius + temp, -radius + temp, radius - temp, radius - temp, false, clr);
     }
     else if (type == ObjectManager::HEALER){
-        //temp
-        Util::drawRoundShape(0, 0, radius * 2, 8, false, clr);
-        Util::drawBox(-radius, -radius, radius, radius, false, clr);
+        Util::drawRoundShape(0, 0, radius * 2, 5, false, clr);
     }
     else if (type == ObjectManager::TANK){
-        //temp
-        Util::drawRoundShape(0, 0, radius * 2, 5, false, clr);
-        //Util::drawBox(-radius, -radius, radius, radius, false, clr);
+        Util::drawRoundShape(0, 0, radius * 2, 6, false, clr);
+        glRotated(30, 0, 0, 1);
+        Util::drawRoundShape(0, 0, radius, 6, false, clr);
     }
     else if (type == ObjectManager::SPRINTER){
-        //temp
-        Util::drawRoundShape(0, 0, radius * 2, 8, false, clr);
         Util::drawBox(-radius, -radius, radius, radius, false, clr);
     }
     else if (type == ObjectManager::SHOOTER){
-        //temp
-        Util::drawRoundShape(0, 0, radius * 2, 8, false, clr);
         Util::drawBox(-radius, -radius, radius, radius, false, clr);
     }
     else{//bullet
