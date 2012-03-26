@@ -10,24 +10,47 @@ class LevelManager
 public:
     LevelManager();
 
-    //constants
-    static const double INITIAL_TTL = 5;
+    enum LevelType{
+        ZEN,
+        LEVELED,
+        INFINITE
+    };
 
-    //starts and advances the level
-    void startLevel(int lvl);
+    //constants
+    static const double TEXT_DISPLAY_TIME = 5;
+    static const double ENEMY_CHECK_RATE = 5;
+
+    static const int MAX_ENEMIES = 50;
+    static const int MIN_ENEMIES = 5;
+    static const int ENEMY_GROWTH = 3;
+
+    //starts the level
+    void startLevel(LevelType t, int lvl);
     void nextLevel();
 
     //updates the levelManager and polls isFinished
     void update(double deltaTime);
 
-    void draw();
+    //draw the level manager stuff (text overlays)
+    void drawNoFade() const;
 
     //returns true if there are no enemies
-    bool isFinished();
+    bool levelFinished() const;
+
+    //get the current level
+    int getCurrentLevel() const {return currLvl;}
 
 private:
+    //state stuff
+    LevelType currType;
     int currLvl;
-    double ttl;
+
+    //timers
+    double text_ttl;
+    double enemyCheck_ttl;
+
+    //finished flag
+    bool levelDone;
 };
 
 #endif // LEVELMANAGER_H

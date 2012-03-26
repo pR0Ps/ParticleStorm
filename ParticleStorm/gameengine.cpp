@@ -172,7 +172,7 @@ void GameEngine::start(){
     gameClock = startTimer(1/(double)MAX_FPS*1000);
 
     //start the game
-    levelManager->startLevel(1);
+    levelManager->startLevel(LevelManager::INFINITE, 1);
 }
 
 //fade the frame
@@ -279,7 +279,11 @@ void GameEngine::update(){
     /*if (getMouseState() & Qt::RightButton){
         objectManager->modPlayerLife(-5);
     }*/
+
+    //level stuff
     levelManager->update(deltaTime);
+    if (levelManager->levelFinished())
+        levelManager->nextLevel();
 }
 
 //draws everything - automatically called by timer
@@ -328,8 +332,7 @@ void GameEngine::paintGL(){
         drawHUD();
 
         //draw the level number display
-        if (levelManager->isFinished())
-            levelManager->draw();
+        levelManager->drawNoFade();
     }
     else{
         //draw the game over sequence

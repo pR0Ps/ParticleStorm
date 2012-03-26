@@ -408,6 +408,10 @@ void ObjectManager::spawnEnemy(EnemyType t, const double x, const double y, cons
     static_cast<Enemy*>(temp)->startEnemy(t, x, y, x_tar, y_tar);
 }
 
+void ObjectManager::spawnEnemy(double x, double y){
+    spawnEnemy((EnemyType)Util::randInt(GRUNT, SHOOTER), x, y, getPlayer()->getX(), getPlayer()->getY());
+}
+
 void ObjectManager::spawnShrapnel(const double x, const double y, const double x_vel, const double y_vel, const int num, const double len, const QColor *clr){
     for (int i = 0 ; i < num ; i++){
         static_cast<Shrapnel*>(getUnused(SHRAPNEL))->startShrapnel(x, y, x_vel, y_vel, len, clr);

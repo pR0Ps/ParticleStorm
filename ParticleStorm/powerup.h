@@ -10,8 +10,8 @@ public:
     Powerup();
 
     static const float AIR_RESIST = 1;
-    static const int MAX_ROTATION_SPD = 1080;
-    static const int MIN_ROTATION_SPD = 720;
+    static const int MAX_ROTATION_SPD = 900;
+    static const int MIN_ROTATION_SPD = 540;
     static const double INITIAL_TTL = 10;
 
     void startPowerup(int type, double x, double y, double x_vel, double y_vel, int value);
@@ -22,7 +22,6 @@ public:
     void applyForce(double, double, double){}
 
     double getRadius() const {return radius;}
-    //Dies after a specific amount of time, or when player collides
 
 private:
     int type;

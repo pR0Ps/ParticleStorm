@@ -23,7 +23,7 @@ public:
     static const int MAX_FPS = 120;
     static const int FPS_COUNT_FRAME_INTERVAL = 50;
     static const int LINES_PER_FADE = 200;
-    static const int CLEAR_BORDER_AMT = 15;
+    static const int CLEAR_BORDER_AMT = 5;
     static const double GAME_OVER_SECONDS = 5;
     static const float PAN_SPEED = 0.5;
 

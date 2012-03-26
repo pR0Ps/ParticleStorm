@@ -39,12 +39,12 @@ public:
     };
     //enemy types
     enum EnemyType{
-        GRUNT,
+        GRUNT, //must be first
         HEALER,
         TANK,
         SPRINTER,
-        SHOOTER,
-        BULLET
+        SHOOTER, //must be second-last
+        BULLET //must be last
     };
     //powerup types
     enum PowerupType{
@@ -89,6 +89,7 @@ public:
     void spawnParticle(double x, double y);
     void spawnPowerup (PowerupType t, double x, double y, double x_vel, double y_vel, int value);
     void spawnEnemy(EnemyType t, double x, double y, double x_tar = 0, double y_tar = 0);
+    void spawnEnemy(double x, double y);
     void spawnShrapnel (double x, double y, double x_vel, double y_vel, int num, double len, const QColor *clr);
 
     //enemy stuff
