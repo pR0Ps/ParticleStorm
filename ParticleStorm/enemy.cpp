@@ -62,11 +62,14 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
     }
     else if(type == ObjectManager::SPRINTER){
         maxLife = life = 100;
-        speed = 300;
+        speed = 800;
         damage = 10;
         numShrapnel = 4;
         shrapnelLen = 30;
         radius = 15;
+        timerActive = false;
+        currTimer = maxTimer = 1;
+        moving = false;
         clr = ResourceManager::getInstance()->getColour(ResourceManager::ORANGE);
 
         findDirection(x, y, x_tar, y_tar);
@@ -118,10 +121,35 @@ void Enemy::update(double deltaTime){
 
     }
     else if (type == ObjectManager::TANK){
-        //apply force to particles
+        //to be added: apply force to particles
+        if(x >= (GameEngine::MAX_X) || x <= 0 || y >= (GameEngine::MAX_Y) || y <= 0){
+            findDirection(x, y, player->getX(), player->getY());
+        }
+        x += x_vel * speed * deltaTime;
+        y += y_vel * speed * deltaTime;
     }
     else if (type == ObjectManager::SPRINTER){
-        //pick a place near the enemy and lunge to it
+        if(currTimer == maxTimer && !timerActive && !moving){
+            findDirection(x, y, player->getX(), player->getY());
+            playerX = player->getX();
+            playerY = player->getY();
+            timerActive = true;
+        }
+        else if(currTimer <= 0 && timerActive && !moving){
+            currTimer = maxTimer;
+            timerActive = false;
+            moving = true;
+        }
+        else if(currTimer <= 0 && timerActive && moving){
+            currTimer = maxTimer;
+            timerActive = false;
+            moving = false;
+        }
+        else if(moving){
+            timerActive = true;
+            x += x_vel * speed * deltaTime;
+            y += y_vel * speed * deltaTime;
+        }
     }
     else if(type == ObjectManager::SHOOTER){
 
@@ -131,19 +159,15 @@ void Enemy::update(double deltaTime){
             ObjectManager::getInstance()->spawnEnemy(ObjectManager::BULLET, x, y, player->getX(), player->getY());
         }
 
-        if(x < 40){
+        if(x < 40)
             x += 2 * speed * deltaTime;
-        }
-        else if(x > 984){
+        else if(x > 984)
             x -= 2 * speed * deltaTime;
-        }
 
-        if(y < 40){
+        if(y < 40)
             y += 2 * speed * deltaTime;
-        }
-        else if(y > 728){
+        else if(y > 728)
             y -= 2 * speed * deltaTime;
-        }
 
         if(Util::distance(x, y, player->getX(), player->getY()) < 500){
             findDirection(x, y, player->getX(), player->getY());
@@ -172,11 +196,14 @@ void Enemy::update(double deltaTime){
                 currentEnemy->modLife(10*deltaTime, true);
                 timerActive = true; //start the timer
             }
-            else{
+            else
                 currentEnemy = ObjectManager::getInstance()->getClosestEnemy(x, y);
-            }
         }
-
+        else{
+            findDirection(x, y, player->getX(), player->getY());
+            x += x_vel * speed * deltaTime;
+            y += y_vel * speed * deltaTime;
+        }
     }
     else if(type == ObjectManager::BULLET){
         x += x_vel * speed * deltaTime;

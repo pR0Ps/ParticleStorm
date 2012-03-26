@@ -53,6 +53,8 @@ private:
     double currTimer;
     double maxTimer;
     bool timerActive;
+    bool moving;
+    double playerX, playerY;
 
     //spin stuff
     double spin;
