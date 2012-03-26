@@ -45,6 +45,10 @@ private:
     double radius;
     double collisionBufferTime;
     int horVert;
+    int shotCounter;
+    double x_vel, y_vel;
+
+    void findDirection(double, double, double, double);
 
     //shrapnel stuff
     int numShrapnel;

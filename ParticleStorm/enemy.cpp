@@ -19,7 +19,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
     this->y_tar = y_tar;
     this->collisionBufferTime = 0;
 
-    double x_dist, y_dist, theta;
+    shotCounter = 0;
 
     //give starting stats depending on type
     if(type == ObjectManager::GRUNT){
@@ -31,24 +31,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         radius = 20;
         clr = ResourceManager::getInstance()->getColour(ResourceManager::BLUE);
 
-        //calculating the x and y distance from enemy spawn and current player position
-        x_dist = x_tar - x;
-        y_dist = y_tar - y;
-
-        //calculate angle in radians
-        theta = atan(y_dist/x_dist);
-
-        //calculating the x and y values to make a unit vector pointing at player
-        x_vel = cos(theta);
-        y_vel = sin(theta);
-        if(x_tar < x && y_tar < y){
-            x_vel = -x_vel;
-            y_vel = -y_vel;
-        }
-        else if(x_tar < x && y_tar > y)
-            x_vel = -x_vel;
-        else if(x_tar > x && y_tar < y)
-            y_vel = -y_vel;
+        findDirection(x, y, x_tar, y_tar);
     }
     else if(type == ObjectManager::HEALER){
         maxLife = life = 100;
@@ -68,24 +51,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         radius = 30;
         clr = ResourceManager::getInstance()->getColour(ResourceManager::GREEN);
 
-        //calculating the x and y distance from enemy spawn and current player position
-        x_dist = x_tar - x;
-        y_dist = y_tar - y;
-
-        //calculate angle in radians
-        theta = atan(y_dist/x_dist);
-
-        //calculating the x and y values to make a unit vector pointing at player
-        x_vel = cos(theta);
-        y_vel = sin(theta);
-        if(x_tar < x && y_tar < y){
-            x_vel = -x_vel;
-            y_vel = -y_vel;
-        }
-        else if(x_tar < x && y_tar > y)
-            x_vel = -x_vel;
-        else if(x_tar > x && y_tar < y)
-            y_vel = -y_vel;
+        findDirection(x, y, x_tar, y_tar);
     }
     else if(type == ObjectManager::SPRINTER){
         maxLife = life = 100;
@@ -96,24 +62,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         radius = 15;
         clr = ResourceManager::getInstance()->getColour(ResourceManager::ORANGE);
 
-        //calculating the x and y distance from enemy spawn and current player position
-        x_dist = x_tar - x;
-        y_dist = y_tar - y;
-
-        //calculate angle in radians
-        theta = atan(y_dist/x_dist);
-
-        //calculating the x and y values to make a unit vector pointing at player
-        x_vel = cos(theta);
-        y_vel = sin(theta);
-        if(x_tar < x && y_tar < y){
-            x_vel = -x_vel;
-            y_vel = -y_vel;
-        }
-        else if(x_tar < x && y_tar > y)
-            x_vel = -x_vel;
-        else if(x_tar > x && y_tar < y)
-            y_vel = -y_vel;
+        findDirection(x, y, x_tar, y_tar);
     }
     else if(type == ObjectManager::SHOOTER){
         maxLife = life = 75;
@@ -133,6 +82,8 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         numShrapnel = 0;
         shrapnelLen = 0;
         radius = 7;
+
+        findDirection(x, y, x_tar, y_tar);
         clr = ResourceManager::getInstance()->getColour(ResourceManager::RED);
     }
     else{
@@ -145,8 +96,8 @@ void Enemy::update(double deltaTime){
 
     const Player* player = ObjectManager::getInstance()->getPlayer();
 
-    if(abs(x - x_tar) == 2048 || abs(y - y_tar) == 1536){
-        die();
+    if(abs(x - x_tar) == (GameEngine::MAX_X) || abs(y - y_tar) == (GameEngine::MAX_Y)){
+        findDirection(x, y, player->getX(), player->getY());
     }
 
     if(type == ObjectManager::GRUNT || type == ObjectManager::TANK || type == ObjectManager::SPRINTER){
@@ -157,6 +108,14 @@ void Enemy::update(double deltaTime){
     }
     else if(type == ObjectManager::SHOOTER){
 
+        shotCounter++;
+
+        //if shotCount reaches its limit, fire a shot
+        if(shotCounter == 120){
+            shotCounter = 0;
+            ObjectManager::getInstance()->spawnEnemy(ObjectManager::BULLET, x, y, player->getX(), player->getY());
+        }
+
         if(x < 40){
             x += 3 * speed * deltaTime;
         }
@@ -172,30 +131,13 @@ void Enemy::update(double deltaTime){
         }
 
         if(Util::distance(x, y, player->getX(), player->getY()) < 500){
-            //calculating the x and y distance from enemy spawn and current player position
-            double x_dist2 = player->getX() - x;
-            double y_dist2 = player->getY() - y;
-
-            //calculate angle in radians
-            double theta2 = atan(y_dist2/x_dist2);
-
-            //calculating the x and y values to make a unit vector pointing at player
-            x_vel = cos(theta2);
-            y_vel = sin(theta2);
-            if(player->getX() < x && player->getY() < y){
-                x_vel = -x_vel;
-                y_vel = -y_vel;
-            }
-            else if(player->getX() < x && player->getY() > y)
-                x_vel = -x_vel;
-            else if(player->getX() > x && player->getY() < y)
-                y_vel = -y_vel;
+            findDirection(x, y, player->getX(), player->getY());
 
             x -= x_vel * speed * deltaTime;
             y -= y_vel * speed * deltaTime;
         }
     }
-    else{
+    else if(type = ObjectManager::HEALER){
         if(x < 40){
             x += 3 * speed * deltaTime;
         }
@@ -211,24 +153,7 @@ void Enemy::update(double deltaTime){
         }
 
         if(Util::distance(x, y, player->getX(), player->getY()) < 500){
-            //calculating the x and y distance from enemy spawn and current player position
-            double x_dist2 = player->getX() - x;
-            double y_dist2 = player->getY() - y;
-
-            //calculate angle in radians
-            double theta2 = atan(y_dist2/x_dist2);
-
-            //calculating the x and y values to make a unit vector pointing at player
-            x_vel = cos(theta2);
-            y_vel = sin(theta2);
-            if(player->getX() < x && player->getY() < y){
-                x_vel = -x_vel;
-                y_vel = -y_vel;
-            }
-            else if(player->getX() < x && player->getY() > y)
-                x_vel = -x_vel;
-            else if(player->getX() > x && player->getY() < y)
-                y_vel = -y_vel;
+            findDirection(x, y, player->getX(), player->getY());
 
             x -= x_vel * speed * deltaTime;
             y -= y_vel * speed * deltaTime;
@@ -261,4 +186,26 @@ void Enemy::die(){
 
     //enemy died, create some shrapnel with it's position and velocity
     ObjectManager::getInstance()->spawnShrapnel(x, y, x_vel, y_vel, numShrapnel, shrapnelLen, clr);
+}
+
+void Enemy::findDirection(double x, double y, double x_tar, double y_tar){
+
+    //calculating the x and y distance from enemy spawn and current player position
+    double x_dist = x_tar - x;
+    double y_dist = y_tar - y;
+
+    //calculate angle in radians
+    double theta = atan(y_dist/x_dist);
+
+    //calculating the x and y values to make a unit vector pointing at player
+    x_vel = cos(theta);
+    y_vel = sin(theta);
+    if(x_tar < x && y_tar < y){
+        x_vel = -x_vel;
+        y_vel = -y_vel;
+    }
+    else if(x_tar < x && y_tar > y)
+        x_vel = -x_vel;
+    else if(x_tar > x && y_tar < y)
+        y_vel = -y_vel;
 }
