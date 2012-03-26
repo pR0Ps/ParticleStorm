@@ -38,7 +38,7 @@ public:
 
     //access mouse state
     Qt::MouseButtons getMouseState(){return mouseState;}
-    QPoint getMousePos(){return mapFromGlobal(QCursor::pos());}
+    QPoint getMousePos() const;
 
     //access key state
     bool keyPressed(int k){return currKeys[k];}

@@ -129,6 +129,14 @@ void GameEngine::keyReleaseEvent(QKeyEvent * event){
         currKeys[keyMap.value(event->key())] = false;
 }
 
+// Convert the mouse position fetched from Qt to the coordinates that are used
+// by OpenGL. For Qt, a y coordinate of 0 is the top of the screen, but for
+// OpenGL this is the bottom of the screen.
+QPoint GameEngine::getMousePos() const {
+    QPoint mousePos = mapFromGlobal(QCursor::pos());
+    return QPoint(mousePos.x(), MAX_Y - mousePos.y());
+}
+
 //resets the game
 void GameEngine::reset(){
     if (gameClock != 0){

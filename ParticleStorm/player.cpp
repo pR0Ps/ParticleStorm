@@ -98,7 +98,7 @@ void Player::update(double deltaTime) {
     if (isValidMousePos(mousePos)){
         // then update the avatar's position with the current mouse coordinates
         x = mousePos.x();
-        y = GameEngine::MAX_Y - mousePos.y(); //window uses top-right as 0,0
+        y = mousePos.y();
     }
     // otherwise leave the avatar's position unchanged
 
