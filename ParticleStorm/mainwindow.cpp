@@ -72,13 +72,13 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
 }
 void MainWindow::mouseReleaseEvent(QMouseEvent *event){
     if (playButton->mouseOver(currMousePos) && playButton->down){
-        playButton->down = false;
-
         //start the game
         instance->setVisible(false);
         engine->setVisible(true);
         engine->start();
     }
+    //reset button states
+    playButton->down = false;
 }
 
 void MainWindow::doneGame(const unsigned int score){
