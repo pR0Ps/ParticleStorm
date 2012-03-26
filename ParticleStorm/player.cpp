@@ -21,6 +21,7 @@ const int Player::MAX_LIFE;
 const int Player::MAX_MANA;
 const int Player::MAX_DIAMETER;
 const int Player::RING_SIZE;
+const int Player::PARTICLE_SPACING;
 const int Player::RAM_DAMAGE;
 const double Player::TIME_BETWEEN_CHG_ABILITY;
 const int Player::LIGHTNING_RANGE;
@@ -30,7 +31,7 @@ const int Player::MIN_LIGHTNING_DRAW_DISTANCE;
 const int Player::PARTICLES_SPAWNED_PER_SEC;
 const int Player::SPRAY_MANA_COST;
 const double Player::LIGHTNING_HEAL_MODIFIER;
-const int Player::PARTICLES_DROPPED_PER_SEC;
+// const int Player::PARTICLES_DROPPED_PER_SEC;
 
 // Implementation of constructor and destructor.
 
@@ -212,7 +213,7 @@ void Player::performAbility(double deltaTime, ObjectManager* manager,
     // Check to see if the drop particles ability has been activated.
     if ((window->getMouseState() & Qt::LeftButton) ||
             window->getKeyPressed(GameEngine::DROP))
-        dropParticles(deltaTime, manager);
+        dropParticles(manager);
     // Force push ability. Force push and force pull are only applied to
     // particles and stars.
     else if ((window->getMouseState() & Qt::RightButton) ||
@@ -245,7 +246,22 @@ void Player::performAbility(double deltaTime, ObjectManager* manager,
     }
 }
 
-void Player::dropParticles(double deltaTime, ObjectManager* manager) const {
+void Player::dropParticles(ObjectManager* manager) const {
+    // spwan at least one particle (if staying still)
+    manager->spawnParticle(x, y);
+
+    // spawn a particle every PARTICLE_SPACING px along the line between the
+    // old a new pos
+    // Note: may want to use the time since the last update for this
+    // instead.
+    const double dist = Util::distance(x, y, x_old, y_old);
+    const double tempX = (x - x_old) / dist;
+    const double tempY = (y - y_old) / dist;
+    for (int i = 0 ; i < dist ; i+= PARTICLE_SPACING)
+        manager->spawnParticle(x_old + tempX * i, y_old + tempY * i);
+
+    /*
+    // deltaTime based implementation of drop particles.
     int numParticles = ceil(deltaTime * PARTICLES_DROPPED_PER_SEC);
 
     // If only one particle is to be spawned then spawn it halfway between the
@@ -262,6 +278,7 @@ void Player::dropParticles(double deltaTime, ObjectManager* manager) const {
             manager->spawnParticle(x_old + xStep * particleCount,
                                    y_old + yStep * particleCount);
     }
+    */
 }
 
 void Player::forcePush(ObjectManager* manager) const {

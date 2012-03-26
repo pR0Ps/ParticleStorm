@@ -54,9 +54,11 @@ public:
     //size of the rings around the player
     static const int RING_SIZE = 4;
 
+    //spacing of the particles to drop
+    static const int PARTICLE_SPACING = 15;
     // Constant for the number of particles dropped by the drop particles
     // ability.
-    static const int PARTICLES_DROPPED_PER_SEC = 100;
+    // static const int PARTICLES_DROPPED_PER_SEC = 100;
 
     // Enumeration for the player's special abilities.
     enum ability {
@@ -192,10 +194,14 @@ private:
      * between the player's position on the last call to update and their current
      * position.
      *
-     * Parameters: the time since the last call to update and the current
-     * ObjectManager.
+     * Parameters: the current ObjectManager.
+     *
+     * Note: the calculation performed does not depend on the time since the last
+     * call to update but rather the distance that the player has travelled. This
+     * encourages the player to move around while spawning particles instead of
+     * staying still.
      */
-    void dropParticles(double deltaTime, ObjectManager* manager) const;
+    void dropParticles(ObjectManager* manager) const;
 
     /*
      * Applies force to all nearby enemies and star objects, pushing them away
