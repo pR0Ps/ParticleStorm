@@ -294,16 +294,37 @@ void ObjectManager::doPlayerPowerupCollisions(){
 
 bool ObjectManager::playerCollision(double px1, double py1, double px2, double py2, double ex, double ey, double radius) {
 
+    //return Util::magnitude(px1-ex,py1-ey) < radius;
+
     //checking that enemy is in the player path range
     double playerAngle = Util::atand(py2-py1,px2-px1);
     double angle1 = Util::atand(ey-py1,ex-px1) - playerAngle;
     double angle2 = Util::atand(ey-py2,ex-px2) - playerAngle;
 
-    if(angle1 > 90 && angle1 < 270){
+    while(angle1 < 0) {
+
+        angle1 += 360;
+        //std::cout << "Angle 1: " << angle1  << endl;
+    }
+
+    while(angle2 < 0) {
+
+        angle2 += 360;
+        //std::cout << "Angle 2: " << angle2  << endl;
+    }
+
+    if(angle1 > 90 || angle1 < 270){
+
+//        double dist = Util::magnitude(px1-ex,py1-ey);
+//        if(dist < radius) {
+
+//        std::cout << "Distance: " << dist << endl;
+//        return true;
+//}
         return Util::magnitude(px1-ex,py1-ey) < radius;
     }
 
-    if(angle2 < 90 && angle2 > 270) {
+    if(angle2 < 90 || angle2 > 270) {
         return Util::magnitude(px2-ex,py2-ey) < radius;
     }
 
