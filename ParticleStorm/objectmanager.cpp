@@ -394,9 +394,10 @@ Enemy* ObjectManager::getClosestEnemy(double x, double y, double minDistance,
                                       currentEnemy->getY());
 
         // Perform bounds checking on the distance to the currently selected
-        // enemy and determine if this is the new closest enemy.
+        // enemy and determine if this is the new closest enemy. Also, don't
+        // consider the enemy if it's not in use.
         if (distance >= minDistance && distance <= maxDistance &&
-                distance < closestDistance) {
+                distance < closestDistance && currentEnemy->getInUse()) {
             closestEnemy = currentEnemy;
             closestDistance = distance;
         }
