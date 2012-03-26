@@ -137,7 +137,7 @@ private:
     // Data members.
     // These represent the location of the player on the last call to update.
     double x_old, y_old;
-    int mana;
+    double mana;
     long int score;
     // The player's currently selected special ability. This should only be
     // assigned values from the ability enum.

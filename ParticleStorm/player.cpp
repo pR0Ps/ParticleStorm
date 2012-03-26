@@ -148,21 +148,12 @@ void Player::modScore(const int amt, const bool rel){
 }
 
 // *Changed mana to a double temporarily.
-void Player::modMana(double amt, bool rel) {
+void Player::modMana(double amount, bool rel) {
     // Perform bounds checking on what the new value of mana would be.
-    if (mana + amt < 0)
-        mana = 0;
-    else if (mana + amt > MAX_MANA)
-        mana = MAX_MANA;
-    else
-        mana+= amt;
-
-    /*
     if (rel)
-        mana = std::max(0, std::min (mana + amt, MAX_MANA));
+        mana = Util::max(0, Util::min (mana + amount, MAX_MANA));
     else
-        mana = std::max(0, std::min (amt, MAX_MANA));
-    */
+        mana = Util::max(0, Util::min (amount, MAX_MANA));
 }
 
 string Player::getAbilityString() const {
@@ -262,14 +253,16 @@ void Player::useAbility(double deltaTime, ObjectManager* manager) {
     }
 }
 
-// Need to check if the player has enough mana left first.
+// Would be more efficient to check to see if the player has enough mana first
+// before finding the closest enemy.
 void Player::lightningAbility(double deltaTime, ObjectManager* manager) {
     Enemy* closestEnemy = manager->getClosestEnemy(x, y, 0, LIGHTNING_RANGE);
+    double manaCost = deltaTime * LIGHTNING_MANA_COST;
 
-    if (closestEnemy != NULL) {
-        // then an enemy is in range of the lightning ability
+    if (closestEnemy != NULL && manaCost <= mana) {
+        // then an enemy is in range of the lightning ability and the player has
+        // enough mana left to perform the ability
         double damage = deltaTime * LIGHTNING_DPS;
-        double manaCost = deltaTime * LIGHTNING_MANA_COST;
 
         closestEnemy->modLife(-damage);
         modMana(-manaCost);
