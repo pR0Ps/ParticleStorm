@@ -4,7 +4,9 @@
 #include <cmath>
 
 const int Enemy::MAX_DAMAGE;
-
+const double Enemy::MAX_COLLISION_BUFFER_TIME;
+const int Enemy::MIN_ROTATION_SPD;
+const int Enemy::MAX_ROTATION_SPD;
 
 Enemy::Enemy():GameObject(){
 }
@@ -18,8 +20,9 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
     this->x_tar = x_tar;
     this->y_tar = y_tar;
     this->collisionBufferTime = 0;
-
-    shotCounter = 0;
+    this->shotCounter = 0;
+    this->angle = 0;
+    this->spin = Util::randInt(MIN_ROTATION_SPD, MAX_ROTATION_SPD) * ((qrand() % 2) * 2 - 1);
 
     //give starting stats depending on type
     if(type == ObjectManager::GRUNT){
@@ -160,17 +163,53 @@ void Enemy::update(double deltaTime){
         }
     }
 
+    //spin the enemies
+    angle += deltaTime * spin;
+    if (angle > 360) angle = angle - 360;
+
+    //decrease collision buffer time (should be in player)
     if(collisionBufferTime > 0)
         collisionBufferTime -= deltaTime;
 
 }
 
 void Enemy::draw() const{
-    Util::drawOctagon(x, y, radius * 2, false, clr);
-    Util::drawBox(x-radius,y-radius,x+radius,y+radius,false,clr);
-    if (type == ObjectManager::GRUNT){
+    //set up a new matrix for drawing
+    glPushMatrix();
+    glLoadIdentity();
+    glTranslated(x, y, 0);
+    glRotated(angle, 0, 0, 1);
 
+    //draw the different objects
+    if (type == ObjectManager::GRUNT){
+       Util::drawBox(-radius, -radius, radius, radius, false, clr);
+       glRotated(45, 0, 0, 1);
+       Util::drawBox(-radius + 6, -radius + 6, radius - 6, radius - 6, false, clr);
     }
+    else if (type == ObjectManager::HEALER){
+        //temp
+        Util::drawOctagon(0, 0, radius * 2, false, clr);
+        Util::drawBox(-radius, -radius, radius, radius, false, clr);
+    }
+    else if (type == ObjectManager::TANK){
+        //temp
+        Util::drawOctagon(0, 0, radius * 2, false, clr);
+        Util::drawBox(-radius, -radius, radius, radius, false, clr);
+    }
+    else if (type == ObjectManager::SPRINTER){
+        //temp
+        Util::drawOctagon(0, 0, radius * 2, false, clr);
+        Util::drawBox(-radius, -radius, radius, radius, false, clr);
+    }
+    else if (type == ObjectManager::SHOOTER){
+        //temp
+        Util::drawOctagon(0, 0, radius * 2, false, clr);
+        Util::drawBox(-radius, -radius, radius, radius, false, clr);
+    }
+    else{//bullet
+        Util::drawOctagon(0, 0, radius * 2, false, clr);
+    }
+    glPopMatrix();
 }
 
 //pan the enemy (and their target)

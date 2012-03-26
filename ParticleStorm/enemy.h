@@ -11,7 +11,8 @@ public:
     //redeclare in cpp file
     static const int MAX_DAMAGE = 10;
     static const double MAX_COLLISION_BUFFER_TIME = 1.0;
-
+    static const int MAX_ROTATION_SPD = 360;
+    static const int MIN_ROTATION_SPD = 45;
 
     Enemy();
 
@@ -46,7 +47,10 @@ private:
     double collisionBufferTime;
     int horVert;
     int shotCounter;
-    double x_vel, y_vel;
+
+    //spin stuff
+    double spin;
+    double angle;
 
     void findDirection(double, double, double, double);
 
