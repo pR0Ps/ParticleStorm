@@ -117,108 +117,115 @@ void Enemy::update(double deltaTime){
     if (timerActive && currTimer > 0)
         currTimer -= deltaTime;
 
-    if(type == ObjectManager::GRUNT){
-
-        if(x >= (GameEngine::MAX_X) || x <= 0 || y >= (GameEngine::MAX_Y) || y <= 0){
-            findDirection(x, y, player->getX(), player->getY());
-        }
-        x += x_vel * speed * deltaTime;
-        y += y_vel * speed * deltaTime;
-
-    }
-    else if (type == ObjectManager::TANK){
-        //to be added: apply force to particles
-        if(x >= (GameEngine::MAX_X) || x <= 0 || y >= (GameEngine::MAX_Y) || y <= 0){
-            findDirection(x, y, player->getX(), player->getY());
-        }
+    if(Util::coordInRect(x, y, 0, 0, GameEngine::MAX_X, GameEngine::MAX_Y) == false && type != ObjectManager::BULLET){
+        findDirection(x, y, player->getX(), player->getY());
         x += x_vel * speed * deltaTime;
         y += y_vel * speed * deltaTime;
     }
-    else if (type == ObjectManager::SPRINTER){
-        if(currTimer == maxTimer && !timerActive && !moving){
-            findDirection(x, y, player->getX(), player->getY());
-            playerX = player->getX();
-            playerY = player->getY();
-            timerActive = true;
+
+    else{
+        if(type == ObjectManager::GRUNT){
+
+            if(x >= (GameEngine::MAX_X) || x <= 0 || y >= (GameEngine::MAX_Y) || y <= 0){
+                findDirection(x, y, player->getX(), player->getY());
+            }
+            x += x_vel * speed * deltaTime;
+            y += y_vel * speed * deltaTime;
+
         }
-        else if(currTimer <= 0 && timerActive && !moving){
-            currTimer = maxTimer;
-            timerActive = false;
-            moving = true;
-        }
-        else if(currTimer <= 0 && timerActive && moving){
-            currTimer = maxTimer;
-            timerActive = false;
-            moving = false;
-        }
-        else if(moving){
-            timerActive = true;
+        else if (type == ObjectManager::TANK){
+            //to be added: apply force to particles
+            if(x >= (GameEngine::MAX_X) || x <= 0 || y >= (GameEngine::MAX_Y) || y <= 0){
+                findDirection(x, y, player->getX(), player->getY());
+            }
             x += x_vel * speed * deltaTime;
             y += y_vel * speed * deltaTime;
         }
-    }
-    else if(type == ObjectManager::SHOOTER){
-
-        //if the timer permits, fire a shot
-        if(currTimer <= 0){
-            currTimer = maxTimer;
-            ObjectManager::getInstance()->spawnEnemy(ObjectManager::BULLET, x, y, player->getX(), player->getY());
-        }
-
-        if(x < 40)
-            x += 2 * speed * deltaTime;
-        else if(x > 984)
-            x -= 2 * speed * deltaTime;
-        if(y < 40)
-            y += 2 * speed * deltaTime;
-        else if(y > 728)
-            y -= 2 * speed * deltaTime;
-
-        if(Util::distance(x, y, player->getX(), player->getY()) < 500){
-            findDirection(x, y, player->getX(), player->getY());
-
-            x -= x_vel * speed * deltaTime;
-            y -= y_vel * speed * deltaTime;
-        }
-    }
-    else if(type == ObjectManager::HEALER){
-
-        //go to the next enemy when the timer runs out (or when not doing anything else)
-        if((currTimer <= 0 && timerActive) || currentEnemy == NULL){
-            currTimer = maxTimer;
-            timerActive = false; //don't start running the timer until an enemy is getting healed
-            currentEnemy = ObjectManager::getInstance()->getClosestEnemy(x, y);
-        }
-
-        //moving towards a target
-        if (currentEnemy != NULL){
-            if(currentEnemy->inUse && Util::distance(x, y, currentEnemy->getX(), currentEnemy->getY()) > 50){
-                findDirection(x, y, currentEnemy->getX(), currentEnemy->getY());
+        else if (type == ObjectManager::SPRINTER){
+            if(currTimer == maxTimer && !timerActive && !moving){
+                findDirection(x, y, player->getX(), player->getY());
+                playerX = player->getX();
+                playerY = player->getY();
+                timerActive = true;
+            }
+            else if(currTimer <= 0 && timerActive && !moving){
+                currTimer = maxTimer;
+                timerActive = false;
+                moving = true;
+            }
+            else if(currTimer <= 0 && timerActive && moving){
+                currTimer = maxTimer;
+                timerActive = false;
+                moving = false;
+            }
+            else if(moving){
+                timerActive = true;
                 x += x_vel * speed * deltaTime;
                 y += y_vel * speed * deltaTime;
             }
-            else if(currentEnemy->inUse && Util::distance(x, y, currentEnemy->getX(), currentEnemy->getY()) <= 50){
-                currentEnemy->modLife(10*deltaTime, true);
-                timerActive = true; //start the timer
-            }
-            else
-                currentEnemy = ObjectManager::getInstance()->getClosestEnemy(x, y);
         }
-        else{
-            findDirection(x, y, player->getX(), player->getY());
+        else if(type == ObjectManager::SHOOTER){
+
+            //if the timer permits, fire a shot
+            if(currTimer <= 0){
+                currTimer = maxTimer;
+                ObjectManager::getInstance()->spawnEnemy(ObjectManager::BULLET, x, y, player->getX(), player->getY());
+            }
+
+            if(x < 40)
+                x += 2 * speed * deltaTime;
+            else if(x > 984)
+                x -= 2 * speed * deltaTime;
+            if(y < 40)
+                y += 2 * speed * deltaTime;
+            else if(y > 728)
+                y -= 2 * speed * deltaTime;
+
+            if(Util::distance(x, y, player->getX(), player->getY()) < 500){
+                findDirection(x, y, player->getX(), player->getY());
+
+                x -= x_vel * speed * deltaTime;
+                y -= y_vel * speed * deltaTime;
+            }
+        }
+        else if(type == ObjectManager::HEALER){
+
+            //go to the next enemy when the timer runs out (or when not doing anything else)
+            if((currTimer <= 0 && timerActive) || currentEnemy == NULL){
+                currTimer = maxTimer;
+                timerActive = false; //don't start running the timer until an enemy is getting healed
+                currentEnemy = ObjectManager::getInstance()->getClosestEnemy(x, y);
+            }
+
+            //moving towards a target
+            if (currentEnemy != NULL){
+                if(currentEnemy->inUse && Util::distance(x, y, currentEnemy->getX(), currentEnemy->getY()) > 50){
+                    findDirection(x, y, currentEnemy->getX(), currentEnemy->getY());
+                    x += x_vel * speed * deltaTime;
+                    y += y_vel * speed * deltaTime;
+                }
+                else if(currentEnemy->inUse && Util::distance(x, y, currentEnemy->getX(), currentEnemy->getY()) <= 50){
+                    currentEnemy->modLife(10*deltaTime, true);
+                    timerActive = true; //start the timer
+                }
+                else
+                    currentEnemy = ObjectManager::getInstance()->getClosestEnemy(x, y);
+            }
+            else{
+                findDirection(x, y, player->getX(), player->getY());
+                x += x_vel * speed * deltaTime;
+                y += y_vel * speed * deltaTime;
+            }
+        }
+        else if(type == ObjectManager::BULLET){
             x += x_vel * speed * deltaTime;
             y += y_vel * speed * deltaTime;
+
+            if (!Util::coordInRect(x, y, -OOB_LIMIT, -OOB_LIMIT, GameEngine::MAX_X + OOB_LIMIT, GameEngine::MAX_Y + OOB_LIMIT)){
+                die();
+            }
         }
     }
-    else if(type == ObjectManager::BULLET){
-        x += x_vel * speed * deltaTime;
-        y += y_vel * speed * deltaTime;
-
-        if (!Util::coordInRect(x, y, -OOB_LIMIT, -OOB_LIMIT, GameEngine::MAX_X + OOB_LIMIT, GameEngine::MAX_Y + OOB_LIMIT)){
-            die();
-        }
-    }
-
     //spin the enemies
     angle += deltaTime * spin;
     if (angle > 360) angle = angle - 360;
@@ -226,7 +233,6 @@ void Enemy::update(double deltaTime){
     //decrease collision buffer time (should be in player)
     if(collisionBufferTime > 0)
         collisionBufferTime -= deltaTime;
-
 }
 
 void Enemy::drawNoFade() const{
@@ -318,8 +324,8 @@ void Enemy::die(){
 void Enemy::findDirection(double x2, double y2, double x_tar2, double y_tar2){
 
     //calculating the x and y distance from enemy spawn and current player position
-    double x_dist = x_tar2 - x2;
-    double y_dist = y_tar2 - y2;
+    double x_dist = abs(x_tar2 - x2);
+    double y_dist = abs(y_tar2 - y2);
 
     //calculate angle in radians
     double theta = atan(y_dist/x_dist);
