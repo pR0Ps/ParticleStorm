@@ -300,8 +300,8 @@ void ObjectManager::doPlayerEnemyCollisions(){
 
     for(unsigned int i = 0; i < enemies.size(); i++) {
         if(enemies[i]->getInUse()) { //enemies vector stores unused enemies
-
             if(!static_cast<Enemy*>(enemies[i])->isImmune() && playerCollision(player->getX(),player->getY(),player->getXOld(),player->getYOld(),enemies[i]->getX(),enemies[i]->getY(),static_cast<Enemy*>(enemies[i])->getRadius())) {
+                //qDebug () << "is colliding";
                 player->modLife(-static_cast<Enemy*>(enemies[i])->getDamage(),true);
                 enemies[i]->modLife(-Player::RAM_DAMAGE,true);
                 static_cast<Enemy*>(enemies[i])->setImmune();
@@ -327,56 +327,27 @@ void ObjectManager::doPlayerPowerupCollisions(){
 
 bool ObjectManager::playerCollision(double px1, double py1, double px2, double py2, double ex, double ey, double radius) {
 
-    //return Util::magnitude(px1-ex,py1-ey) < radius;
-
-    //checking that enemy is in the player path range
-    double playerAngle = Util::atand(py2-py1,px2-px1);
-    double angle1 = Util::atand(ey-py1,ex-px1) - playerAngle;
-    double angle2 = Util::atand(ey-py2,ex-px2) - playerAngle;
-
-    while(angle1 < 0) {
-
-        angle1 += 360;
-        //std::cout << "Angle 1: " << angle1  << endl;
+    double dotprod = (ex-px1)*(px2-px1)+(ey-py1)*(py2-py1);
+    double mag = Util::magnitude(px2-px1,py2-py1);
+    double closestX, closestY;
+    if (px1!=px2 && py1!=py2) {
+        if (dotprod/mag < 0){
+            closestX = px1;
+            closestY = py1;
+        }
+        else if (dotprod/mag > 1){
+            closestX = px2;
+            closestY = py2;
+        }
+        else {
+            closestX = px1 + (dotprod/mag)*(px2-px1);
+            closestY = py1 + (dotprod/mag)*(py2-py1);
+        }
+        //qDebug() << "New:" << px1 << py1 << "Old:" << px2 << py2 << "Slp:" << (px2-px1)/(py2-py1) << "Clse(x y):" << closestX << closestY;
+        return Util::magnitude(ex-closestX,ey-closestY) < radius;
     }
-
-    while(angle2 < 0) {
-
-        angle2 += 360;
-        //std::cout << "Angle 2: " << angle2  << endl;
-    }
-
-    if(angle1 > 90 && angle1 < 270){
-
-//        double dist = Util::magnitude(px1-ex,py1-ey);
-//        if(dist < radius) {
-
-//        std::cout << "Distance: " << dist << endl;
-//        return true;
-//}
-        return Util::magnitude(px1-ex,py1-ey) < radius;
-    }
-
-    if(angle2 < 90 || angle2 > 270) {
-        return Util::magnitude(px2-ex,py2-ey) < radius;
-    }
-
-    //checking for non moving player case
-    if((px1 == px2) && (py1 == py2)) {
-
-       return Util::magnitude(px1-ex,py1-ey) < radius;
-    }
-
-    double m = (py2-py1)/(px2-px1);
-    double B = py1 - m*px1;
-
-    double a = py2-py1;
-    double b = px1-px2;
-    double c = -B*b;
-
-    double dist = fabs(a*ex+b*ey+c)/Util::magnitude(a,b);
-
-    return dist <= radius;
+    else
+        return Util::magnitude(ex-px1,ey-py2) < radius;
 }
 
 //spawning
