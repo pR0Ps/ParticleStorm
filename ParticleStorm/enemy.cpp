@@ -156,7 +156,7 @@ void Enemy::update(double deltaTime){
             y += y_vel * speed * deltaTime;
         }
         else if(currentEnemy->inUse == true && Util::distance(x, y, currentEnemy->getX(), currentEnemy->getY()) <= 50){
-            currentEnemy->modLife(1, true);
+            currentEnemy->modLife(10*deltaTime, true);
         }
         else{
             currentEnemy = ObjectManager::getInstance()->getClosestEnemy(x, y);
@@ -164,7 +164,6 @@ void Enemy::update(double deltaTime){
 
     }
     else if(type == ObjectManager::BULLET){
-        qDebug() << "is it working";
         x += x_vel * speed * deltaTime;
         y += y_vel * speed * deltaTime;
 
