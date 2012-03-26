@@ -77,6 +77,9 @@ public:
     static const int LIGHTNING_RANGE = 250;
     static const int LIGHTNING_DPS = 50; // DPS - damage per second
     static const int LIGHTNING_MANA_COST = 50; // mana consumed per second
+    // The ratio of life based on damage dealt that the player will be healed
+    // for when the lightning ability hits an enemy.
+    static const double LIGHTNING_HEAL_MODIFIER = 0.5;
     // Don't draw the lightning effect if the enemy is closer than 10 pixels to
     // the player since the drawJaggedLine function may cause the program to
     // crash otherwise.

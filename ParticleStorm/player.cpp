@@ -26,6 +26,7 @@ const int Player::LIGHTNING_MANA_COST;
 const int Player::MIN_LIGHTNING_DRAW_DISTANCE;
 const int Player::PARTICLES_SPAWNED_PER_SEC;
 const int Player::SPRAY_MANA_COST;
+const double Player::LIGHTNING_HEAL_MODIFIER;
 
 // Implementation of constructor and destructor.
 
@@ -268,6 +269,13 @@ void Player::lightningAbility(double deltaTime, ObjectManager* manager) {
 
         closestEnemy->modLife(-damage);
         modMana(-manaCost);
+
+        // Heal the player for a percentage of the damage dealt to the target.
+        // If the damage of the lightning ability was greater than the enemy's
+        // remaining life then heal the player for a fraction of the enemy's
+        // remaining life, not the damage that would have been dealt.
+        double damageDealt = Util::min(damage, closestEnemy->getLife());
+        modLife(damageDealt * LIGHTNING_HEAL_MODIFIER);
 
         lightningTarget = closestEnemy;
     }
