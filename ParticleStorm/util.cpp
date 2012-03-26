@@ -15,6 +15,18 @@ double Util::distance(const double x1, const double y1, const double x2, const d
     return sqrt((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1));
 }
 
+double Util::max(double x, double y) {
+    if (x >= y)
+        return x;
+    return y;
+}
+
+double Util::min(double x, double y) {
+    if (x <= y)
+        return x;
+    return y;
+}
+
 //returns the amount of scale to apply based on the # frames elapsed to make an object pulse
 float Util::getScaleByFrame(unsigned long int frame, unsigned int steps,
                             const float min, const float max, const bool cycle){

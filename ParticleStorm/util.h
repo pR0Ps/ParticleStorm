@@ -37,6 +37,11 @@ public:
     static int flr (double d){return static_cast<int>(floor(d));}
     static int flr (float f){return static_cast<int>(floor(f));}
 
+    // Max and min functions which take doubles as parameters (the functions in
+    // the std namespace only take ints).
+    static double max(double x, double y);
+    static double min(double x, double y);
+
     //for pulsing objects (scale amount per frame)
     static float getScaleByFrame(unsigned long int frame, unsigned int steps,
                                  float min, float max, bool smooth = true);
