@@ -48,14 +48,15 @@ public:
     static const int MAX_MANA = 1000;
     static const int RAM_DAMAGE = 10;
 
-    //spacing of the particles to drop
-    static const int PARTICLE_SPACING = 15;
-
     //max size of the player
     static const int MAX_DIAMETER = 24;
 
     //size of the rings around the player
     static const int RING_SIZE = 4;
+
+    // Constant for the number of particles dropped by the drop particles
+    // ability.
+    static const int PARTICLES_DROPPED_PER_SEC = 100;
 
     // Enumeration for the player's special abilities.
     enum ability {
@@ -74,7 +75,7 @@ public:
     // be tinkered with in the future to modify the game difficulty.
 
     // Constants for the lightning ability.
-    static const int LIGHTNING_RANGE = 250;
+    static const int LIGHTNING_RANGE = 350;
     static const int LIGHTNING_DPS = 50; // DPS - damage per second
     static const int LIGHTNING_MANA_COST = 50; // mana consumed per second
     // The ratio of life based on damage dealt that the player will be healed
@@ -190,12 +191,17 @@ private:
      * Performs the drop particles ability. Particles are dropped along the line
      * between the player's position on the last call to update and their current
      * position.
+     *
+     * Parameters: the time since the last call to update and the current
+     * ObjectManager.
      */
-    void dropParticles(ObjectManager* manager) const;
+    void dropParticles(double deltaTime, ObjectManager* manager) const;
 
     /*
      * Applies force to all nearby enemies and star objects, pushing them away
      * from the player's current position.
+     *
+     * Parameter: the current ObjectManager.
      *
      * Note: force push and force pull are applied only to particles and stars.
      */
@@ -204,6 +210,8 @@ private:
     /*
      * Applies force to all nearby enemies and stars, pulling them towards the
      * player's current position.
+     *
+     * Parameter: the current ObjectManager.
      */
     void forcePull(ObjectManager* manager) const;
 

@@ -3,6 +3,10 @@
  *
  * Last modified by: Luke
  * Last modified on: March 25, 2012
+ *
+ * To do:
+ * - make the player invulnerable when it takes damage
+ * - spawn shrapnel when the player takes damage
  */
 
 #include "player.h"
@@ -11,14 +15,12 @@
 #include "resourcemanager.h"
 
 
-
 // Declaration of constants. Some of these can be modified to alter the
 // difficulty of the gameplay.
 const int Player::MAX_LIFE;
 const int Player::MAX_MANA;
 const int Player::MAX_DIAMETER;
 const int Player::RING_SIZE;
-const int Player::PARTICLE_SPACING;
 const int Player::RAM_DAMAGE;
 const double Player::TIME_BETWEEN_CHG_ABILITY;
 const int Player::LIGHTNING_RANGE;
@@ -28,6 +30,7 @@ const int Player::MIN_LIGHTNING_DRAW_DISTANCE;
 const int Player::PARTICLES_SPAWNED_PER_SEC;
 const int Player::SPRAY_MANA_COST;
 const double Player::LIGHTNING_HEAL_MODIFIER;
+const int Player::PARTICLES_DROPPED_PER_SEC;
 
 // Implementation of constructor and destructor.
 
@@ -209,7 +212,7 @@ void Player::performAbility(double deltaTime, ObjectManager* manager,
     // Check to see if the drop particles ability has been activated.
     if ((window->getMouseState() & Qt::LeftButton) ||
             window->getKeyPressed(GameEngine::DROP))
-        dropParticles(manager);
+        dropParticles(deltaTime, manager);
     // Force push ability. Force push and force pull are only applied to
     // particles and stars.
     else if ((window->getMouseState() & Qt::RightButton) ||
@@ -236,26 +239,29 @@ void Player::performAbility(double deltaTime, ObjectManager* manager,
     }
     // If the change ability button is not pressed, then reset the variables for
     // keeping track of how often the player's special ability can be changed.
-    // *Should rename these variable slightly.
     if (!window->getKeyPressed(GameEngine::CHGABILITY)) {
         chgAbilityActivatedOnLastUpdate = false;
         timeSinceLastChgAbility = 0;
     }
 }
 
-void Player::dropParticles(ObjectManager* manager) const {
-    // spwan at least one particle (if staying still)
-    manager->spawnParticle(x, y);
+void Player::dropParticles(double deltaTime, ObjectManager* manager) const {
+    int numParticles = ceil(deltaTime * PARTICLES_DROPPED_PER_SEC);
 
-    // spawn a particle every PARTICLE_SPACING px along the line between the
-    // old a new pos
-    // Note: may want to use the time since the last update for this
-    // instead.
-    const double dist = Util::distance(x, y, x_old, y_old);
-    const double tempX = (x - x_old) / dist;
-    const double tempY = (y - y_old) / dist;
-    for (int i = 0 ; i < dist ; i+= PARTICLE_SPACING)
-        manager->spawnParticle(x_old + tempX * i, y_old + tempY * i);
+    // If only one particle is to be spawned then spawn it halfway between the
+    // player's current position and their previous position.
+    if (numParticles == 1)
+        manager->spawnParticle((x + x_old) / 2, (y + y_old) / 2);
+    // Otherwise spawn multiple particles along the player's line of movement by
+    // using incremental steps for the x and y coordinates.
+    else {
+        double xStep = (x - x_old) / (numParticles - 1);
+        double yStep = (y - y_old) / (numParticles - 1);
+        for (int particleCount = 0; particleCount < numParticles;
+             particleCount++)
+            manager->spawnParticle(x_old + xStep * particleCount,
+                                   y_old + yStep * particleCount);
+    }
 }
 
 void Player::forcePush(ObjectManager* manager) const {
@@ -335,8 +341,11 @@ void Player::sprayAbility(double deltaTime, ObjectManager *manager) {
         modMana(-manaCost);
 
         // Spawn numParticles at the player's current position and apply force
-        // to them immediately.
-        double numParticles = deltaTime * PARTICLES_SPAWNED_PER_SEC;
+        // to them immediately. The ceil function is used so that at least one
+        // particle is spawned per update. This may actually cause more particles
+        // to spawn per second then specified by one of the spray ability's
+        // constants, but this is a minor issue.
+        int numParticles = ceil(deltaTime * PARTICLES_SPAWNED_PER_SEC);
         for (int particleCount = 0; particleCount < numParticles;
              particleCount++) {
             manager->spawnParticle(x,y);
