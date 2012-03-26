@@ -184,22 +184,27 @@ void Enemy::update(double deltaTime){
 
 void Enemy::draw() const{
 
+    //draw indicators for enemies that are off-screen
     if(this->getX() > 1024 || this->getX() < 0 || this->getY() > 768 || this->getY() < 0){
         if(this->getX() > 1024 || this->getY() > 768){
             if(this->getX() > 1024 && this->getY() < 768)
-                Util::drawRoundShape(Util::min(1024, this->getX()), Util::min(768, this->getY()), sqrt((this->getX() - 1024)*(this->getX() - 1024) + (768 - this->getY())*(768 - this->getY())), 3, false, clr);
-            else if(this->getX() < 1024 && this->getY() > 768)
-                Util::drawRoundShape(Util::min(1024, this->getX()), Util::min(768, this->getY()), sqrt((1024 - this->getX())*(1024 - this->getX()) + (this->getY() - 768)*(this->getY() - 768)), 3, false, clr);
+                Util::drawRoundShape(Util::min(1024, this->getX()), Util::min(768, this->getY()), (sqrt((this->getX() - 1024)*(this->getX() - 1024) + (768 - this->getY())*(768 - this->getY())))/50, 3, true, clr);
             else if(this->getX() > 1024 && this->getY() > 768)
-                Util::drawRoundShape(Util::min(1024, this->getX()), Util::min(768, this->getY()), sqrt((this->getX() - 1024)*(this->getX() - 1024) + (this->getY() - 768)*(this->getY() - 768)), 3, false, clr);
+                Util::drawRoundShape(Util::min(1024, this->getX()), Util::min(768, this->getY()), (sqrt((this->getX() - 1024)*(this->getX() - 1024) + (this->getY() - 768)*(this->getY() - 768)))/50, 3, true, clr);
+            else if(this->getX() < 1024 && this->getY() > 768)
+                Util::drawRoundShape(Util::min(1024, this->getX()), Util::min(768, this->getY()), (sqrt((1024 - this->getX())*(1024 - this->getX()) + (this->getY() - 768)*(this->getY() - 768)))/50, 3, true, clr);
+            else if(this->getX() > 1024 && this->getY() > 768)
+                Util::drawRoundShape(Util::min(1024, this->getX()), Util::min(768, this->getY()), (sqrt((this->getX() - 1024)*(this->getX() - 1024) + (this->getY() - 768)*(this->getY() - 768)))/50, 3, true, clr);
         }
         else if(this->getX() > 1024 || this->getY() < 0){
             if(this->getX() > 1024 && this->getY() < 768)
-                Util::drawRoundShape(Util::min(1024, this->getX()), Util::max(0, this->getY()), 20, 3, false, clr);
-            else if(this->getX() < 1024 && this->getY() > 768)
-                Util::drawRoundShape(Util::min(1024, this->getX()), Util::max(0, this->getY()), 20, 3, false, clr);
+                Util::drawRoundShape(Util::min(1024, this->getX()), Util::max(0, this->getY()), (sqrt((this->getX() - 1024)*(this->getX() - 1024) + (768 - this->getY())*(768 - this->getY())))/50, 3, true, clr);
             else if(this->getX() > 1024 && this->getY() > 768)
-                Util::drawRoundShape(Util::min(1024, this->getX()), Util::max(0, this->getY()), 20, 3, false, clr);
+                Util::drawRoundShape(Util::min(1024, this->getX()), Util::max(0, this->getY()), (sqrt((this->getX() - 1024)*(this->getX() - 1024) + (this->getY() - 768)*(this->getY() - 768)))/50, 3, true, clr);
+            else if(this->getX() < 1024 && this->getY() < 0)
+                Util::drawRoundShape(Util::min(1024, this->getX()), Util::max(0, this->getY()), (sqrt((1024 - this->getX())*(1024 - this->getX()) + (-(this->getY()))*(-(this->getY()))))/50, 3, true, clr);
+            else if(this->getX() > 1024 && this->getY() < 0)
+                Util::drawRoundShape(Util::min(1024, this->getX()), Util::max(0, this->getY()), (sqrt((this->getX() - 1024)*(this->getX() - 1024) + (-(this->getY()))*(-(this->getY()))))/50, 3, true, clr);
         }
         else if(this->getX() < 0 || this->getY() > 768){
             if(this->getX() > 1024 && this->getY() < 768)
