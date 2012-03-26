@@ -158,17 +158,19 @@ void Enemy::update(double deltaTime){
         }
 
         //moving towards a target
-        if(currentEnemy->inUse && Util::distance(x, y, currentEnemy->getX(), currentEnemy->getY()) > 50){
-            findDirection(x, y, currentEnemy->getX(), currentEnemy->getY());
-            x += x_vel * speed * deltaTime;
-            y += y_vel * speed * deltaTime;
-        }
-        else if(currentEnemy->inUse && Util::distance(x, y, currentEnemy->getX(), currentEnemy->getY()) <= 50){
-            currentEnemy->modLife(10*deltaTime, true);
-            timerActive = true; //start the timer
-        }
-        else{
-            currentEnemy = ObjectManager::getInstance()->getClosestEnemy(x, y);
+        if (currentEnemy != NULL){
+            if(currentEnemy->inUse && Util::distance(x, y, currentEnemy->getX(), currentEnemy->getY()) > 50){
+                findDirection(x, y, currentEnemy->getX(), currentEnemy->getY());
+                x += x_vel * speed * deltaTime;
+                y += y_vel * speed * deltaTime;
+            }
+            else if(currentEnemy->inUse && Util::distance(x, y, currentEnemy->getX(), currentEnemy->getY()) <= 50){
+                currentEnemy->modLife(10*deltaTime, true);
+                timerActive = true; //start the timer
+            }
+            else{
+                currentEnemy = ObjectManager::getInstance()->getClosestEnemy(x, y);
+            }
         }
 
     }
