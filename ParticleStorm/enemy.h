@@ -48,6 +48,7 @@ private:
     double radius;
     double collisionBufferTime;
     Enemy *currentEnemy;
+    int points;
 
     //timer stuff
     double currTimer;

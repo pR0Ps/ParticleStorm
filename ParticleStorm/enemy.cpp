@@ -31,6 +31,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         maxLife = life = 100;
         speed = 150;
         damage = 10;
+        points = 10;
         numShrapnel = 4;
         shrapnelLen = 40;
         radius = 20;
@@ -42,6 +43,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         maxLife = life = 100;
         speed = 150;
         damage = 10;
+        points = 12;
         numShrapnel = 6;
         shrapnelLen = 10;
         radius = 15;
@@ -53,6 +55,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         maxLife = life = 300;
         speed = 75;
         damage = 10;
+        points = 23;
         numShrapnel = 8;
         shrapnelLen = 15;
         radius = 30;
@@ -64,6 +67,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         maxLife = life = 100;
         speed = 800;
         damage = 10;
+        points = 15;
         numShrapnel = 4;
         shrapnelLen = 30;
         radius = 15;
@@ -78,6 +82,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         maxLife = life = 75;
         speed = 150;
         damage = 10;
+        points = 19;
         numShrapnel = 4;
         shrapnelLen = 25;
         radius = 12;
@@ -89,6 +94,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         maxLife = life = 10;
         speed = 1000;
         damage = 10;
+        points = 0;
         numShrapnel = 0;
         shrapnelLen = 0;
         radius = 7;
@@ -200,6 +206,7 @@ void Enemy::update(double deltaTime){
                 currentEnemy = ObjectManager::getInstance()->getClosestEnemy(x, y);
         }
         else{
+            qDebug() << "are we here?";
             findDirection(x, y, player->getX(), player->getY());
             x += x_vel * speed * deltaTime;
             y += y_vel * speed * deltaTime;
