@@ -32,9 +32,8 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
     menuClock = startTimer(1/(double)GameEngine::MAX_FPS*1000);
     timer = new QTime();
 
-    Button* playButton = new Button(50, 10, 300, 300);
+    playButton = new Button(176, 75, 300, 300);
 
-    //Temporary starting event
     instance->setVisible(false);
     engine->setVisible(true);
     engine->start();
@@ -46,6 +45,7 @@ MainWindow::~MainWindow(){
     delete starVect;
     delete timer;
     delete engine;
+    delete playButton;
 }
 
 //mouse stuff
@@ -83,6 +83,7 @@ void MainWindow::initializeGL(){
     gluOrtho2D(0, MAX_X, 0, MAX_Y); //orthogonal, not perspective
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    glEnable(GL_BLEND);
 }
 
 void MainWindow::paintGL(){
@@ -92,6 +93,7 @@ void MainWindow::paintGL(){
     glClear(GL_COLOR_BUFFER_BIT);
 
 
+    Util::drawTexture(212, 200, 388, 275, loadTexture(":/Images/PLAY.png"));
 }
 
 void MainWindow::timerEvent(QTimerEvent *){
@@ -103,6 +105,13 @@ void MainWindow::timerEvent(QTimerEvent *){
 void MainWindow::update(){
     double deltaTime = timer->restart()/(float)1000;
 
+    if (playButton->mouseHover()&&(mouseState & Qt::LeftButton)){
+        qDebug() << "HOVERING";
+        //Temporary starting event
+        /*
+
+        */
+    }
     /*
     //move star (NOT WORKING :()
     double panx = 0.02 * deltaTime;
@@ -142,10 +151,25 @@ void MainWindow::fillStar(){
 
 }
 
-MainWindow::Button::Button(double width, double height, double centerX, double centerY){
-    this->centerX = centerX;
-    this->centerY = centerY;
-    this->height = height;
-    this->width = width;
-}
 
+GLuint MainWindow::loadTexture(const char* c){
+    GLuint ret;
+    QImage tex;
+    tex = QGLWidget::convertToGLFormat(QImage(c));
+    if (tex.isNull()){
+        qDebug() << "Error loading texture" << c;
+        return 0;
+    }
+    //save settings
+    glPushAttrib(GL_ENABLE_BIT);
+    glEnable(GL_TEXTURE_2D);
+    //generate texture slot
+    glGenTextures(1, &ret);
+    //bind, load, unbind texture
+    glBindTexture(GL_TEXTURE_2D, ret);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tex.width(), tex.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, tex.bits());
+    glBindTexture(GL_TEXTURE_2D, 0);
+    //restore settings
+    glPopAttrib();
+    return ret;
+}

@@ -8,6 +8,8 @@
 #include <vector>
 #include <QImage>
 #include "gameengine.h"
+#include "button.h"
+
 class GameEngine;
 
 class MainWindow : public QGLWidget{
@@ -60,25 +62,21 @@ private:
     int menuClock;
     QTime *timer;
     static MainWindow *instance;
-
-
-    class Button{
-    public:
-        Button();
-        Button(double width, double height, double centerX, double centerY);
-        bool mouseHover();
-    private:
-        double centerX;
-        double centerY;
-        double width;
-        double height;
-    };
+    Button *playButton;
 
 protected:
     void initializeGL();
     void paintGL();
     void timerEvent(QTimerEvent *);
     void update();
+
+    void mousePressEvent(QMouseEvent* event){mouseState = event->buttons();}
+    void mouseReleaseEvent(QMouseEvent* event){mouseState = event->buttons();}
+    Qt::MouseButtons mouseState;
+
+
+    GLuint loadTexture(const char* c);
 };
+
 
 #endif // MAINWINDOW_H
