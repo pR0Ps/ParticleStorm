@@ -24,9 +24,6 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
     printf("%s\n", str.toAscii().constData());
     //music.play();
 
-
-
-
     clr = new QColor(255, 255, 255);
     fillStar();
 
@@ -35,8 +32,7 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
     menuClock = startTimer(1/(double)GameEngine::MAX_FPS*1000);
     timer = new QTime();
 
-
-
+    Button* playButton = new Button(50, 10, 300, 300);
 
     //Temporary starting event
     instance->setVisible(false);
@@ -94,6 +90,8 @@ void MainWindow::paintGL(){
         Util::drawLine(starVect->at(i)->x, starVect->at(i)->y, starVect->at(i)->x_old, starVect->at(i)->y_old, clr);
     }
     glClear(GL_COLOR_BUFFER_BIT);
+
+
 }
 
 void MainWindow::timerEvent(QTimerEvent *){
@@ -143,3 +141,11 @@ void MainWindow::fillStar(){
     }
 
 }
+
+MainWindow::Button::Button(double width, double height, double centerX, double centerY){
+    this->centerX = centerX;
+    this->centerY = centerY;
+    this->height = height;
+    this->width = width;
+}
+

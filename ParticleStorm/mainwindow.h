@@ -6,6 +6,7 @@
 #include <GL/glu.h>
 #include <GL/gl.h>
 #include <vector>
+#include <QImage>
 #include "gameengine.h"
 
 class MainWindow : public QGLWidget{
@@ -58,6 +59,19 @@ private:
     int menuClock;
     QTime *timer;
     static MainWindow *instance;
+
+
+    class Button{
+    public:
+        Button();
+        Button(double width, double height, double centerX, double centerY);
+        bool mouseHover();
+    private:
+        double centerX;
+        double centerY;
+        double width;
+        double height;
+    };
 
 protected:
     void initializeGL();
