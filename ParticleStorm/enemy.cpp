@@ -30,7 +30,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
     if(type == ObjectManager::GRUNT){
         maxLife = life = 100;
         speed = 150;
-        damage = 10;
+        damage = 50;
         points = 10;
         numShrapnel = 4;
         shrapnelLen = 40;
@@ -42,7 +42,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
     else if(type == ObjectManager::HEALER){
         maxLife = life = 100;
         speed = 150;
-        damage = 10;
+        damage = 20;
         points = 12;
         numShrapnel = 6;
         shrapnelLen = 10;
@@ -54,7 +54,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
     else if(type == ObjectManager::TANK){
         maxLife = life = 600;
         speed = 75;
-        damage = 10;
+        damage = 75;
         points = 23;
         numShrapnel = 8;
         shrapnelLen = 15;
@@ -66,7 +66,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
     else if(type == ObjectManager::SPRINTER){
         maxLife = life = 100;
         speed = 800;
-        damage = 10;
+        damage = 50;
         points = 15;
         numShrapnel = 4;
         shrapnelLen = 30;
@@ -81,7 +81,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
     else if(type == ObjectManager::SHOOTER){
         maxLife = life = 75;
         speed = 150;
-        damage = 10;
+        damage = 20;
         points = 19;
         numShrapnel = 4;
         shrapnelLen = 25;
@@ -93,7 +93,7 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
     else if (type == ObjectManager::BULLET){
         maxLife = life = 10;
         speed = 1000;
-        damage = 10;
+        damage = 50;
         points = 0;
         numShrapnel = 0;
         shrapnelLen = 0;
