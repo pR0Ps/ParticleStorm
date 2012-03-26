@@ -45,8 +45,12 @@ private:
     double x_tar, y_tar;
     double radius;
     double collisionBufferTime;
-    int horVert;
+    //shooter stuff
     int shotCounter;
+    //healer stuff
+    int healCounter;
+    bool healStart;
+    Enemy *currentEnemy;
 
     //spin stuff
     double spin;

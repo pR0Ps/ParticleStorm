@@ -21,8 +21,10 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
     this->y_tar = y_tar;
     this->collisionBufferTime = 0;
     this->shotCounter = 0;
+    this->healCounter = 0;
     this->angle = 0;
     this->spin = Util::randInt(MIN_ROTATION_SPD, MAX_ROTATION_SPD) * ((qrand() % 2) * 2 - 1);
+    currentEnemy = NULL;
 
     //give starting stats depending on type
     if(type == ObjectManager::GRUNT){
@@ -43,7 +45,9 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         numShrapnel = 6;
         shrapnelLen = 10;
         radius = 15;
+        healStart = true;
         clr = ResourceManager::getInstance()->getColour(ResourceManager::GREEN);
+        const Enemy* enemy;
     }
     else if(type == ObjectManager::TANK){
         maxLife = life = 300;
@@ -75,8 +79,6 @@ void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
         shrapnelLen = 25;
         radius = 12;
         clr = ResourceManager::getInstance()->getColour(ResourceManager::YELLOW);
-
-        horVert = qrand() % 2;
     }
     else if (type == ObjectManager::BULLET){
         maxLife = life = 10;
@@ -140,26 +142,26 @@ void Enemy::update(double deltaTime){
         }
     }
     else if(type == ObjectManager::HEALER){
-        if(x < 40){
-            x += 2 * speed * deltaTime;
-        }
-        else if(x > 984){
-            x -= 2 * speed * deltaTime;
+
+        healCounter++;
+        if(healCounter == 360 || healStart == true){
+            healStart = false;
+            healCounter = 0;
+            currentEnemy = ObjectManager::getInstance()->getClosestEnemy(x, y);
         }
 
-        if(y < 40){
-            y += 2 * speed * deltaTime;
+        if(currentEnemy->inUse == true && Util::distance(x, y, currentEnemy->getX(), currentEnemy->getY()) > 50){
+            findDirection(x, y, currentEnemy->getX(), currentEnemy->getY());
+            x += x_vel * speed * deltaTime;
+            y += y_vel * speed * deltaTime;
         }
-        else if(y > 728){
-            y -= 2* speed * deltaTime;
+        else if(currentEnemy->inUse == true && Util::distance(x, y, currentEnemy->getX(), currentEnemy->getY()) <= 50){
+            currentEnemy->modLife(1, true);
+        }
+        else{
+            currentEnemy = ObjectManager::getInstance()->getClosestEnemy(x, y);
         }
 
-        if(Util::distance(x, y, player->getX(), player->getY()) < 500){
-            findDirection(x, y, player->getX(), player->getY());
-
-            x -= x_vel * speed * deltaTime;
-            y -= y_vel * speed * deltaTime;
-        }
     }
     else if(type == ObjectManager::BULLET){
         qDebug() << "is it working";
