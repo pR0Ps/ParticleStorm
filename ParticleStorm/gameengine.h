@@ -8,6 +8,9 @@
 
 #include "objectmanager.h"
 #include "resourcemanager.h"
+#include "levelmanager.h"
+
+class LevelManager;
 
 class GameEngine : public QGLWidget{
 public:
@@ -66,6 +69,7 @@ private:
     QGLFramebufferObject *fbo; //offscreen framebuffer
     ObjectManager *objectManager; //manages all the objects in the game
     ResourceManager *resourceManager;
+    LevelManager *levelManager;
 
     //timing stuff (FPS/deltatime)
     unsigned long int framecnt;

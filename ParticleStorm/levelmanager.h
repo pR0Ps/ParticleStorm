@@ -3,7 +3,6 @@
 
 #include "objectmanager.h"
 #include "gameengine.h"
-#include "mainwindow.h"
 #include "resourcemanager.h"
 
 class LevelManager
@@ -11,14 +10,24 @@ class LevelManager
 public:
     LevelManager();
 
-    //starts the next level
-    void startLevel();
+    //constants
+    static const double INITIAL_TTL = 5;
+
+    //starts and advances the level
+    void startLevel(int lvl);
+    void nextLevel();
+
+    //updates the levelManager and polls isFinished
+    void update(double deltaTime);
+
+    void draw();
 
     //returns true if there are no enemies
     bool isFinished();
 
 private:
     int currLvl;
+    double ttl;
 };
 
 #endif // LEVELMANAGER_H

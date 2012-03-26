@@ -48,6 +48,7 @@ GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
     //initial values for the managers
     objectManager = NULL;
     resourceManager = NULL;
+    levelManager = NULL;
 }
 
 //destructor
@@ -58,6 +59,7 @@ GameEngine::~GameEngine(){
     //managers
     if (objectManager != NULL) delete objectManager;
     if (resourceManager != NULL) delete resourceManager;
+    if (levelManager != NULL) delete levelManager;
 
     //timer
     delete timer;
@@ -114,6 +116,7 @@ void GameEngine::initializeGL(){
 
     //init object manager (needs resource manager)
     objectManager = new ObjectManager();
+    levelManager = new LevelManager();
 }
 
 //keyboard stuff
@@ -160,8 +163,7 @@ void GameEngine::start(){
     gameClock = startTimer(1/(double)MAX_FPS*1000);
 
     //spawn some testing enemies
-    LevelManager level;
-    level.startLevel();
+    levelManager->startLevel(1);
 
     objectManager->spawnPowerup(ObjectManager::HEALTH, 700, 100, 50, 50, 50);
 }
@@ -270,11 +272,11 @@ void GameEngine::update(){
     /*if (getMouseState() & Qt::RightButton){
         objectManager->modPlayerLife(-5);
     }*/
-    LevelManager level;
-    //qDebug("This should be zero %d", ObjectManager::getInstance()->getNumObjects(ObjectManager::ENEMY));
-    if (level.isFinished()) {
-        level.startLevel();
+    if (framecnt%50==0) {
+       // qDebug("Current Level %d", levelManager->currLvl);
+        qDebug("This should be zero %d", ObjectManager::getInstance()->getNumObjects(ObjectManager::ENEMY));
     }
+    levelManager->update(deltaTime);
 }
 
 //draws everything - automatically called by timer
@@ -325,6 +327,8 @@ void GameEngine::paintGL(){
 
         //draw the interface and information
         drawHUD();
+        if (levelManager->isFinished())
+            levelManager->draw();
     }
     else{
         //draw the game over sequence
