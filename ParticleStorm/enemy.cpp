@@ -96,7 +96,7 @@ void Enemy::update(double deltaTime){
 
     const Player* player = ObjectManager::getInstance()->getPlayer();
 
-    if(abs(x - x_tar) == (GameEngine::MAX_X) || abs(y - y_tar) == (GameEngine::MAX_Y)){
+    if(x >= (GameEngine::MAX_X) || x <= 0 || y >= (GameEngine::MAX_Y) || y <= 0){
         findDirection(x, y, player->getX(), player->getY());
     }
 
@@ -188,11 +188,11 @@ void Enemy::die(){
     ObjectManager::getInstance()->spawnShrapnel(x, y, x_vel, y_vel, numShrapnel, shrapnelLen, clr);
 }
 
-void Enemy::findDirection(double x, double y, double x_tar, double y_tar){
+void Enemy::findDirection(double x2, double y2, double x_tar2, double y_tar2){
 
     //calculating the x and y distance from enemy spawn and current player position
-    double x_dist = x_tar - x;
-    double y_dist = y_tar - y;
+    double x_dist = x_tar2 - x2;
+    double y_dist = y_tar2 - y2;
 
     //calculate angle in radians
     double theta = atan(y_dist/x_dist);
@@ -200,12 +200,12 @@ void Enemy::findDirection(double x, double y, double x_tar, double y_tar){
     //calculating the x and y values to make a unit vector pointing at player
     x_vel = cos(theta);
     y_vel = sin(theta);
-    if(x_tar < x && y_tar < y){
+    if(x_tar2 < x2 && y_tar2 < y2){
         x_vel = -x_vel;
         y_vel = -y_vel;
     }
-    else if(x_tar < x && y_tar > y)
+    else if(x_tar2 < x2 && y_tar2 > y2)
         x_vel = -x_vel;
-    else if(x_tar > x && y_tar < y)
+    else if(x_tar2 > x2 && y_tar2 < y2)
         y_vel = -y_vel;
 }
