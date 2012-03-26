@@ -41,7 +41,7 @@ public:
     QPoint getMousePos() const;
 
     //access key state
-    bool keyPressed(int k){return currKeys[k];}
+    bool getKeyPressed(int k){return currKeys[k];}
 
     //control the game engine
     void reset();

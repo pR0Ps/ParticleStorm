@@ -187,7 +187,7 @@ void Player::performAbility(double deltaTime, ObjectManager* manager,
                             MainWindow* window) {
     // Check to see if the drop particle ability has been activated.
     if ((window->getMouseState() & Qt::LeftButton) ||
-            window->keyPressed(GameEngine::DROP)){
+            window->getKeyPressed(GameEngine::DROP)){
         // spwan at least one particle (if staying still)
         manager->spawnParticle(x, y);
 
@@ -204,26 +204,26 @@ void Player::performAbility(double deltaTime, ObjectManager* manager,
     // Force push ability. Force push and force pull are only applied to
     // particles and stars.
     else if ((window->getMouseState() & Qt::RightButton) ||
-             window->keyPressed(GameEngine::PUSH)){
+             window->getKeyPressed(GameEngine::PUSH)){
         manager->applyForce(ObjectManager::PARTICLE, x, y, Particle::FORCE_EXERT);
         manager->applyForce(ObjectManager::STAR, x, y, Star::FORCE_EXERT);
     }
     // Force pull.
     else if ((window->getMouseState() & Qt::MiddleButton) ||
-             window->keyPressed(GameEngine::PULL)){
+             window->getKeyPressed(GameEngine::PULL)){
         manager->applyForce(ObjectManager::PARTICLE, x, y, -Particle::FORCE_EXERT);
         manager->applyForce(ObjectManager::STAR, x, y, -Star::FORCE_EXERT);
     }
     // Use special ability.
-    else if (window->keyPressed(GameEngine::ABILITY))
+    else if (window->getKeyPressed(GameEngine::ABILITY))
         useAbility(deltaTime, manager);
     // Change special ability.
-    else if (window->keyPressed(GameEngine::CHGABILITY))
+    else if (window->getKeyPressed(GameEngine::CHGABILITY))
         changeAbility(deltaTime);
 
     // Perform any clean-up required for when a special ability has not been
     // activated.
-    if (!window->keyPressed(GameEngine::ABILITY)) {
+    if (!window->getKeyPressed(GameEngine::ABILITY)) {
         // Reset the lightning target to prevent the lightning effect from
         // continuing to be drawn if this ability was activated on the last call
         // to update.
@@ -232,7 +232,7 @@ void Player::performAbility(double deltaTime, ObjectManager* manager,
     // If the change ability button is not pressed, then reset the variables for
     // keeping track of how often the player's special ability can be changed.
     // *Should rename these variable slightly.
-    if (!window->keyPressed(GameEngine::CHGABILITY)) {
+    if (!window->getKeyPressed(GameEngine::CHGABILITY)) {
         chgAbilityActivatedOnLastUpdate = false;
         timeSinceLastChgAbility = 0;
     }

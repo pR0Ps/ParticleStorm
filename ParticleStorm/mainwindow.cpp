@@ -5,63 +5,80 @@
 #include <QDir>
 #include <iostream>
 
+const int MainWindow::MAX_X;
+const int MainWindow::MAX_Y;
+const int MainWindow::MAX_DIST;
+const int MainWindow::NUM_STARS;
+
 MainWindow* MainWindow::instance = NULL;
 
 MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
-
     setWindowTitle("Particle Storm");
     setFixedSize(MAX_X,MAX_Y);
+
     //set up the game engine
     engine = new GameEngine();
     engine->setMouseTracking(true);
-    //try and do music
 
+    //try and do music
     //QSound music("C://Users//Daniel//CISC 320//ParticleStorm//Resources//base-loop.wav");
     //music.play();
     //QSound music("./Images/base-loop.wav");
-    QSound music("../ParticleStorm/Resources/base-loop.wav");
-    music.play();
-
-    QString str = QDir::homePath();
-    printf("%s\n", str.toAscii().constData());
+    //QSound music("../ParticleStorm/Resources/base-loop.wav");
     //music.play();
 
-    clr = new QColor(255, 255, 255);
-    fillStar();
-
+    //QString str = QDir::homePath();
+    //printf("%s\n", str.toAscii().constData());
+    //music.play();
 
     instance = this;
-    menuClock = startTimer(1/(double)GameEngine::MAX_FPS*1000);
-    timer = new QTime();
+
+    //init stars
+    initStars();
 
     playButton = new Button(212, 200, 388, 275);
-    qDebug() << "x1 = " << playButton->x1 << " x2 = " << playButton->x2 << " y1 = " << playButton->y1 << " y2 = " << playButton->y2;
 
-    instance->setVisible(false);
-    engine->setVisible(true);
-    engine->start();
-
+    //timing stuff
+    timer = new QTime();
+    timer->start();
+    startTimer(1/(double)GameEngine::MAX_FPS*1000);
 }
 
 MainWindow::~MainWindow(){
-    while(!starVect->empty()) delete starVect->back(), starVect->pop_back();
-    delete starVect;
+    while(!stars->empty()) delete stars->back(), stars->pop_back();
+    delete stars;
+    delete starClr;
     delete timer;
-    delete engine;
     delete playButton;
+    delete engine;
 }
 
-//mouse stuff
+//engine mouse stuff
 QPoint MainWindow::getMousePos(){
     return engine->getMousePos();
 }
 Qt::MouseButtons MainWindow::getMouseState(){
     return engine->getMouseState();
 }
+//engine keyboard stuff
+bool MainWindow::getKeyPressed(int k){
+    return engine->getKeyPressed(k);
+}
 
-//keyboard stuff
-bool MainWindow::keyPressed(int k){
-    return engine->keyPressed(k);
+void MainWindow::mousePressEvent(QMouseEvent *event){
+    if (playButton->mouseOver(currMousePos)){
+        playButton->down = true;
+    }
+}
+void MainWindow::mouseReleaseEvent(QMouseEvent *event){
+    if (playButton->mouseOver(currMousePos) && playButton->down){
+        playButton->down = false;
+
+        //start the game
+        instance->setVisible(false);
+        engine->setVisible(true);
+        engine->start();
+    }
 }
 
 void MainWindow::doneGame(const unsigned int score){
@@ -76,9 +93,6 @@ void MainWindow::initializeGL(){
     //get current OpenGL context
     makeCurrent();
 
-    //current version of OpenGL
-    qDebug() << "Current OpenGL version:" << (char*)glGetString(GL_VERSION);
-
     //window stuff
     glViewport(0, 0, MAX_X, MAX_Y);
     glMatrixMode(GL_PROJECTION);
@@ -87,72 +101,80 @@ void MainWindow::initializeGL(){
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glEnable(GL_BLEND);
+
+    //load textures
+    playTex = loadTexture(":/Images/PLAY.png");
 }
 
-void MainWindow::paintGL(){
-    for(int i = 0; i < NUM_STARS; i++){
-        Util::drawLine(starVect->at(i)->x, starVect->at(i)->y, starVect->at(i)->x_old, starVect->at(i)->y_old, clr);
-    }
-    glClear(GL_COLOR_BUFFER_BIT);
 
-    Util::drawBox(playButton->x1, playButton->y1, playButton->x2, playButton->y2, false, clr);
-
-
-    Util::drawTexture(212, 200, 388, 275, loadTexture(":/Images/PLAY.png"));
-}
 
 void MainWindow::timerEvent(QTimerEvent *){
     update();
     updateGL();
 }
 
-
 void MainWindow::update(){
     double deltaTime = timer->restart()/(float)1000;
 
-    if (playButton->mouseHover()&&(mouseState & Qt::LeftButton)){
-        qDebug() << "HOVERING";
+    //get mouse position
+    currMousePos = mapFromGlobal(QCursor::pos());
+    currMousePos.setY(MAX_Y - currMousePos.y());
+
+    //hovering stuff
+    if (playButton->mouseOver(currMousePos)){
+        //draw cursor image
     }
-    /*
-    //move star (NOT WORKING :()
-    double panx = 0.02 * deltaTime;
-    for(int i = 0; i < NUM_STARS; ++i){
 
-        starVect->at(i)->x_old = starVect->at(i)->x;
-        starVect->at(i)->x += panx/starVect->at(i)->dist;
-
-        if (starVect->at(i)->x > GameEngine::MAX_X){
-            starVect->at(i)->x = 0;
-            starVect->at(i)->x_old = 0;
+    //move stars
+    const double panX = 500 * deltaTime;
+    const double panY = 0 * deltaTime;
+    for (int i = 0 ; i < NUM_STARS ; i++){
+        stars->at(i)->x += panX/(float)stars->at(i)->dist;
+        stars->at(i)->y += panY/(float)stars->at(i)->dist;
+        //wrap the star around when panned offscreen
+        if (stars->at(i)->x > MAX_X){
+            stars->at(i)->x = 0;
         }
-        else if (starVect->at(i)->x < 0){
-            starVect->at(i)->x = GameEngine::MAX_X;
-            starVect->at(i)->x_old = GameEngine::MAX_X;
+        else if (stars->at(i)->x < 0){
+            stars->at(i)->x = MAX_X;
         }
-        if (starVect->at(i)->y > GameEngine::MAX_Y){
-            starVect->at(i)->y = 0;
-            starVect->at(i)->y_old = 0;
+        if (stars->at(i)->y > MAX_Y){
+            stars->at(i)->y = 0;
         }
-        else if (starVect->at(i)->y < 0){
-            starVect->at(i)->y = GameEngine::MAX_Y;
-            starVect->at(i)->y_old = GameEngine::MAX_Y;
+        else if (stars->at(i)->y < 0){
+            stars->at(i)->y = MAX_Y;
         }
     }
-    */
-
 }
 
-void MainWindow::fillStar(){
-    starVect = new std::vector<mStar*>;
-    starVect->reserve(NUM_STARS);
-    for(int i = 0; i < NUM_STARS; i++)
-    {
-        starVect->push_back(new mStar(qrand()%MAX_X, qrand()%MAX_Y, Util::randInt(1,10)));
-    }
+//draw the scene
+void MainWindow::paintGL(){
+    //clear the screen
+    glClear(GL_COLOR_BUFFER_BIT);
 
+    //draw the stars
+    glBegin(GL_POINTS);
+    for(int i = 0; i < NUM_STARS; i++){
+        glVertex2d(stars->at(i)->x, stars->at(i)->y);
+    }
+    glEnd();
+
+    //draw the button
+    Util::drawBox(playButton->x1, playButton->y1, playButton->x2, playButton->y2, false, starClr);
+    Util::drawTexture(playButton->x1, playButton->y1, playButton->x2, playButton->y2, playTex);
 }
 
+//init the stars
+void MainWindow::initStars(){
+    starClr = new QColor(255, 255, 255);
+    stars = new std::vector<mStar*>;
+    stars->reserve(NUM_STARS);
+    for(int i = 0; i < NUM_STARS; i++){
+        stars->push_back(new mStar(qrand() % MAX_X, qrand() % MAX_Y, Util::randInt(1,MAX_DIST)));
+    }
+}
 
+//load a texture from a file
 GLuint MainWindow::loadTexture(const char* c){
     GLuint ret;
     QImage tex;

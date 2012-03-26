@@ -212,7 +212,7 @@ void Enemy::draw() const{
                                  //10 is the minimum size circle
                                  //60 (50 + 10) is the maximum size circle
                                  Util::min(Util::distance(temp->x(), temp->y(), x, y), 1000)/1000.0f * 50 + 10,
-                                 10, false, ResourceManager::getInstance()->getColour(ResourceManager::WHITE));
+                                 15, false, ResourceManager::getInstance()->getColour(ResourceManager::WHITE));
         }
         //clean up
         delete temp;

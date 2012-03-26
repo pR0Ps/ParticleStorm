@@ -45,7 +45,8 @@ GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
     //initial garbage value for gameClock
     gameClock = 0;
 
-    //initial values for the managers
+    //initial values for the objects
+    fbo = NULL;
     objectManager = NULL;
     resourceManager = NULL;
     levelManager = NULL;
@@ -54,7 +55,7 @@ GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
 //destructor
 GameEngine::~GameEngine(){
     //framebuffer
-    delete fbo;
+    if (fbo != NULL) delete fbo;
 
     //managers
     if (objectManager != NULL) delete objectManager;
@@ -247,7 +248,7 @@ void GameEngine::update(){
 
     //deal with keyboard input
     //should add a pause option here as well
-    if (keyPressed(EXIT)){
+    if (getKeyPressed(EXIT)){
         exit(0);
     }
 
@@ -340,25 +341,4 @@ void GameEngine::paintGL(){
         //fade screen (or other game-overy stuff) for GAME_OVER_FRAMES frames
         Util::drawString("Game Over", MAX_X/2, MAX_Y/2, resourceManager->getTexture(ResourceManager::TEXT), true, true, 5, 5);
     }
-}
-
-void spawnPosition(){
-    /*
-    int start = qrand()%4;
-    if(start == 0){
-        x_start = 0;
-        y_start = qrand()%768;
-    }
-    else if(start == 1){
-        x_start = 1024;
-        y_start = qrand()%768;
-    }
-    else if(start == 2){
-        x_start = qrand()%1024;
-        y_start = 0;
-    }
-    else if(start == 3){
-        x_start = qrand()%1024;
-        y_start = 768;
-    }*/
 }

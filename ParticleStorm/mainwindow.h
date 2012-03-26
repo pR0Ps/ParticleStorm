@@ -8,7 +8,6 @@
 #include <vector>
 #include <QImage>
 #include "gameengine.h"
-#include "button.h"
 
 class GameEngine;
 
@@ -32,7 +31,7 @@ public:
      */
     QPoint getMousePos();
     Qt::MouseButtons getMouseState();
-    bool keyPressed(int k);
+    bool getKeyPressed(int k);
 
     //get this instance
     static MainWindow* getInstance(){return instance;}
@@ -40,29 +39,54 @@ public:
     void doneGame(unsigned int score);
 
 private:
+    //self reference
+    static MainWindow *instance;
+
     GameEngine *engine;
 
+    //star stuff
     struct mStar{
-        double x, x_old;
-        double y, y_old;
+        double x;
+        double y;
         double dist;
         mStar(double x, double y, double dist){
             this->x = x;
             this->y = y;
-            x_old = x;
-            y_old = y;
             this->dist = dist;
         }
     };
+    std::vector<mStar*> *stars;
+    const QColor *starClr;
 
-    std::vector<mStar*> *starVect;
-
-    void fillStar();
-    const QColor *clr;
-    int menuClock;
+    //timing stuff
     QTime *timer;
-    static MainWindow *instance;
+
+    //button stuff
+    struct Button{
+        Button(double x1, double y1, double x2, double y2){
+            this->x1 = x1;
+            this->y1 = y1;
+            this->x2 = x2;
+            this->y2 = y2;
+            this->down = false;
+        }
+        bool mouseOver(QPoint point){
+            return Util::coordInRect(point.x(), point.y(), x1, y1, x2, y2);
+        }
+        double x1;
+        double y1;
+        double x2;
+        double y2;
+        bool down;
+    };
     Button *playButton;
+
+    QPoint currMousePos;
+
+    //textures
+    GLuint playTex;
+
+    void initStars();
 
 protected:
     void initializeGL();
@@ -70,10 +94,8 @@ protected:
     void timerEvent(QTimerEvent *);
     void update();
 
-    void mousePressEvent(QMouseEvent* event){mouseState = event->buttons();}
-    void mouseReleaseEvent(QMouseEvent* event){mouseState = event->buttons();}
-    Qt::MouseButtons mouseState;
-
+    void mousePressEvent(QMouseEvent* event);
+    void mouseReleaseEvent(QMouseEvent* event);
 
     GLuint loadTexture(const char* c);
 };

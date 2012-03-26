@@ -9,6 +9,7 @@ LevelManager::LevelManager() {
 }
 
 void LevelManager::startLevel(int lvl) {
+    currLvl = lvl;
     int temp = lvl*lvl;
     if (ttl <=0) {
         for (int i=0; i<(temp);i++) {
@@ -30,8 +31,7 @@ void LevelManager::startLevel(int lvl) {
 }
 
 void LevelManager::nextLevel() {
-    currLvl++;
-    startLevel(currLvl);
+    startLevel(currLvl + 1);
 }
 
 void LevelManager::update(double deltaTime) {

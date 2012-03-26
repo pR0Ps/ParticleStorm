@@ -23,8 +23,7 @@ SOURCES += main.cpp\
     util.cpp \
     gameengine.cpp \
     resourcemanager.cpp \
-    levelmanager.cpp \
-    button.cpp
+    levelmanager.cpp
 
 HEADERS  += mainwindow.h \
     objectmanager.h \
@@ -38,8 +37,7 @@ HEADERS  += mainwindow.h \
     util.h \
     gameengine.h \
     resourcemanager.h \
-    levelmanager.h \
-    button.h
+    levelmanager.h
 
 FORMS    += mainwindow.ui
 
