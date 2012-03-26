@@ -346,7 +346,7 @@ bool ObjectManager::playerCollision(double px1, double py1, double px2, double p
         //std::cout << "Angle 2: " << angle2  << endl;
     }
 
-    if(angle1 > 90 || angle1 < 270){
+    if(angle1 > 90 && angle1 < 270){
 
 //        double dist = Util::magnitude(px1-ex,py1-ey);
 //        if(dist < radius) {
