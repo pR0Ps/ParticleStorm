@@ -94,6 +94,15 @@ public:
     // The intial speed to be given to particles spawned by the spray ability.
     static const int SPRAY_PARTICLE_SPEED;
 
+    // Constants for the vortex ability.
+    static const int VORTEX_MANA_COST;
+    static const int VORTEX_PARTICLES_PER_SEC;
+    // The distance from the player that particles will be spawned by the vortex
+    // ability.
+    static const int VORTEX_SPAWN_RADIUS;
+    // The initial velocity to apply to the particles spawned by vortex.
+    static const int VORTEX_SPAWN_VELOCITY;
+
     // Constructor/destructor.
     Player();
     ~Player();
@@ -257,6 +266,12 @@ private:
      * into one.
      */
     void sprayAbility(double deltaTime, ObjectManager* manager);
+
+    /*
+     * Implements the vortex ability. Causes several particles to spawn and
+     * rapidly spin around the player, damaging any enemies that get too close.
+     */
+    void vortexAbility(double deltaTime, ObjectManager* manager);
 
     /*
      * Advances the player's currently selected special ability to the next one

@@ -29,10 +29,14 @@ const int Player::LIGHTNING_RANGE = 350;
 const int Player::LIGHTNING_DPS = 150;
 const int Player::LIGHTNING_MANA_COST = 50;
 const int Player::MIN_LIGHTNING_DRAW_DISTANCE = 10;
-const int Player::PARTICLES_SPAWNED_PER_SEC = 200;
+const int Player::PARTICLES_SPAWNED_PER_SEC = 100;
 const int Player::SPRAY_MANA_COST = 50;
 const double Player::LIGHTNING_HEAL_MODIFIER = 0.5;
 const int Player::SPRAY_PARTICLE_SPEED = 2000;
+const int Player::VORTEX_MANA_COST = 100;
+const int Player::VORTEX_PARTICLES_PER_SEC = 100;
+const int Player::VORTEX_SPAWN_RADIUS = 50;
+const int Player::VORTEX_SPAWN_VELOCITY = 2000;
 
 // Implementation of constructor and destructor.
 
@@ -300,6 +304,7 @@ void Player::forcePull(ObjectManager* manager) const {
 void Player::useAbility(double deltaTime, ObjectManager* manager) {
     switch (currentAbility) {
     case VORTEX:
+        vortexAbility(deltaTime, manager);
         break;
     case SPRAY:
         sprayAbility(deltaTime, manager);
@@ -369,14 +374,47 @@ void Player::sprayAbility(double deltaTime, ObjectManager *manager) {
             // Randomly choose a degree of direction for the spawned particle.
             int degree = Util::randInt(0, 360);
 
-            // Use sin to calculate the x direction and cos for the y direction.
+            // Use sin to calculate the x velocity and cos for the y velocity.
             // Note: the cmath trigonometric functions take radians instead of
             // degrees - use the Util functions instead.
-            double xDirection = Util::sind(degree);
-            double yDirection = Util::cosd(degree);
-            manager->spawnParticle(x, y, xDirection * SPRAY_PARTICLE_SPEED,
-                                   yDirection * SPRAY_PARTICLE_SPEED);
+            double xVel = Util::sind(degree) * SPRAY_PARTICLE_SPEED;
+            double yVel = Util::cosd(degree) * SPRAY_PARTICLE_SPEED;
+            manager->spawnParticle(x, y, xVel, yVel);
         }
+    }
+}
+
+void Player::vortexAbility(double deltaTime, ObjectManager* manager) {
+    // Check to see if the player has enough mana left to perform the ability.
+    double manaCost = deltaTime * VORTEX_MANA_COST;
+    if (manaCost <= mana) {
+        modMana(-manaCost);
+
+        // Spawn particles around the player. The location of the spawned
+        // particles is randomly chosen.
+        // The particles spawned are also given an initial velocity
+        // perpendicular to the degree used to choose the starting location of
+        // the particle. This way, when a pulling force is applied to the
+        // particles they will swirl around the player, creating the vortex.
+        // (Thanks to Adam/Carey for this.)
+        int numParticles = ceil(deltaTime * VORTEX_PARTICLES_PER_SEC);
+        for (int particleCount = 0; particleCount < numParticles;
+             particleCount++) {
+                int degree = Util::randInt(0, 360);
+                double xPos = x + Util::sind(degree) * VORTEX_SPAWN_RADIUS;
+                double yPos = y + Util::cosd(degree) * VORTEX_SPAWN_RADIUS;
+                double xVel = Util::sind(degree + 90) * VORTEX_SPAWN_VELOCITY;
+                double yVel = Util::cosd(degree + 90) * VORTEX_SPAWN_VELOCITY;
+
+                manager->spawnParticle(xPos, yPos, xVel, yVel);
+        }
+
+        // Apply a pulling force to all of the particles just spawned, and all
+        // of the particles that were already in the game. This is essentially
+        // the same as the force pull ability except that the force is not also
+        // applied to stars.
+        manager->applyForce(ObjectManager::PARTICLE, x, y,
+                            -Particle::FORCE_EXERT);
     }
 }
 
