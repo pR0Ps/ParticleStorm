@@ -23,10 +23,11 @@ public:
 
     //constants (redeclare in implementation)
     static const int MAX_PARTICLES = 500;
-    static const int MAX_ENEMIES = 100;
-    static const int MAX_POWERUPS = 50;
+    static const int INIT_ENEMIES = 100;
+    static const int INIT_POWERUPS = 30;
     static const int MAX_SHRAPNEL = 40;
     static const int MAX_STARS = 250;
+    static const int RESIZE_AMT = 20;
 
     //object types
     enum ObjectType{
@@ -64,9 +65,6 @@ public:
     void pan(ObjectType t, double x, double y);
     void update(ObjectType t, double deltaTime);
     void applyForce(ObjectType t, double x, double y, double mag);
-
-    //initilize the object pool of type t;
-    void initPool(ObjectType t, unsigned int numObjects);
 
     //get number of objects
     unsigned int getNumObjects(ObjectType t);
@@ -129,6 +127,10 @@ private:
 
     //returns the address of the proper vector
     std::vector<GameObject*>& getVector(ObjectType t);
+
+    //manage the object pools;
+    void initPool(ObjectType t, unsigned int numObjects);
+    void extendPool(ObjectType t, unsigned int extra);
 
     //sets all the objects as inactive
     void deactivateAll(ObjectType t);

@@ -6,10 +6,11 @@
 ObjectManager* ObjectManager::instance = NULL;
 
 const int ObjectManager::MAX_PARTICLES;
-const int ObjectManager::MAX_ENEMIES;
-const int ObjectManager::MAX_POWERUPS;
+const int ObjectManager::INIT_ENEMIES;
+const int ObjectManager::INIT_POWERUPS;
 const int ObjectManager::MAX_SHRAPNEL;
 const int ObjectManager::MAX_STARS;
+const int ObjectManager::RESIZE_AMT;
 
 ObjectManager::ObjectManager(){
     if (instance){
@@ -27,8 +28,8 @@ ObjectManager::ObjectManager(){
 
     //init objects
     initPool(PARTICLE, MAX_PARTICLES);
-    initPool(ENEMY, MAX_ENEMIES);
-    initPool(POWERUP, MAX_POWERUPS);
+    initPool(ENEMY, INIT_ENEMIES);
+    initPool(POWERUP, INIT_POWERUPS);
     initPool(SHRAPNEL, MAX_SHRAPNEL);
     initPool(STAR, MAX_STARS);
 
@@ -214,6 +215,28 @@ void ObjectManager::initPool(ObjectType t, const unsigned int numObjects){
     }
 }
 
+//extends the pool of objects when more are needed that initiall accounted for
+void ObjectManager::extendPool(ObjectType t, unsigned int extra){
+    //herp-a-derp
+    if (t != ENEMY && t != POWERUP){
+        qDebug() << "Tried to resize an object pool that doesn't need be resized";
+        exit(1);
+    }
+
+    if (t == ENEMY){
+        enemies->reserve(enemies->size() + extra);
+        for (int i = 0 ; i < extra ; i++){
+            enemies->push_back(new Enemy());
+        }
+    }
+    else if (t == POWERUP){
+        powerups->reserve(powerups->size() + extra);
+        for (int i = 0 ; i < extra ; i++){
+            powerups->push_back(new Powerup());
+        }
+    }
+}
+
 //sets all the items as inactive
 void ObjectManager::deactivateAll(ObjectType t){
     if (t == PLAYER){
@@ -245,8 +268,7 @@ unsigned int ObjectManager::getNumObjects(ObjectType t){
 }
 
 //return an unused object
-//for now, if there aren't any free, it returns NULL
-//this can be changed in the future to expand the object pool
+//if there aren't any free, it expands the object pool
 GameObject* ObjectManager::getUnused(ObjectType t){
     if (t == PLAYER){
         //cannot get an unused player
@@ -269,7 +291,10 @@ GameObject* ObjectManager::getUnused(ObjectType t){
                 return temp.at(i);
             }
         }
-        return NULL;
+        //resize the array and return the first element of the resized portion
+        //NOTE: temp doesn't update with the new vector information, it keeps the old vector
+        extendPool(t, RESIZE_AMT);
+        return getVector(t).at(temp.size());
     }
 }
 
@@ -380,22 +405,12 @@ void ObjectManager::spawnParticle(const double x, const double y){
 }
 
 void ObjectManager::spawnPowerup (PowerupType t, double x, double y, double x_vel, double y_vel, int value){
-    GameObject* temp = getUnused(POWERUP);
-    if (temp == NULL){
-        qDebug() << "allocated too many powerups";
-        exit(1);
-    }
-    static_cast<Powerup*>(temp)->startPowerup(t, x, y, x_vel, y_vel, value);
+    static_cast<Powerup*>(getUnused(POWERUP))->startPowerup(t, x, y, x_vel, y_vel, value);
 }
 
 //spawn an enemy
 void ObjectManager::spawnEnemy(EnemyType t, const double x, const double y, const double x_tar, const double y_tar){
-    GameObject* temp = getUnused(ENEMY);
-    if (temp == NULL){
-        qDebug() << "allocated too many enemies";
-        exit(1);
-    }
-    static_cast<Enemy*>(temp)->startEnemy(t, x, y, x_tar, y_tar);
+    static_cast<Enemy*>(getUnused(ENEMY))->startEnemy(t, x, y, x_tar, y_tar);
 }
 void ObjectManager::spawnEnemy(EnemyType t, double x, double y){
     spawnEnemy(t, x, y, getPlayer()->getX(), getPlayer()->getY());

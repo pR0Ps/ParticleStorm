@@ -35,6 +35,7 @@ void LevelManager::startEnemies(){
         }
     }
     else if (currType == LEVELED){
+        //stacked levels (each loads enemies from all the levels below it as well)
         switch(currLvl){
         case 25:
             om->spawnEnemy(ObjectManager::SHOOTER, randomOffscreenPos());
