@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
     endlessButton = new Button(110, 200, 470, 230);
     zenButton = new Button(170, 100, 410, 130);
     exitButton = new Button(6, 6, 126, 36);
-    resumeButton = new Button(MAX_X - 180, 0, MAX_X, 30, false);
+    resumeButton = new Button(MAX_X - 186, 6, MAX_X - 6, 36, false);
 
     //timing stuff
     timer = new QTime();
@@ -208,21 +208,27 @@ void MainWindow::paintGL(){
     Util::drawString("ZEN MODE", 300, 100, fontTex, true, false, 2, 2, true);
     Util::drawString("EXIT",6, 6, fontTex, false, false, 2, 2, true);
     if (resumeButton->enabled){
-        Util::drawString("RESUME", MAX_X - 180, 0, fontTex, false, false, 2, 2, true);
+        Util::drawString("RESUME", MAX_X - 186, 6, fontTex, false, false, 2, 2, true);
     }
 
     //hovering stuff
     if (levelButton->mouseOver(currMousePos)){
         Util::drawTexture(levelButton->x1 - CURSOR_OFFSET - 23, levelButton->y1 - 5, levelButton->x1 - CURSOR_OFFSET, levelButton->y2 + 5, cursorTex);
+        Util::drawTexture(levelButton->x2 + CURSOR_OFFSET + 23, levelButton->y1 - 5, levelButton->x2 + CURSOR_OFFSET, levelButton->y2 + 5, cursorTex);
     }
     if (endlessButton->mouseOver(currMousePos)){
         Util::drawTexture(endlessButton->x1 - CURSOR_OFFSET - 23, endlessButton->y1 - 5, endlessButton->x1 - CURSOR_OFFSET, endlessButton->y2 + 5, cursorTex);
+        Util::drawTexture(endlessButton->x2 + CURSOR_OFFSET + 23, endlessButton->y1 - 5, endlessButton->x2 + CURSOR_OFFSET, endlessButton->y2 + 5, cursorTex);
     }
     if (zenButton->mouseOver(currMousePos)){
         Util::drawTexture(zenButton->x1 - CURSOR_OFFSET - 23, zenButton->y1 - 5, zenButton->x1 - CURSOR_OFFSET, zenButton->y2 + 5, cursorTex);
+        Util::drawTexture(zenButton->x2 + CURSOR_OFFSET + 23, zenButton->y1 - 5, zenButton->x2 + CURSOR_OFFSET, zenButton->y2 + 5, cursorTex);
     }
     if (exitButton->mouseOver(currMousePos)){
         Util::drawTexture(exitButton->x2 + CURSOR_OFFSET + 23, exitButton->y1 - 5, exitButton->x2 + CURSOR_OFFSET, exitButton->y2 + 5, cursorTex);
+    }
+    if (resumeButton->mouseOver(currMousePos)){
+        Util::drawTexture(resumeButton->x1 - CURSOR_OFFSET - 23, resumeButton->y1 - 5, resumeButton->x1 - CURSOR_OFFSET, resumeButton->y2 + 5, cursorTex);
     }
 
 
