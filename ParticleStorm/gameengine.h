@@ -26,6 +26,7 @@ public:
     static const int CLEAR_BORDER_AMT = 5;
     static const double GAME_OVER_SECONDS = 5;
     static const float PAN_SPEED = 0.5;
+    static const double RESUME_GAME_LAG = 3;
 
     enum Keys{
         DROP,
@@ -46,6 +47,7 @@ public:
     //control the game engine
     void reset();
     void start(int type);
+    void resume();
 
 private:
     //mouse stuff
@@ -64,7 +66,7 @@ private:
 
     void doFade(); //fade the previous screen every frame
     void drawHUD();
-    void update(); //update the logic for all the objects
+    void update(double deltaTime); //update the logic for all the objects
 
     QGLFramebufferObject *fbo; //offscreen framebuffer
     ObjectManager *objectManager; //manages all the objects in the game
@@ -79,6 +81,9 @@ private:
 
     //game clock
     int gameClock;
+
+    //allow player to get thir bearings before putting them back into the game
+    double resumeTimer;
 
     //game modifiers
     bool paused;

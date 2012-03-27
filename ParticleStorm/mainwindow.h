@@ -20,6 +20,9 @@ public:
     static const int MAX_Y = 600;
     static const int MAX_DIST = 10;
     static const int NUM_STARS = 255;
+    static const int STAR_PAN_X = 500;
+    static const int STAR_PAN_Y = 0;
+    static const int CURSOR_OFFSET = 10;
 
     /*
      * This function returns the position of the mouse relative to the OpenGL
@@ -37,6 +40,7 @@ public:
     static MainWindow* getInstance(){return instance;}
 
     void doneGame(unsigned int score);
+    void pauseGame();
 
 private:
     //self reference
@@ -63,14 +67,16 @@ private:
 
     //button stuff
     struct Button{
-        Button(double x1, double y1, double x2, double y2){
+        Button(double x1, double y1, double x2, double y2, bool enabled = true){
             this->x1 = x1;
             this->y1 = y1;
             this->x2 = x2;
             this->y2 = y2;
             this->down = false;
+            this->enabled = enabled;
         }
         bool mouseOver(QPoint point){
+            if (!enabled) return false;
             return Util::coordInRect(point.x(), point.y(), x1, y1, x2, y2);
         }
         double x1;
@@ -78,16 +84,20 @@ private:
         double x2;
         double y2;
         bool down;
+        bool enabled;
     };
     Button *levelButton;
     Button *endlessButton;
     Button *zenButton;
+    Button *exitButton;
+    Button *resumeButton;
 
     QPoint currMousePos;
 
     //textures
     GLuint fontTex;
     GLuint titleTex;
+    GLuint cursorTex;
 
     void initStars();
 

@@ -14,6 +14,7 @@ const int GameEngine::LINES_PER_FADE;
 const int GameEngine::CLEAR_BORDER_AMT;
 const double GameEngine::GAME_OVER_SECONDS;
 const float GameEngine::PAN_SPEED;
+const double GameEngine::RESUME_GAME_LAG;
 
 GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
     setFixedSize(MAX_X, MAX_Y);
@@ -37,11 +38,6 @@ GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
     keyMap.insert(Qt::Key_Space, ABILITY);
     keyMap.insert(Qt::Key_Control, CHGABILITY);
     keyMap.insert(Qt::Key_Escape, EXIT);
-
-    //init keypress arrays
-    for (int i = 0 ; i < EXIT+1 ; i++){
-        currKeys[i] = false;
-    }
 
     //initially paused
     paused = true;
@@ -73,7 +69,16 @@ GameEngine::~GameEngine(){
 //the main frameloop
 void GameEngine::timerEvent(QTimerEvent *){
     if (!paused){
-        update();
+        //get time (in seconds) since last update
+        double deltaTime = timer->restart()/(float)1000;
+
+        //wait for player to get bearings after a resume
+        if (resumeTimer > 0){
+            resumeTimer -= deltaTime;
+            return;
+        }
+
+        update(deltaTime);
         updateGL();
     }
 }
@@ -150,8 +155,6 @@ void GameEngine::reset(){
 
     //resets all the game objects
     objectManager->reset();
-
-    qDebug() << "GameEngine reset";
 }
 
 //starts a game
@@ -159,6 +162,7 @@ void GameEngine::start(int mode){
     //game states
     paused = false;
     gameOverTimer = 0;
+    resumeTimer = 0;
 
     //set game type
     if (mode < 0 || mode > 2) mode = 0;
@@ -169,6 +173,11 @@ void GameEngine::start(int mode){
     fps = 0;
     secSinceFrameInterval = 0;
     timer->start();
+
+    //init keypress arrays
+    for (int i = 0 ; i < EXIT+1 ; i++){
+        currKeys[i] = false;
+    }
 
     //tell the framebuffer to clear properly
     initialClear = true;
@@ -181,6 +190,22 @@ void GameEngine::start(int mode){
 
     //start the game
     levelManager->startLevel((LevelManager::LevelType)gameMode, 1);
+}
+
+//pauses the game
+void GameEngine::resume(){
+    this->paused = false;
+
+    //restart the timer
+    timer->start();
+
+    //init keypress arrays
+    for (int i = 0 ; i < EXIT+1 ; i++){
+        currKeys[i] = false;
+    }
+
+    //wait a bit
+    resumeTimer = RESUME_GAME_LAG;
 }
 
 //fade the frame
@@ -231,11 +256,10 @@ void GameEngine::drawHUD(){
 }
 
 //update game logic - automatically called by timer
-void GameEngine::update(){
-    //get time (in seconds) since last update
-    double deltaTime = timer->restart()/(float)1000;
-    // play main music
-     ResourceManager::getInstance()->playMainMusic(deltaTime);
+void GameEngine::update(double deltaTime){
+
+    //play main music
+    ResourceManager::getInstance()->playMainMusic(deltaTime);
 
     //FPS monitoring
     framecnt++;
@@ -260,9 +284,9 @@ void GameEngine::update(){
     //game stuff
 
     //deal with keyboard input
-    //should add a pause option here as well
     if (getKeyPressed(EXIT)){
-        exit(0);
+        paused = true;
+        MainWindow::getInstance()->pauseGame();
     }
 
     //pan everything

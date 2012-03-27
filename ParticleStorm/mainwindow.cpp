@@ -9,6 +9,9 @@ const int MainWindow::MAX_X;
 const int MainWindow::MAX_Y;
 const int MainWindow::MAX_DIST;
 const int MainWindow::NUM_STARS;
+const int MainWindow::STAR_PAN_X;
+const int MainWindow::STAR_PAN_Y;
+const int MainWindow::CURSOR_OFFSET;
 
 MainWindow* MainWindow::instance = NULL;
 
@@ -23,15 +26,19 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
     //set up the game engine
     engine = new GameEngine();
     engine->setMouseTracking(true);
+
+    //self reference
     instance = this;
 
     //init stars
     initStars();
 
     //Buttons relative to texture centers
-    levelButton = new Button(150, 275, 450, 325);
-    endlessButton = new Button(100, 175, 500, 225);
-    zenButton = new Button(175, 75, 425, 125);
+    levelButton = new Button(145, 300, 440, 330);
+    endlessButton = new Button(110, 200, 470, 230);
+    zenButton = new Button(170, 100, 410, 130);
+    exitButton = new Button(0, 0, 120, 30);
+    resumeButton = new Button(MAX_X - 180, 0, MAX_X, 30, false);
 
     //timing stuff
     timer = new QTime();
@@ -47,6 +54,8 @@ MainWindow::~MainWindow(){
     delete levelButton;
     delete zenButton;
     delete endlessButton;
+    delete resumeButton;
+
     delete engine;
 }
 
@@ -72,28 +81,47 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
     else if (zenButton->mouseOver(currMousePos)){
         zenButton->down = true;
     }
+    else if (resumeButton->mouseOver(currMousePos)){
+        resumeButton->down = true;
+    }
+    else if (exitButton->mouseOver(currMousePos)){
+        exitButton->down = true;
+    }
 }
 void MainWindow::mouseReleaseEvent(QMouseEvent *event){
     if (levelButton->mouseOver(currMousePos) && levelButton->down){
+        if (resumeButton->enabled) engine->reset();
         instance->setVisible(false);
         engine->setVisible(true);
         engine->start(LevelManager::LEVELED);
     }
     else if(endlessButton->mouseOver(currMousePos) && endlessButton->down){
+        if (resumeButton->enabled) engine->reset();
         instance->setVisible(false);
         engine->setVisible(true);
         engine->start(LevelManager::NONSTOP);
     }
     else if(zenButton->mouseOver(currMousePos) && zenButton->down){
+        if (resumeButton->enabled) engine->reset();
         instance->setVisible(false);
         engine->setVisible(true);
         engine->start(LevelManager::ZEN);
+    }
+    else if (resumeButton->mouseOver(currMousePos) && resumeButton->down){
+        instance->setVisible(false);
+        engine->resume();
+        engine->setVisible(true);
+    }
+    else if (exitButton->mouseOver(currMousePos) && exitButton->down){
+        exit(0);
     }
 
     //reset button states
     levelButton->down = false;
     endlessButton->down = false;
     zenButton->down = false;
+    exitButton->down = false;
+    resumeButton->down = false;
 }
 
 void MainWindow::doneGame(const unsigned int score){
@@ -102,6 +130,12 @@ void MainWindow::doneGame(const unsigned int score){
     engine->reset();
     qDebug() << "Final score was " << score;
     //highscores(score)
+}
+
+void MainWindow::pauseGame(){
+    engine->setVisible(false);
+    instance->setVisible(true);
+    resumeButton->enabled = true;
 }
 
 void MainWindow::initializeGL(){
@@ -120,9 +154,8 @@ void MainWindow::initializeGL(){
     //load textures
     fontTex = loadTexture(":/Images/font.png");
     titleTex = loadTexture(":/Images/TITLE2.png");
+    cursorTex = loadTexture(":/Images/Cursor.png");
 }
-
-
 
 void MainWindow::timerEvent(QTimerEvent *){
     update();
@@ -136,14 +169,9 @@ void MainWindow::update(){
     currMousePos = mapFromGlobal(QCursor::pos());
     currMousePos.setY(MAX_Y - currMousePos.y());
 
-    //hovering stuff
-    if (levelButton->mouseOver(currMousePos)){
-        //draw cursor image
-    }
-
     //move stars
-    const double panX = 500 * deltaTime;
-    const double panY = 0 * deltaTime;
+    const double panX = STAR_PAN_X * deltaTime;
+    const double panY = STAR_PAN_Y * deltaTime;
     for (int i = 0 ; i < NUM_STARS ; i++){
         stars->at(i)->x += panX/(float)stars->at(i)->dist;
         stars->at(i)->y += panY/(float)stars->at(i)->dist;
@@ -176,9 +204,24 @@ void MainWindow::paintGL(){
     glEnd();
 
     //draw the button options
-    Util::drawString("LEVEL MODE", 300, 300, fontTex, true, true, 2, 2, true);
-    Util::drawString("ENDLESS PLAY", 300, 200, fontTex, true, true, 2, 2, true);
-    Util::drawString("ZEN MODE", 300, 100, fontTex, true, true, 2, 2, true);
+    Util::drawString("LEVEL MODE", 300, 300, fontTex, true, false, 2, 2, true);
+    Util::drawString("ENDLESS PLAY", 300, 200, fontTex, true, false, 2, 2, true);
+    Util::drawString("ZEN MODE", 300, 100, fontTex, true, false, 2, 2, true);
+    Util::drawString("EXIT", 0, 0, fontTex, false, false, 2, 2, true);
+    if (resumeButton->enabled){
+        Util::drawString("RESUME", MAX_X - 180, 0, fontTex, false, false, 2, 2, true);
+    }
+
+    //hovering stuff
+    if (levelButton->mouseOver(currMousePos)){
+        Util::drawTexture(levelButton->x1 - CURSOR_OFFSET - 23, levelButton->y1 - 5, levelButton->x1 - CURSOR_OFFSET, levelButton->y2 + 5, cursorTex);
+    }
+    if (endlessButton->mouseOver(currMousePos)){
+        Util::drawTexture(endlessButton->x1 - CURSOR_OFFSET - 23, endlessButton->y1 - 5, endlessButton->x1 - CURSOR_OFFSET, endlessButton->y2 + 5, cursorTex);
+    }
+    if (zenButton->mouseOver(currMousePos)){
+        Util::drawTexture(zenButton->x1 - CURSOR_OFFSET - 23, zenButton->y1 - 5, zenButton->x1 - CURSOR_OFFSET, zenButton->y2 + 5, cursorTex);
+    }
 
     //draw the title ew ew hard code. IMG has width 552, height 106
     Util::drawTexture((MAX_X-552)/2, (MAX_Y-50-106), (((MAX_X-552)/2)+552), (MAX_Y-50), titleTex);

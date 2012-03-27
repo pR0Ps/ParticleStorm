@@ -19,16 +19,19 @@ ResourceManager::ResourceManager()
         ":/Images/font.png",
         ":/Images/Player.png"
     };
+
+    //defined sounds
     const char* music_sounds[] ={
         "../ParticleStorm/Resources/base-loop.wav"
     };
+
     //load the textures
     textures = new std::vector<GLuint>;
     for (unsigned int i = 0 ; i < sizeof(tex_files)/sizeof(char*) ; i++){
         textures->push_back(loadTextureFromFile(tex_files[i]));
     }
 
-    //music
+    //load the music
     sound = new std::vector<QSound*>;
     for (unsigned int i = 0; i<sizeof(music_sounds)/sizeof(char*); i++){
         sound->push_back(new QSound(music_sounds[i]));
