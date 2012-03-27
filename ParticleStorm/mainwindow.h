@@ -39,6 +39,7 @@ public:
     //get this instance
     static MainWindow* getInstance(){return instance;}
 
+    int getGameType(){return gameType;}
     void doneGame(unsigned int score);
     void pauseGame();
 
@@ -99,7 +100,11 @@ private:
     GLuint titleTex;
     GLuint cursorTex;
 
+    //zen/nonstop/leveled
+    int gameType;
+
     void initStars();
+    void launchGame();
 
 protected:
     void initializeGL();

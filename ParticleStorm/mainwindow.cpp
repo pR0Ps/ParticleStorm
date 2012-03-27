@@ -30,6 +30,8 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
     //self reference
     instance = this;
 
+    gameType = 0;
+
     //init stars
     initStars();
 
@@ -90,27 +92,21 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
 }
 void MainWindow::mouseReleaseEvent(QMouseEvent *event){
     if (levelButton->mouseOver(currMousePos) && levelButton->down){
-        if (resumeButton->enabled) engine->reset();
-        instance->setVisible(false);
-        engine->setVisible(true);
-        engine->start(LevelManager::LEVELED);
+        gameType = LevelManager::LEVELED;
+        launchGame();
     }
     else if(endlessButton->mouseOver(currMousePos) && endlessButton->down){
-        if (resumeButton->enabled) engine->reset();
-        instance->setVisible(false);
-        engine->setVisible(true);
-        engine->start(LevelManager::NONSTOP);
+        gameType = LevelManager::NONSTOP;
+        launchGame();
     }
     else if(zenButton->mouseOver(currMousePos) && zenButton->down){
-        if (resumeButton->enabled) engine->reset();
-        instance->setVisible(false);
-        engine->setVisible(true);
-        engine->start(LevelManager::ZEN);
+        gameType = LevelManager::ZEN;
+        launchGame();
     }
     else if (resumeButton->mouseOver(currMousePos) && resumeButton->down){
         instance->setVisible(false);
-        engine->resume();
         engine->setVisible(true);
+        engine->resume();
     }
     else if (exitButton->mouseOver(currMousePos) && exitButton->down){
         exit(0);
@@ -125,6 +121,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
 }
 
 void MainWindow::doneGame(const unsigned int score){
+    resumeButton->enabled = false;
     engine->setVisible(false);
     instance->setVisible(true);
     engine->reset();
@@ -133,9 +130,9 @@ void MainWindow::doneGame(const unsigned int score){
 }
 
 void MainWindow::pauseGame(){
+    resumeButton->enabled = true;
     engine->setVisible(false);
     instance->setVisible(true);
-    resumeButton->enabled = true;
 }
 
 void MainWindow::initializeGL(){
@@ -225,6 +222,14 @@ void MainWindow::paintGL(){
 
     //draw the title ew ew hard code. IMG has width 552, height 106
     Util::drawTexture((MAX_X-552)/2, (MAX_Y-50-106), (((MAX_X-552)/2)+552), (MAX_Y-50), titleTex);
+}
+
+//launch the game
+void MainWindow::launchGame(){
+    if (resumeButton->enabled) engine->reset();
+    instance->setVisible(false);
+    engine->setVisible(true);
+    engine->start(gameType);
 }
 
 //init the stars

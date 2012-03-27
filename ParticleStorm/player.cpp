@@ -172,6 +172,9 @@ void Player::modScore(const int amt, const bool rel){
 }
 
 void Player::modMana(double amount, bool rel) {
+    //dont decreate mana if in zen mode
+    if (MainWindow::getInstance()->getGameType() == LevelManager::ZEN) return;
+
     // Perform bounds checking on what the new value of mana would be.
     if (rel)
         mana = Util::max(0, Util::min (mana + amount, MAX_MANA));
