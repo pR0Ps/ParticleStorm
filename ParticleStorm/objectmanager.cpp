@@ -394,8 +394,11 @@ void ObjectManager::spawnEnemy(EnemyType t, const double x, const double y, cons
 void ObjectManager::spawnEnemy(EnemyType t, double x, double y){
     spawnEnemy(t, x, y, getPlayer()->getX(), getPlayer()->getY());
 }
-void ObjectManager::spawnEnemy(double x, double y){
-    spawnEnemy((EnemyType)Util::randInt(GRUNT, SHOOTER), x, y, getPlayer()->getX(), getPlayer()->getY());
+void ObjectManager::spawnEnemy(EnemyType t, QPoint p){
+    spawnEnemy(t, p.x(), p.y(), getPlayer()->getX(), getPlayer()->getY());
+}
+void ObjectManager::spawnEnemy(QPoint p){
+    spawnEnemy((EnemyType)Util::randInt(GRUNT, SHOOTER), p.x(), p.y(), getPlayer()->getX(), getPlayer()->getY());
 }
 
 void ObjectManager::spawnShrapnel(const double x, const double y, const double x_vel, const double y_vel, const int num, const double len, const QColor *clr){
@@ -438,4 +441,4 @@ void ObjectManager::modPlayerMana(int amt, bool rel){
 }
 void ObjectManager::modPlayerScore(int amt, bool rel) {
     player->modScore(amt, rel);
-}
+} 

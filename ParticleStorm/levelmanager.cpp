@@ -5,6 +5,7 @@ const double LevelManager::ENEMY_CHECK_RATE;
 const int LevelManager::MAX_ENEMIES;
 const int LevelManager::MIN_ENEMIES;
 const int LevelManager::ENEMY_GROWTH;
+const int LevelManager::ENEMY_SPAWN_DIST;
 
 LevelManager::LevelManager() {
 }
@@ -30,7 +31,7 @@ void LevelManager::startEnemies(){
     //start the enemies for the level
     if (currType == NONSTOP){
         for (int i = 0; i < std::min((currLvl * ENEMY_GROWTH) + MIN_ENEMIES, MAX_ENEMIES) ; i++) {
-            om->spawnEnemy(qrand() % GameEngine::MAX_X, qrand() % GameEngine::MAX_Y);
+            om->spawnEnemy(randomOffscreenPos());
         }
     }
     else if (currType == LEVELED){
@@ -60,7 +61,7 @@ void LevelManager::startEnemies(){
         case 3:
         case 2:
         case 1:
-            om->spawnEnemy(ObjectManager::GRUNT, 0, 0);
+            om->spawnEnemy(ObjectManager::GRUNT, randomOffscreenPos());
         }
     }
     else if (currType == ZEN){
@@ -101,6 +102,20 @@ void LevelManager::drawNoFade() const{
         else if (currType == ZEN){
             Util::drawString("ZEN MODE", GameEngine::MAX_X/2, GameEngine::MAX_Y/2, ResourceManager::getInstance()->getTexture(ResourceManager::TEXT), true, true, 3,3);
         }
+    }
+}
+
+//spawning enemies offscreen
+QPoint LevelManager::randomOffscreenPos(){
+    switch(qrand()%4){
+    case 0:
+        return QPoint(-ENEMY_SPAWN_DIST, qrand() % (GameEngine::MAX_Y + ENEMY_SPAWN_DIST * 2) - ENEMY_SPAWN_DIST);
+    case 1:
+        return QPoint(GameEngine::MAX_X + ENEMY_SPAWN_DIST, qrand() % (GameEngine::MAX_Y + ENEMY_SPAWN_DIST * 2) - ENEMY_SPAWN_DIST);
+    case 2:
+        return QPoint(qrand() % (GameEngine::MAX_X + ENEMY_SPAWN_DIST * 2) - ENEMY_SPAWN_DIST, -ENEMY_SPAWN_DIST);
+    default:
+        return QPoint(qrand() % (GameEngine::MAX_X + ENEMY_SPAWN_DIST * 2) - ENEMY_SPAWN_DIST, GameEngine::MAX_Y + ENEMY_SPAWN_DIST);
     }
 }
 

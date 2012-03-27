@@ -23,6 +23,7 @@ public:
     static const int MAX_ENEMIES = 70;
     static const int MIN_ENEMIES = 5;
     static const int ENEMY_GROWTH = 3;
+    static const int ENEMY_SPAWN_DIST = 300;
 
     //starts the level
     void startLevel(LevelType t, int lvl);
@@ -55,6 +56,7 @@ private:
 
     //start the enemies
     void startEnemies();
+    QPoint randomOffscreenPos();
 };
 
 #endif // LEVELMANAGER_H
