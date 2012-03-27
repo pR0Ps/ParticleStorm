@@ -8,6 +8,7 @@ const double Enemy::MAX_COLLISION_BUFFER_TIME;
 const int Enemy::MIN_ROTATION_SPD;
 const int Enemy::MAX_ROTATION_SPD;
 const int Enemy::OOB_LIMIT;
+const int Enemy::OOB_ALLOWANCE;
 
 Enemy::Enemy():GameObject(){
 }
@@ -117,7 +118,7 @@ void Enemy::update(double deltaTime){
     if (timerActive && currTimer > 0)
         currTimer -= deltaTime;
 
-    if(Util::coordInRect(x, y, 0, 0, GameEngine::MAX_X, GameEngine::MAX_Y) == false && type != ObjectManager::BULLET){
+    if(!Util::coordInRect(x, y, -OOB_ALLOWANCE, -OOB_ALLOWANCE, GameEngine::MAX_X + OOB_ALLOWANCE, GameEngine::MAX_Y + OOB_ALLOWANCE) && type != ObjectManager::BULLET){
         findDirection(x, y, player->getX(), player->getY());
         x += x_vel * speed * deltaTime;
         y += y_vel * speed * deltaTime;
