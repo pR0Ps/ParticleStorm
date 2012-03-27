@@ -35,8 +35,8 @@ const double Player::LIGHTNING_HEAL_MODIFIER = 0.5;
 const int Player::SPRAY_PARTICLE_SPEED = 2000;
 const int Player::VORTEX_MANA_COST = 100;
 const int Player::VORTEX_PARTICLES_PER_SEC = 100;
-const int Player::VORTEX_SPAWN_RADIUS = 50;
-const int Player::VORTEX_SPAWN_VELOCITY = 2000;
+const int Player::VORTEX_SPAWN_RADIUS = 100;
+const int Player::VORTEX_SPAWN_VELOCITY = 1350;
 
 // Implementation of constructor and destructor.
 

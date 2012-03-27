@@ -161,8 +161,8 @@ void MainWindow::timerEvent(QTimerEvent *){
 
 void MainWindow::update(){
     double deltaTime = timer->restart()/(float)1000;
-    if(engine->isVisible()==false){
-    ResourceManager::getInstance()->playSecondMusic(deltaTime, false);
+    if(!engine->isVisible()){
+        ResourceManager::getInstance()->playSecondMusic(deltaTime, false);
     }
     //get mouse position
     currMousePos = mapFromGlobal(QCursor::pos());
