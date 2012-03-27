@@ -311,12 +311,6 @@ void GameEngine::update(double deltaTime){
     objectManager->doPlayerEnemyCollisions();
     objectManager->doPlayerPowerupCollisions();
 
-    //testing game stuff
-    objectManager->modPlayerScore(1);
-    /*if (getMouseState() & Qt::RightButton){
-        objectManager->modPlayerLife(-5);
-    }*/
-
     //level stuff
     levelManager->update(deltaTime);
     if (levelManager->levelFinished())

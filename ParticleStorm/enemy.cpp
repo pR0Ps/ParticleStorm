@@ -317,12 +317,16 @@ void Enemy::pan(double x, double y){
 void Enemy::die(){
     inUse = false;
 
-    //enemy died, create some shrapnel with it's position and velocity
-    ObjectManager::getInstance()->spawnShrapnel(x, y, x_vel, y_vel, numShrapnel, shrapnelLen, clr);
+    ObjectManager* om = ObjectManager::getInstance();
+    //increase player score
+    om->modPlayerScore(points);
+
+    //create some shrapnel with it's position and velocity
+    om->spawnShrapnel(x, y, x_vel, y_vel, numShrapnel, shrapnelLen, clr);
 
     //powerup (use the maxLife to dertermine value of powerup (harder = better powerup)
     if (type != ObjectManager::BULLET && qrand() % 3 == 0)
-        ObjectManager::getInstance()->spawnPowerup(qrand() % 2 == 1 ? ObjectManager::HEALTH : ObjectManager::MANA, x, y, x_vel, y_vel, maxLife);
+        om->spawnPowerup(qrand() % 2 == 1 ? ObjectManager::HEALTH : ObjectManager::MANA, x, y, x_vel, y_vel, maxLife);
 }
 
 void Enemy::findDirection(double x2, double y2, double x_tar2, double y_tar2){
