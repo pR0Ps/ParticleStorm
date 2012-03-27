@@ -24,6 +24,7 @@ ResourceManager::ResourceManager()
     const char* music_sounds[] ={
         "../ParticleStorm/Resources/base-loop.wav"
         "../ParticleStorm/Resources/secondarysong.wav"
+        "../ParticleStorm/Resources/zapping.wav"
     };
 
     //load the textures
@@ -176,11 +177,28 @@ void ResourceManager::playSecondMusic(double deltaTime, bool turnOff)
         QSound secondarysong("../ParticleStorm/Resources/secondarysong.wav");
         secondarysong.play();
         musicTime2=0;
+    }
         if (turnOff ==true){
             QSound secondarysong("../ParticleStorm/Resources/secondarysong.wav");
                     secondarysong.stop();
                     musicTime2 = 55;
         }
-                }
+    }
+
+
+double musicTime3 =4;
+
+void ResourceManager::playZap(double deltaTime, bool turnOff){
+    musicTime3 =musicTime3 +deltaTime;
+    if(turnOff == false){
+        QSound zapping("../ParticleStorm/Resources/zapping.wav");
+        zapping.play();
+        musicTime3 = 0;
+    }
+    if(turnOff ==true){
+        QSound zapping("../ParticleStorm/Resources/zapping.wav");
+        zapping.stop();
+        musicTime3=4;
+    }
 
 }

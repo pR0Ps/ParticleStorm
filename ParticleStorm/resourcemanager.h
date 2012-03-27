@@ -50,6 +50,7 @@ public:
     const QColor* getColour (Colours c);
     void playMainMusic(double deltaTime, bool turnOff);
     void playSecondMusic(double deltaTime, bool turnOff);
+    void playZap(double deltaTime,bool turnOff);
 
 private:
     //the files to load textures from

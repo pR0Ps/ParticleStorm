@@ -329,12 +329,19 @@ void Player::lightningAbility(double deltaTime, ObjectManager* manager) {
         modLife(damageDealt * LIGHTNING_HEAL_MODIFIER);
 
         lightningTarget = closestEnemy;
+        //try and play zap and stop current music
+        ResourceManager::getInstance()->playMainMusic(1, true);
+        ResourceManager::getInstance()->playZap(deltaTime, false);
+
     }
-    else
+    else{
         // reset the current target of the lightning ability to null so that the
         // lightning effect will not be drawn
         lightningTarget = NULL;
-}
+        //try to stop play zap
+        // ResourceManager::getInstance()->playZap(1, true);
+        }
+    }
 
 void Player::sprayAbility(double deltaTime, ObjectManager *manager) {
     // First check to see if the player has enough mana to perform the ability.
