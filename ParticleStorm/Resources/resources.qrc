@@ -6,5 +6,6 @@
         <file>Player.png</file>
         <file>PLAY.png</file>
         <file>TITLE2.png</file>
+        <file>CursorFLIP.png</file>
     </qresource>
 </RCC>

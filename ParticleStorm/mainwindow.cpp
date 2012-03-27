@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
     levelButton = new Button(145, 300, 440, 330);
     endlessButton = new Button(110, 200, 470, 230);
     zenButton = new Button(170, 100, 410, 130);
-    exitButton = new Button(0, 0, 120, 30);
+    exitButton = new Button(5, 11, 125, 41);
     resumeButton = new Button(MAX_X - 180, 0, MAX_X, 30, false);
 
     //timing stuff
@@ -152,6 +152,7 @@ void MainWindow::initializeGL(){
     fontTex = loadTexture(":/Images/font.png");
     titleTex = loadTexture(":/Images/TITLE2.png");
     cursorTex = loadTexture(":/Images/Cursor.png");
+    cursorFLIPTex = loadTexture(":/Images/CursorFLIP.png");
 }
 
 void MainWindow::timerEvent(QTimerEvent *){
@@ -206,7 +207,7 @@ void MainWindow::paintGL(){
     Util::drawString("LEVEL MODE", 300, 300, fontTex, true, false, 2, 2, true);
     Util::drawString("ENDLESS PLAY", 300, 200, fontTex, true, false, 2, 2, true);
     Util::drawString("ZEN MODE", 300, 100, fontTex, true, false, 2, 2, true);
-    Util::drawString("EXIT", 0, 0, fontTex, false, false, 2, 2, true);
+    Util::drawString("EXIT",5, 11, fontTex, false, false, 2, 2, true);
     if (resumeButton->enabled){
         Util::drawString("RESUME", MAX_X - 180, 0, fontTex, false, false, 2, 2, true);
     }
@@ -221,6 +222,10 @@ void MainWindow::paintGL(){
     if (zenButton->mouseOver(currMousePos)){
         Util::drawTexture(zenButton->x1 - CURSOR_OFFSET - 23, zenButton->y1 - 5, zenButton->x1 - CURSOR_OFFSET, zenButton->y2 + 5, cursorTex);
     }
+    if (exitButton->mouseOver(currMousePos)){
+        Util::drawTexture(exitButton->x2 + CURSOR_OFFSET, exitButton->y2 - CURSOR_OFFSET - 23, exitButton->x2 + CURSOR_OFFSET + 23, exitButton->y2 + 5, cursorFLIPTex);
+    }
+
 
     //draw the title ew ew hard code. IMG has width 552, height 106
     Util::drawTexture((MAX_X-552)/2, (MAX_Y-50-106), (((MAX_X-552)/2)+552), (MAX_Y-50), titleTex);
