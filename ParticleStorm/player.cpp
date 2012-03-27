@@ -24,6 +24,7 @@ const int Player::RING_SIZE = 4;
 const int Player::PARTICLE_SPACING = 15;
 const int Player::RAM_DAMAGE = 10;
 const double Player::MAX_COLLISION_BUFFER_TIME = 0.8;
+const double Player::COLLISON_INDICATION_TIME = 0.1;
 const double Player::TIME_BETWEEN_CHG_ABILITY = 0.5;
 const int Player::LIGHTNING_RANGE = 350;
 const int Player::LIGHTNING_DPS = 150;
@@ -80,8 +81,9 @@ void Player::reset(){
     x_old = x;
     y_old = y;
 
-    //set not immue
+    //set not immune + hit
     collisionBufferTime = 0;
+    hitDisplayTime = 0;
 
     //set initial score
     score = 0;
@@ -95,12 +97,14 @@ void Player::reset(){
     lightningTarget = NULL;
 }
 
-
 // Implementation of pure virtual functions.
 
-
-
 void Player::update(double deltaTime) {
+    //decrease collision buffer and hit time
+    if(collisionBufferTime > 0)
+        collisionBufferTime -= deltaTime;
+    if(hitDisplayTime > 0)
+        hitDisplayTime -= deltaTime;
 
     // Update the previous coordinates of the avatar with the current
     // coordinates.
@@ -123,10 +127,6 @@ void Player::update(double deltaTime) {
 
     // Perform an ability if any have been activated.
     performAbility(deltaTime, o, mw);
-
-    //decrease collision buffer time
-    if(collisionBufferTime > 0)
-        collisionBufferTime -= deltaTime;
 }
 
 //draw the player - these are called in the GameEngine
@@ -141,6 +141,20 @@ void Player::drawFaded() const {
         drawPlayer();
     }
     drawLightning();
+
+    //hit indication (an X)
+    if (hitDisplayTime > 0){
+        const int angle = qrand() % 359;
+        const float size = (1 - getLifePercent()) * 50 + 50;
+
+        glColor3d(100, 100, 100);
+        for (int i = -6 ; i <= 6 ; i++){
+            Util::drawLine(x + size * Util::sind(angle + i), y + size * Util::cosd(angle + i),
+                           x - size * Util::sind(angle + i), y - size * Util::cosd(angle + i));
+            Util::drawLine(x + size * Util::sind(angle + 90 + i), y + size * Util::cosd(angle + 90 + i),
+                           x - size * Util::sind(angle + 90 + i), y - size * Util::cosd(angle + 90 + i));
+        }
+    }
 }
 
 void Player::drawPlayer() const {
@@ -289,6 +303,20 @@ void Player::dropParticles(ObjectManager* manager) const {
                                    y_old + yStep * particleCount);
     }
     */
+}
+
+//player was set as immune, therefore draw hit effects
+void Player::setImmune(){
+    //show hit indication
+    hitDisplayTime = COLLISON_INDICATION_TIME;
+    collisionBufferTime = MAX_COLLISION_BUFFER_TIME;
+
+    //shrapnel from player
+    ObjectManager::getInstance()->spawnShrapnel(x, y, 0, 0, 8, 20,
+        ResourceManager::getInstance()->getColourScale(1 - getLifePercent() * 1.1));
+
+    //screen shake
+    MainWindow::getInstance()->shakeGameScreen(0.5, 50);
 }
 
 void Player::forcePush(ObjectManager* manager) const {

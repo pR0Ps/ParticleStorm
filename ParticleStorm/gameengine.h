@@ -49,6 +49,8 @@ public:
     void start(int type);
     void resume();
 
+    void shakeScreen(double time, int amt);
+
 private:
     //mouse stuff
     void mousePressEvent(QMouseEvent* event){mouseState = event->buttons();}

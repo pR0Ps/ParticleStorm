@@ -40,6 +40,7 @@ public:
     static MainWindow* getInstance(){return instance;}
 
     int getGameType(){return gameType;}
+    void shakeGameScreen(double time, int amt);
     void doneGame(unsigned int score);
     void pauseGame();
 

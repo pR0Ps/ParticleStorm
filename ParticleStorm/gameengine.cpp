@@ -208,6 +208,11 @@ void GameEngine::resume(){
     resumeTimer = RESUME_GAME_LAG;
 }
 
+//shake the screen
+void GameEngine::shakeScreen(double time, int amt){
+    //TODO: shake the screen
+}
+
 //fade the frame
 void GameEngine::doFade(){
     glColor3f(0, 0, 0);

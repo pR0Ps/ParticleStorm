@@ -59,6 +59,7 @@ public:
 
     //time between accepting damage from enemies
     static const double MAX_COLLISION_BUFFER_TIME;
+    static const double COLLISON_INDICATION_TIME;
 
     // Enumeration for the player's special abilities.
     enum ability {
@@ -137,7 +138,7 @@ public:
 
     //immunity for damage
     bool isImmune() const {return collisionBufferTime > 0;}
-    void setImmune() {collisionBufferTime = MAX_COLLISION_BUFFER_TIME;}
+    void setImmune();
 
     //score stuff
     long int getScore() const {return score;}
@@ -167,7 +168,9 @@ private:
     double x_old, y_old;
     double mana;
 
+    //timers
     double collisionBufferTime;
+    double hitDisplayTime;
 
     //score
     long int score;

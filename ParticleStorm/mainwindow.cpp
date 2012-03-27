@@ -61,16 +61,19 @@ MainWindow::~MainWindow(){
     delete engine;
 }
 
-//engine mouse stuff
-QPoint MainWindow::getMousePos(){
-    return engine->getMousePos();
+void MainWindow::doneGame(const unsigned int score){
+    resumeButton->enabled = false;
+    engine->setVisible(false);
+    instance->setVisible(true);
+    engine->reset();
+    qDebug() << "Final score was " << score;
+    //highscores(score)
 }
-Qt::MouseButtons MainWindow::getMouseState(){
-    return engine->getMouseState();
-}
-//engine keyboard stuff
-bool MainWindow::getKeyPressed(int k){
-    return engine->getKeyPressed(k);
+
+void MainWindow::pauseGame(){
+    resumeButton->enabled = true;
+    engine->setVisible(false);
+    instance->setVisible(true);
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event){
@@ -118,21 +121,6 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
     zenButton->down = false;
     exitButton->down = false;
     resumeButton->down = false;
-}
-
-void MainWindow::doneGame(const unsigned int score){
-    resumeButton->enabled = false;
-    engine->setVisible(false);
-    instance->setVisible(true);
-    engine->reset();
-    qDebug() << "Final score was " << score;
-    //highscores(score)
-}
-
-void MainWindow::pauseGame(){
-    resumeButton->enabled = true;
-    engine->setVisible(false);
-    instance->setVisible(true);
 }
 
 void MainWindow::initializeGL(){
@@ -275,4 +263,21 @@ GLuint MainWindow::loadTexture(const char* c){
     //restore settings
     glPopAttrib();
     return ret;
+}
+
+//ENGINE STUFF (refactor this?)
+//engine mouse stuff
+QPoint MainWindow::getMousePos(){
+    return engine->getMousePos();
+}
+Qt::MouseButtons MainWindow::getMouseState(){
+    return engine->getMouseState();
+}
+//engine keyboard stuff
+bool MainWindow::getKeyPressed(int k){
+    return engine->getKeyPressed(k);
+}
+
+void MainWindow::shakeGameScreen(double time, int amt){
+    engine->shakeScreen(time, amt);
 }
