@@ -329,9 +329,9 @@ void Player::lightningAbility(double deltaTime, ObjectManager* manager) {
         modLife(damageDealt * LIGHTNING_HEAL_MODIFIER);
 
         lightningTarget = closestEnemy;
-        //try and play zap and stop current music
-        ResourceManager::getInstance()->playMainMusic(1, true);
-        ResourceManager::getInstance()->playZap(deltaTime, false);
+        //try and play zap and stop current music[technically not working but still sounds cool]
+        //ResourceManager::getInstance()->playMainMusic(1, true);
+       // ResourceManager::getInstance()->playZap(deltaTime, false);
 
     }
     else{
