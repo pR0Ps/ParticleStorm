@@ -36,7 +36,8 @@ ResourceManager::ResourceManager()
     //load the music
     sound = new std::vector<QSound*>;
     for (unsigned int i = 0; i<sizeof(music_sounds)/sizeof(char*); i++){
-        sound->push_back(new QSound(music_sounds[i]));
+        //commented the line out because it doesn't do anything and causes a 5 sec pause when starting the game (for me anyway)
+        //sound->push_back(new QSound(music_sounds[i]));
     }
 
     //init colour arrays
@@ -60,7 +61,9 @@ ResourceManager::ResourceManager()
     red = new QColor(255, 0, 0);
     green = new QColor(0, 255, 0);
     blue = new QColor(0, 0, 255);
-    orange = new QColor (255, 69, 0);
+    orange = new QColor (255, 132, 0);
+    lightBlue = new QColor(185, 190, 255);
+    lightRed = new QColor (255, 176, 176);
     black = new QColor(0, 0, 0);
 
     //set up self reference
@@ -147,6 +150,10 @@ const QColor* ResourceManager::getColour(Colours c){
         return blue;
     else if (c == ORANGE)
         return orange;
+    else if (c == LIGHTBLUE)
+        return lightBlue;
+    else if (c == LIGHTRED)
+        return lightRed;
     else
         return black;
 }

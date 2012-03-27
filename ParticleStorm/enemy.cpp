@@ -140,6 +140,9 @@ void Enemy::update(double deltaTime){
             }
             x += x_vel * speed * deltaTime;
             y += y_vel * speed * deltaTime;
+
+            //appy the force
+            ObjectManager::getInstance()->applyForce(ObjectManager::PARTICLE, x, y, 1000);
         }
         else if (type == ObjectManager::SPRINTER){
             if(currTimer == maxTimer && !timerActive && !moving){
@@ -318,7 +321,7 @@ void Enemy::die(){
 
     //powerup (use the maxLife to dertermine value of powerup (harder = better powerup)
     if (type != ObjectManager::BULLET && qrand() % 3 == 0)
-        ObjectManager::getInstance()->spawnPowerup(ObjectManager::HEALTH, x, y, x_vel, y_vel, maxLife);
+        ObjectManager::getInstance()->spawnPowerup(qrand() % 2 == 1 ? ObjectManager::HEALTH : ObjectManager::MANA, x, y, x_vel, y_vel, maxLife);
 }
 
 void Enemy::findDirection(double x2, double y2, double x_tar2, double y_tar2){

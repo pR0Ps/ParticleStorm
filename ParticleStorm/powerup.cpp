@@ -5,6 +5,9 @@ const float Powerup::AIR_RESIST;
 const int Powerup::MAX_ROTATION_SPD;
 const int Powerup::MIN_ROTATION_SPD;
 const double Powerup::INITIAL_TTL;
+const int Powerup::NUM_LIGHTNING;
+const double Powerup::COLLECT_RING_SIZE;
+const double Powerup::VALUE_RATIO;
 
 Powerup::Powerup():GameObject(){
     //do nothing
@@ -20,8 +23,18 @@ void Powerup::startPowerup(int type, double x, double y, double x_vel, double y_
     this->spin = Util::randInt(MIN_ROTATION_SPD, MAX_ROTATION_SPD) * ((qrand() % 2) * 2 - 1);
     this->angle = 0;
     this->ttl = INITIAL_TTL;
-    this->clr = ResourceManager::getInstance()->getColour(ResourceManager::WHITE);
+    this->radius = 25;
     this->inUse = true;
+
+    //set colour based on type
+    if (type == ObjectManager::HEALTH)
+        this->clr = ResourceManager::getInstance()->getColour(ResourceManager::LIGHTRED);
+    else if (type == ObjectManager::MANA)
+        this->clr = ResourceManager::getInstance()->getColour(ResourceManager::LIGHTBLUE);
+    else{
+        qDebug() << type;
+        this->clr = ResourceManager::getInstance()->getColour(ResourceManager::WHITE);
+    }
 }
 
 void Powerup::drawFaded() const{
@@ -29,7 +42,7 @@ void Powerup::drawFaded() const{
     glLoadIdentity();
     glTranslated(x, y, 0);
     glRotated(angle, 0, 0, 1);
-    Util::drawRoundShape(0, 0, 25, 3, false, clr);
+    Util::drawRoundShape(0, 0, radius, 3, false, clr);
     glPopMatrix();
 }
 

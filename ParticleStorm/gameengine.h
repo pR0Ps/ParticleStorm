@@ -26,7 +26,7 @@ public:
     static const int CLEAR_BORDER_AMT = 5;
     static const double GAME_OVER_SECONDS = 5;
     static const float PAN_SPEED = 0.5;
-    static const double RESUME_GAME_LAG = 3;
+    static const double RESUME_GAME_LAG = 2;
 
     enum Keys{
         DROP,

@@ -74,6 +74,7 @@ public:
     //player stuff
     const Player* getPlayer(){return player;}
     void modPlayerLife(int amt, bool rel = true);
+    void modPlayerMana(int amt, bool rel = true);
     void modPlayerScore(int amt, bool rel = true);
 
     //get unused object to modify

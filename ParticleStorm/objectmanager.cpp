@@ -317,9 +317,21 @@ void ObjectManager::doPlayerPowerupCollisions(){
     std::vector<GameObject*> powerups = getVector(POWERUP);
 
     for(unsigned int i = 0; i < powerups.size(); i++) {
-        if(powerups[i]->getInUse()) { //enemies vector stores unused enemies
+        if(powerups[i]->getInUse()) { //powerups vector stores unused enemies
             if(playerCollision(player->getX(),player->getY(),player->getXOld(),player->getYOld(), powerups[i]->getX(),powerups[i]->getY(),static_cast<Powerup*>(powerups[i])->getRadius())) {
                 //do player powerups collision
+                Powerup* pow = static_cast<Powerup*>(powerups[i]);
+                //mod the player
+                if (pow->getType() == ObjectManager::HEALTH){
+                    player->modLife(pow->getValue() * Powerup::VALUE_RATIO);
+                }
+                else if (pow->getType() == ObjectManager::MANA){
+                     player->modMana(pow->getValue() * Powerup::VALUE_RATIO);
+                }
+                //draw effects (how? in what class?)
+
+                //kill the powerup
+                pow->die();
             }
         }
     }
@@ -417,10 +429,13 @@ Enemy* ObjectManager::getClosestEnemy(double x, double y, double minDistance,
     return closestEnemy;
 }
 
+//mod player
 void ObjectManager::modPlayerLife(int amt, bool rel) {
     player->modLife(amt, rel);
 }
-
+void ObjectManager::modPlayerMana(int amt, bool rel){
+    player->modMana(amt, rel);
+}
 void ObjectManager::modPlayerScore(int amt, bool rel) {
     player->modScore(amt, rel);
 }

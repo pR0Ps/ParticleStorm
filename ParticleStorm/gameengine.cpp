@@ -117,7 +117,7 @@ void GameEngine::initializeGL(){
     //init the framebuffer
     QGLFramebufferObjectFormat format;
     format.setAttachment(QGLFramebufferObject::NoAttachment);
-    format.setInternalTextureFormat(GL_RGB);
+    format.setInternalTextureFormat(GL_RGBA);
     format.setTextureTarget(GL_TEXTURE_2D);
     fbo = new QGLFramebufferObject(MAX_X, MAX_Y, format);
 
@@ -259,7 +259,7 @@ void GameEngine::drawHUD(){
 void GameEngine::update(double deltaTime){
 
     //play main music
-    ResourceManager::getInstance()->playMainMusic(deltaTime, false);
+    //ResourceManager::getInstance()->playMainMusic(deltaTime, false);
 
     //FPS monitoring
     framecnt++;

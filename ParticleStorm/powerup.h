@@ -13,6 +13,9 @@ public:
     static const int MAX_ROTATION_SPD = 900;
     static const int MIN_ROTATION_SPD = 540;
     static const double INITIAL_TTL = 10;
+    static const int NUM_LIGHTNING = 5;
+    static const double COLLECT_RING_SIZE = .8;
+    static const double VALUE_RATIO = 0.5;
 
     void startPowerup(int type, double x, double y, double x_vel, double y_vel, int value);
 
@@ -22,6 +25,8 @@ public:
     void applyForce(double, double, double){}
 
     double getRadius() const {return radius;}
+    int getType() const {return type;}
+    double getValue() const {return value;}
 
 private:
     int type;
