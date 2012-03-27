@@ -22,7 +22,7 @@ public:
     void drawNoFade() const{}
     void drawFaded() const;
     void update(double deltaTime);
-    void applyForce(double, double, double){}
+    void applyForce(double, double, double, double){}
 
     double getRadius() const {return radius;}
     int getType() const {return type;}

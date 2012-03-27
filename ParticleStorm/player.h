@@ -123,7 +123,7 @@ public:
     void drawFaded() const;
 
     //Have to override to do nothing
-    void applyForce(double x, double y, double mag){}
+    void applyForce(double x, double y, double mag, double range){}
     void pan(double x, double y){}
     void die(){}
 

@@ -55,10 +55,11 @@ void Star::pan(double x, double y){
     this->y += y / dist;
 }
 
-void Star::applyForce(double x, double y, double mag){
+void Star::applyForce(double x, double y, double mag, double range){
     double dist = Util::distance(this->x,this->y,x,y);
 
-    if (dist > FORCE_CUTOFF) return;
+    //out of range
+    if (dist > range) return;
 
     if(dist == 0) {
         dist = 0.0001; //avoiding a div by 0 error in the next step

@@ -165,7 +165,7 @@ void ObjectManager::update(ObjectType t, double deltaTime){
         }
     }
 }
-void ObjectManager::applyForce(const ObjectType t, const double x, const double y, const double mag){
+void ObjectManager::applyForce(const ObjectType t, const double x, const double y, const double mag, const double range){
     if (t == PLAYER){
         //cannot apply a force to player
         return;
@@ -174,7 +174,7 @@ void ObjectManager::applyForce(const ObjectType t, const double x, const double 
         std::vector<GameObject*> temp = getVector(t);
         for (unsigned int i = 0 ; i < temp.size() ; i++){
             if (temp.at(i)->getInUse()){
-                temp.at(i)->applyForce(x, y, mag);
+                temp.at(i)->applyForce(x, y, mag, range);
             }
         }
     }
@@ -312,7 +312,8 @@ void ObjectManager::doEnemyParticleCollisions(){
                     if(enemies[i]->getInUse() && Util::distance(particles[j]->getX(), particles[j]->getY(), enemies[i]->getX(), enemies[i]->getY()) < static_cast<Enemy*>(enemies[i])->getRadius()) {
                         enemies[i]->modLife(-static_cast<Particle*>(particles[j])->getSpeedPercent() * Enemy::MAX_DAMAGE,true); //for death by damage
                         particles[j]->die();
-                        //enemy isn't dead (that we know of) so no shrapnel yet
+
+                        //draw effects
                     }
                 }
             }
@@ -336,6 +337,9 @@ void ObjectManager::doPlayerEnemyCollisions(){
                 static_cast<Enemy*>(enemies[i])->setImmune();
                 player->setImmune();
                 //player is immune now, stop checking
+
+                //draw effects
+
                 return;
             }
         }
@@ -359,6 +363,7 @@ void ObjectManager::doPlayerPowerupCollisions(){
                 else if (pow->getType() == ObjectManager::MANA){
                      player->modMana(pow->getValue() * Powerup::VALUE_RATIO);
                 }
+
                 //draw effects (how? in what class?)
 
                 //kill the powerup

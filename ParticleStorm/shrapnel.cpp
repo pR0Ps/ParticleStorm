@@ -67,7 +67,9 @@ void Shrapnel::drawFaded() const{
      glPopMatrix();
 }
 
-void Shrapnel::applyForce(double x, double y, double mag){
+void Shrapnel::applyForce(double x, double y, double mag, double range){
+
+    //IMPLEMENT THIS (maybe?)
 
 }
 

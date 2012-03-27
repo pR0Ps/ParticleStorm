@@ -142,8 +142,9 @@ void Enemy::update(double deltaTime){
             x += x_vel * speed * deltaTime;
             y += y_vel * speed * deltaTime;
 
-            //appy the force
-            ObjectManager::getInstance()->applyForce(ObjectManager::PARTICLE, x, y, 1000);
+            //apply the force
+            ObjectManager::getInstance()->applyForce(ObjectManager::PARTICLE, x, y, 10000, 200);
+            ObjectManager::getInstance()->applyForce(ObjectManager::STAR, x, y, 10000, 200);
         }
         else if (type == ObjectManager::SPRINTER){
             if(currTimer == maxTimer && !timerActive && !moving){

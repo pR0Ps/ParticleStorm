@@ -292,13 +292,13 @@ void Player::dropParticles(ObjectManager* manager) const {
 }
 
 void Player::forcePush(ObjectManager* manager) const {
-    manager->applyForce(ObjectManager::PARTICLE, x, y, Particle::FORCE_EXERT);
-    manager->applyForce(ObjectManager::STAR, x, y, Star::FORCE_EXERT);
+    manager->applyForce(ObjectManager::PARTICLE, x, y, Particle::FORCE_EXERT, Particle::FORCE_CUTOFF);
+    manager->applyForce(ObjectManager::STAR, x, y, Star::FORCE_EXERT, Star::FORCE_CUTOFF);
 }
 
 void Player::forcePull(ObjectManager* manager) const {
-    manager->applyForce(ObjectManager::PARTICLE, x, y, -Particle::FORCE_EXERT);
-    manager->applyForce(ObjectManager::STAR, x, y, -Star::FORCE_EXERT);
+    manager->applyForce(ObjectManager::PARTICLE, x, y, -Particle::FORCE_EXERT, Particle::FORCE_CUTOFF);
+    manager->applyForce(ObjectManager::STAR, x, y, -Star::FORCE_EXERT, Star::FORCE_CUTOFF);
 }
 
 void Player::useAbility(double deltaTime, ObjectManager* manager) {
@@ -413,8 +413,7 @@ void Player::vortexAbility(double deltaTime, ObjectManager* manager) {
         // of the particles that were already in the game. This is essentially
         // the same as the force pull ability except that the force is not also
         // applied to stars.
-        manager->applyForce(ObjectManager::PARTICLE, x, y,
-                            -Particle::FORCE_EXERT);
+        manager->applyForce(ObjectManager::PARTICLE, x, y, -Particle::FORCE_EXERT, Particle::FORCE_CUTOFF);
     }
 }
 

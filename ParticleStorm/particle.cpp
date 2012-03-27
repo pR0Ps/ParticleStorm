@@ -45,10 +45,11 @@ void Particle::drawFaded() const{
     Util::drawLine(x, y, x_old, y_old, clr);
 }
 
-void Particle::applyForce(double x, double y, double mag){
+void Particle::applyForce(double x, double y, double mag, double range){
     double dist = Util::distance(this->x,this->y,x,y);
 
-    if (dist > FORCE_CUTOFF) return;
+    //out of range
+    if (dist > range) return;
 
     //calculating and updating x and y velocity using a 1/dist magnitude scaling
     if(dist == 0) {
