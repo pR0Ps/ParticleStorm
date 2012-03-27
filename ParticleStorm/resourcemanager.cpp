@@ -23,6 +23,7 @@ ResourceManager::ResourceManager()
     //defined sounds
     const char* music_sounds[] ={
         "../ParticleStorm/Resources/base-loop.wav"
+        "../ParticleStorm/Resources/secondarysong.wav"
     };
 
     //load the textures
@@ -165,17 +166,21 @@ void ResourceManager::playMainMusic(double deltaTime, bool turnOff){
         primarySong.stop();
         musictime=34;
     }
-
 }
 
-double musicTime2 = 35;
+double musicTime2 =55;
 void ResourceManager::playSecondMusic(double deltaTime, bool turnOff)
 {
     musicTime2=musicTime2 +deltaTime;
-    if(musicTime2>35 && turnOff ==true){
-        QSound secondarysong("../ParticleStorm/Resources/base-loop.wav");
+    if(musicTime2 > 55 && turnOff ==false){
+        QSound secondarysong("../ParticleStorm/Resources/secondarysong.wav");
         secondarysong.play();
         musicTime2=0;
+        if (turnOff ==true){
+            QSound secondarysong("../ParticleStorm/Resources/secondarysong.wav");
+                    secondarysong.stop();
+                    musicTime2 = 55;
+        }
                 }
 
 }
