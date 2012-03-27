@@ -32,6 +32,7 @@ const int Player::PARTICLES_SPAWNED_PER_SEC;
 const int Player::SPRAY_MANA_COST;
 const double Player::LIGHTNING_HEAL_MODIFIER;
 // const int Player::PARTICLES_DROPPED_PER_SEC;
+const int Player::SPRAY_PARTICLE_SPEED;
 
 // Implementation of constructor and destructor.
 
@@ -332,38 +333,32 @@ void Player::lightningAbility(double deltaTime, ObjectManager* manager) {
         lightningTarget = NULL;
 }
 
-// A first pass at the spray ability. The way it works now, it is essentially
-// just a combination of the drop particle and force push abilities. The mana
-// cost for this ability is justified since only one of these abilities can be
-// activated at a time individually, but this abilitiy allows the player to
-// apply force to spawned particles immediately.
-// As I have programmed it now, a few particles are spawned at the player's
-// current location on every call to update and force is applied to the
-// particles right away. It may be better to take the approach that Carey used
-// for the implementation of the drop particle ability, which is to spawn
-// particles along the line that the player travelled since the last call to
-// update (although delta t should be used in some way in this function).
 void Player::sprayAbility(double deltaTime, ObjectManager *manager) {
     // First check to see if the player has enough mana to perform the ability.
-    // *It may make more sense to move this check into the useAbility function
-    // since all special abilities consume mana.
     double manaCost = deltaTime * SPRAY_MANA_COST;
 
     if (manaCost <= mana) {
         modMana(-manaCost);
 
-        // Spawn numParticles at the player's current position and apply force
-        // to them immediately. The ceil function is used so that at least one
-        // particle is spawned per update. This may actually cause more particles
-        // to spawn per second then specified by one of the spray ability's
-        // constants, but this is a minor issue.
+        // Spawn numParticles at the player's current position and give them an
+        // initial velocity. This controls their direction.
+        // The ceil function is used so that at least one particle is spawned
+        // per update. This may actually cause more particles to spawn per
+        // second than is specified by one of the spray ability's constants, but
+        // this is a minor issue.
         int numParticles = ceil(deltaTime * PARTICLES_SPAWNED_PER_SEC);
         for (int particleCount = 0; particleCount < numParticles;
              particleCount++) {
-            manager->spawnParticle(x,y);
-            manager->applyForce(ObjectManager::PARTICLE, x, y,
-                                Particle::FORCE_EXERT);
-            // Note: should also apply force to stars here.
+            // Randomly choose a degree of direction for the spawned particle.
+            int degree = Util::randInt(0, 360);
+
+            // Use sin to calculate the x direction and cos for the y direction.
+            // Note: the cmath trigonometric functions take radians instead of
+            // degrees - use the Util functions instead.
+            double xDirection = Util::sind(degree);
+            double yDirection = Util::cosd(degree);
+            manager->spawnParticle(x, y, xDirection * SPRAY_PARTICLE_SPEED,
+                                   yDirection * SPRAY_PARTICLE_SPEED);
         }
     }
 }

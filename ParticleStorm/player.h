@@ -89,8 +89,10 @@ public:
     static const int MIN_LIGHTNING_DRAW_DISTANCE = 10;
 
     // Constants for the spray ability.
-    static const int PARTICLES_SPAWNED_PER_SEC = 50;
+    static const int PARTICLES_SPAWNED_PER_SEC = 200;
     static const int SPRAY_MANA_COST = 50;
+    // The intial speed to be given to particles spawned by the spray ability.
+    static const int SPRAY_PARTICLE_SPEED = 2000;
 
     // Constructor/destructor.
     Player();
@@ -191,15 +193,15 @@ private:
 
     /*
      * Performs the drop particles ability. Particles are dropped along the line
-     * between the player's position on the last call to update and their current
-     * position.
+     * between the player's position on the last call to update and their
+     * current position.
      *
      * Parameters: the current ObjectManager.
      *
-     * Note: the calculation performed does not depend on the time since the last
-     * call to update but rather the distance that the player has travelled. This
-     * encourages the player to move around while spawning particles instead of
-     * staying still.
+     * Note: the calculation performed does not depend on the time since the
+     * last call to update but rather the distance that the player has
+     * travelled. This encourages the player to move around while spawning
+     * particles instead of staying still.
      */
     void dropParticles(ObjectManager* manager) const;
 
@@ -239,8 +241,11 @@ private:
     void lightningAbility(double deltaTime, ObjectManager* manager);
 
     /*
-     * Implements the spray abililty. This is essentially just a combination of
-     * the drop particle and force push abilities.
+     * Implements the spray abililty. Fires off several particles from the
+     * player's current position at high speed in random directions. The
+     * particles spawned are given an intial velocity, so in essence this is
+     * just a combination of the drop particles and force push abilities rolled
+     * into one.
      */
     void sprayAbility(double deltaTime, ObjectManager* manager);
 
