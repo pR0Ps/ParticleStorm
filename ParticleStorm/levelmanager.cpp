@@ -52,14 +52,33 @@ void LevelManager::startEnemies(){
         case 12:
         case 11:
         case 10:
+            om->spawnEnemy(ObjectManager::HEALER, randomOffscreenPos());
+            om->spawnEnemy(ObjectManager::HEALER, randomOffscreenPos());
+            om->spawnEnemy(ObjectManager::HEALER, randomOffscreenPos());
         case 9:
+            om->spawnEnemy(ObjectManager::SPRINTER, randomOffscreenPos());
+            om->spawnEnemy(ObjectManager::SPRINTER, randomOffscreenPos());
+            om->spawnEnemy(ObjectManager::SPRINTER, randomOffscreenPos());
         case 8:
+            om->spawnEnemy(ObjectManager::TANK, randomOffscreenPos());
+            om->spawnEnemy(ObjectManager::TANK, randomOffscreenPos());
         case 7:
+            om->spawnEnemy(ObjectManager::HEALER, randomOffscreenPos());
+            om->spawnEnemy(ObjectManager::HEALER, randomOffscreenPos());
+            om->spawnEnemy(ObjectManager::HEALER, randomOffscreenPos());
         case 6:
+            om->spawnEnemy(ObjectManager::GRUNT, randomOffscreenPos());
+            om->spawnEnemy(ObjectManager::GRUNT, randomOffscreenPos());
+            om->spawnEnemy(ObjectManager::GRUNT, randomOffscreenPos());
         case 5:
+            om->spawnEnemy(ObjectManager::HEALER, randomOffscreenPos());
         case 4:
+            om->spawnEnemy(ObjectManager::SPRINTER, randomOffscreenPos());
         case 3:
+            om->spawnEnemy(ObjectManager::SHOOTER, randomOffscreenPos());
+            om->spawnEnemy(ObjectManager::SHOOTER, randomOffscreenPos());
         case 2:
+            om->spawnEnemy(ObjectManager::TANK, randomOffscreenPos());
         case 1:
             om->spawnEnemy(ObjectManager::GRUNT, randomOffscreenPos());
         }

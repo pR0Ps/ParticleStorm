@@ -283,8 +283,8 @@ void ObjectManager::doEnemyParticleCollisions(){
         if(enemies[i]->getInUse()) { //enemies vector stores unused enemies
             for(unsigned int j = 0; j < particles.size(); j++) {
                 if(particles[j]->getInUse()) {
-
-                    if(Util::distance(particles[j]->getX(), particles[j]->getY(), enemies[i]->getX(), enemies[i]->getY()) < static_cast<Enemy*>(enemies[i])->getRadius()) {
+                    //check if the enemy is still in use to avoid killing the enemy multiple times
+                    if(enemies[i]->getInUse() && Util::distance(particles[j]->getX(), particles[j]->getY(), enemies[i]->getX(), enemies[i]->getY()) < static_cast<Enemy*>(enemies[i])->getRadius()) {
                         enemies[i]->modLife(-static_cast<Particle*>(particles[j])->getSpeedPercent() * Enemy::MAX_DAMAGE,true); //for death by damage
                         particles[j]->die();
                         //enemy isn't dead (that we know of) so no shrapnel yet
