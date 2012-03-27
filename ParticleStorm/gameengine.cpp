@@ -259,7 +259,7 @@ void GameEngine::drawHUD(){
 void GameEngine::update(double deltaTime){
 
     //play main music
-    ResourceManager::getInstance()->playMainMusic(deltaTime);
+    ResourceManager::getInstance()->playMainMusic(deltaTime, false);
 
     //FPS monitoring
     framecnt++;
