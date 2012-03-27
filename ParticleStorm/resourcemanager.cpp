@@ -112,6 +112,9 @@ GLuint ResourceManager::getTexture(Texture t){
     return textures->at(t);
 }
 
+const QSound *ResourceManager::getSound(Sound t){
+    return sound->at(t);
+    }
 
 //return the stored colour of the specified gradient
 const QColor* ResourceManager::getColourScale(const float f){
@@ -143,14 +146,33 @@ const QColor* ResourceManager::getColour(Colours c){
         return black;
 }
 
-double totalDeltaTime = 35;
-void ResourceManager::playMainMusic(double deltaTime){
 
-totalDeltaTime = totalDeltaTime+deltaTime;
-    if (totalDeltaTime > 35){
-     QSound music("../ParticleStorm/Resources/base-loop.wav");
-    music.play();
-    totalDeltaTime =0;
+double musictime = 34;
+void ResourceManager::playMainMusic(double deltaTime, bool turnOff){
+    musictime = musictime+deltaTime;
+
+    if (musictime > 34 && turnOff ==false ){
+   QSound primarySong("../ParticleStorm/Resources/base-loop.wav");
+        //QSound primarySong(ResourceManager::getInstance()->getSound(music));//not sure why It is not working
+         primarySong.play();
+    musictime =0;
     }
+    if (turnOff ==true){
+        QSound primarySong("../ParticleStorm/Resources/base-loop.wav");
+        primarySong.stop();
+        musictime=34;
+    }
+
+}
+
+double musicTime2 = 35;
+void ResourceManager::playSecondMusic(double deltaTime, bool turnOff)
+{
+    musicTime2=musicTime2 +deltaTime;
+    if(musicTime2>35 && turnOff ==true){
+        QSound secondarysong("../ParticleStorm/Resources/base-loop.wav");
+        secondarysong.play();
+        musicTime2=0;
+                }
 
 }

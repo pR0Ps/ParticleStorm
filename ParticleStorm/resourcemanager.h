@@ -43,10 +43,13 @@ public:
     //get a texture
     GLuint getTexture(Texture t);
 
+    //get sound
+    const QSound* getSound(Sound t);
     //get colours
     const QColor* getColourScale(float f);
     const QColor* getColour (Colours c);
-    void playMainMusic(double deltaTime);
+    void playMainMusic(double deltaTime, bool turnOff);
+    void playSecondMusic(double deltaTime, bool turnOff);
 
 private:
     //the files to load textures from
