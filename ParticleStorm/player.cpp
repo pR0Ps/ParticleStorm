@@ -15,24 +15,24 @@
 #include "resourcemanager.h"
 
 
-// Declaration of constants. Some of these can be modified to alter the
+// Initialization of constants. Some of these can be modified to alter the
 // difficulty of the gameplay.
-const int Player::MAX_LIFE;
-const int Player::MAX_MANA;
-const int Player::MAX_DIAMETER;
-const int Player::RING_SIZE;
-const int Player::PARTICLE_SPACING;
-const int Player::RAM_DAMAGE;
-const double Player::TIME_BETWEEN_CHG_ABILITY;
-const int Player::LIGHTNING_RANGE;
-const int Player::LIGHTNING_DPS;
-const int Player::LIGHTNING_MANA_COST;
-const int Player::MIN_LIGHTNING_DRAW_DISTANCE;
-const int Player::PARTICLES_SPAWNED_PER_SEC;
-const int Player::SPRAY_MANA_COST;
-const double Player::LIGHTNING_HEAL_MODIFIER;
+const int Player::MAX_LIFE = 1000;
+const int Player::MAX_MANA = 1000;
+const int Player::MAX_DIAMETER = 24;
+const int Player::RING_SIZE = 4;
+const int Player::PARTICLE_SPACING = 15;
+const int Player::RAM_DAMAGE = 10;
+const double Player::TIME_BETWEEN_CHG_ABILITY = 0.5;
+const int Player::LIGHTNING_RANGE = 350;
+const int Player::LIGHTNING_DPS = 50;
+const int Player::LIGHTNING_MANA_COST = 50;
+const int Player::MIN_LIGHTNING_DRAW_DISTANCE = 10;
+const int Player::PARTICLES_SPAWNED_PER_SEC = 200;
+const int Player::SPRAY_MANA_COST = 50;
+const double Player::LIGHTNING_HEAL_MODIFIER = 0.5;
 // const int Player::PARTICLES_DROPPED_PER_SEC;
-const int Player::SPRAY_PARTICLE_SPEED;
+const int Player::SPRAY_PARTICLE_SPEED = 2000;
 
 // Implementation of constructor and destructor.
 

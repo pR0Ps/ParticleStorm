@@ -44,18 +44,18 @@ public:
     // accessible to the whole class. Also, may want to move these definitions
     // into private access space if they shouldn't be accessible by other
     // classes.
-    static const int MAX_LIFE = 1000;
-    static const int MAX_MANA = 1000;
-    static const int RAM_DAMAGE = 10;
+    static const int MAX_LIFE;
+    static const int MAX_MANA;
+    static const int RAM_DAMAGE;
 
     //max size of the player
-    static const int MAX_DIAMETER = 24;
+    static const int MAX_DIAMETER;
 
     //size of the rings around the player
-    static const int RING_SIZE = 4;
+    static const int RING_SIZE;
 
     //spacing of the particles to drop
-    static const int PARTICLE_SPACING = 15;
+    static const int PARTICLE_SPACING;
     // Constant for the number of particles dropped by the drop particles
     // ability.
     // static const int PARTICLES_DROPPED_PER_SEC = 100;
@@ -71,28 +71,28 @@ public:
 
     // The amount of time that must pass before the player's special ability can
     // be changed when the change ability button is held down continuously.
-    static const double TIME_BETWEEN_CHG_ABILITY = 0.5; // measured in seconds
+    static const double TIME_BETWEEN_CHG_ABILITY; // measured in seconds
 
     // Dummy values are used for the ability constants at the moment - these can
     // be tinkered with in the future to modify the game difficulty.
 
     // Constants for the lightning ability.
-    static const int LIGHTNING_RANGE = 350;
-    static const int LIGHTNING_DPS = 50; // DPS - damage per second
-    static const int LIGHTNING_MANA_COST = 50; // mana consumed per second
+    static const int LIGHTNING_RANGE;
+    static const int LIGHTNING_DPS; // DPS - damage per second
+    static const int LIGHTNING_MANA_COST; // mana consumed per second
     // The ratio of life based on damage dealt that the player will be healed
     // for when the lightning ability hits an enemy.
-    static const double LIGHTNING_HEAL_MODIFIER = 0.5;
+    static const double LIGHTNING_HEAL_MODIFIER;
     // Don't draw the lightning effect if the enemy is closer than 10 pixels to
     // the player since the drawJaggedLine function may cause the program to
     // crash otherwise.
-    static const int MIN_LIGHTNING_DRAW_DISTANCE = 10;
+    static const int MIN_LIGHTNING_DRAW_DISTANCE;
 
     // Constants for the spray ability.
-    static const int PARTICLES_SPAWNED_PER_SEC = 200;
-    static const int SPRAY_MANA_COST = 50;
+    static const int PARTICLES_SPAWNED_PER_SEC;
+    static const int SPRAY_MANA_COST;
     // The intial speed to be given to particles spawned by the spray ability.
-    static const int SPRAY_PARTICLE_SPEED = 2000;
+    static const int SPRAY_PARTICLE_SPEED;
 
     // Constructor/destructor.
     Player();
