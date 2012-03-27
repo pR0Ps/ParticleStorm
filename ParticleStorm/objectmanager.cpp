@@ -297,15 +297,21 @@ void ObjectManager::doEnemyParticleCollisions(){
 
 void ObjectManager::doPlayerEnemyCollisions(){
 
+    //player is immune to damage, don't bother checking
+    if (player->isImmune()) return;
+
     std::vector<GameObject*> enemies = getVector(ENEMY);
 
     for(unsigned int i = 0; i < enemies.size(); i++) {
         if(enemies[i]->getInUse()) { //enemies vector stores unused enemies
             if(!static_cast<Enemy*>(enemies[i])->isImmune() && playerCollision(player->getX(),player->getY(),player->getXOld(),player->getYOld(),enemies[i]->getX(),enemies[i]->getY(),static_cast<Enemy*>(enemies[i])->getRadius())) {
-                //qDebug () << "is colliding";
                 player->modLife(-static_cast<Enemy*>(enemies[i])->getDamage(),true);
                 enemies[i]->modLife(-Player::RAM_DAMAGE,true);
+                //give immunity to the colliding objects
                 static_cast<Enemy*>(enemies[i])->setImmune();
+                player->setImmune();
+                //player is immune now, stop checking
+                return;
             }
         }
     }

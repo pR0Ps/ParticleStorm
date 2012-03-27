@@ -23,6 +23,7 @@ const int Player::MAX_DIAMETER = 24;
 const int Player::RING_SIZE = 4;
 const int Player::PARTICLE_SPACING = 15;
 const int Player::RAM_DAMAGE = 10;
+const double Player::MAX_COLLISION_BUFFER_TIME = 0.8;
 const double Player::TIME_BETWEEN_CHG_ABILITY = 0.5;
 const int Player::LIGHTNING_RANGE = 350;
 const int Player::LIGHTNING_DPS = 150;
@@ -31,7 +32,6 @@ const int Player::MIN_LIGHTNING_DRAW_DISTANCE = 10;
 const int Player::PARTICLES_SPAWNED_PER_SEC = 200;
 const int Player::SPRAY_MANA_COST = 50;
 const double Player::LIGHTNING_HEAL_MODIFIER = 0.5;
-// const int Player::PARTICLES_DROPPED_PER_SEC;
 const int Player::SPRAY_PARTICLE_SPEED = 2000;
 
 // Implementation of constructor and destructor.
@@ -76,6 +76,9 @@ void Player::reset(){
     x_old = x;
     y_old = y;
 
+    //set not immue
+    collisionBufferTime = 0;
+
     //set initial score
     score = 0;
     currentAbility = VORTEX;
@@ -116,6 +119,10 @@ void Player::update(double deltaTime) {
 
     // Perform an ability if any have been activated.
     performAbility(deltaTime, o, mw);
+
+    //decrease collision buffer time
+    if(collisionBufferTime > 0)
+        collisionBufferTime -= deltaTime;
 }
 
 //draw the player - these are called in the GameEngine

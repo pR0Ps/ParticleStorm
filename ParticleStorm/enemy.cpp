@@ -233,7 +233,7 @@ void Enemy::update(double deltaTime){
     angle += deltaTime * spin;
     if (angle > 360) angle = angle - 360;
 
-    //decrease collision buffer time (should be in player)
+    //decrease collision buffer time
     if(collisionBufferTime > 0)
         collisionBufferTime -= deltaTime;
 }

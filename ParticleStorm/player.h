@@ -56,9 +56,9 @@ public:
 
     //spacing of the particles to drop
     static const int PARTICLE_SPACING;
-    // Constant for the number of particles dropped by the drop particles
-    // ability.
-    // static const int PARTICLES_DROPPED_PER_SEC = 100;
+
+    //time between accepting damage from enemies
+    static const double MAX_COLLISION_BUFFER_TIME;
 
     // Enumeration for the player's special abilities.
     enum ability {
@@ -126,6 +126,10 @@ public:
     //use radius
     double getRadius () const {return (MAX_DIAMETER * getLifePercent())/2.0;}
 
+    //immunity for damage
+    bool isImmune() const {return collisionBufferTime > 0;}
+    void setImmune() {collisionBufferTime = MAX_COLLISION_BUFFER_TIME;}
+
     //score stuff
     long int getScore() const {return score;}
     void modScore(int amt, bool rel);
@@ -153,7 +157,12 @@ private:
     // These represent the location of the player on the last call to update.
     double x_old, y_old;
     double mana;
+
+    double collisionBufferTime;
+
+    //score
     long int score;
+
     // The player's currently selected special ability. This should only be
     // assigned values from the ability enum.
     int currentAbility;
