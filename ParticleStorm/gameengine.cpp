@@ -376,5 +376,7 @@ void GameEngine::paintGL(){
 
         //fade screen (or other game-overy stuff) for GAME_OVER_FRAMES frames
         Util::drawString("Game Over", MAX_X/2, MAX_Y/2, resourceManager->getTexture(ResourceManager::TEXT), true, true, 5, 5);
+        //end music
+        ResourceManager::getInstance()->playMainMusic(1, true);
     }
 }
