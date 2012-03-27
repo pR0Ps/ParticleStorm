@@ -99,7 +99,6 @@ private:
     GLuint fontTex;
     GLuint titleTex;
     GLuint cursorTex;
-    GLuint cursorFLIPTex;
 
     //zen/nonstop/leveled
     int gameType;
