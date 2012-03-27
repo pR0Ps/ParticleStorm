@@ -71,7 +71,7 @@ void ObjectManager::reset(){
     deactivateAll(ENEMY);
     deactivateAll(POWERUP);
     deactivateAll(SHRAPNEL);
-    deactivateAll(STAR);
+    //deactivateAll(STAR);
 }
 
 //returns the correct vector to operate on based on object type

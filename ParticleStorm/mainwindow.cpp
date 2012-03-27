@@ -149,16 +149,16 @@ void MainWindow::update(){
         stars->at(i)->y += panY/(float)stars->at(i)->dist;
         //wrap the star around when panned offscreen
         if (stars->at(i)->x > MAX_X){
-            stars->at(i)->x = 0;
+            stars->at(i)->x -= MAX_X;
         }
         else if (stars->at(i)->x < 0){
-            stars->at(i)->x = MAX_X;
+            stars->at(i)->x = MAX_X - stars->at(i)->x;
         }
         if (stars->at(i)->y > MAX_Y){
-            stars->at(i)->y = 0;
+            stars->at(i)->y -= MAX_Y;
         }
         else if (stars->at(i)->y < 0){
-            stars->at(i)->y = MAX_Y;
+            stars->at(i)->y = MAX_Y - stars->at(i)->y;
         }
     }
 }
