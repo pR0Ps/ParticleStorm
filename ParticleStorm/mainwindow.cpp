@@ -52,6 +52,7 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
 
     //sounds
     soundManager = new SoundManager();
+    soundManager->playSound(SoundManager::TITLE);
 }
 
 MainWindow::~MainWindow(){
