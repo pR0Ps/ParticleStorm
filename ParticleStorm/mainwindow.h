@@ -110,7 +110,7 @@ private:
 protected:
     void initializeGL();
     void paintGL();
-    void timerEvent(QTimerEvent *);
+    void timerEvent(QTimerEvent*);
     void update();
 
     void mousePressEvent(QMouseEvent* event);

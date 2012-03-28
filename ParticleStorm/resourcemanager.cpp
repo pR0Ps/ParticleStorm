@@ -64,8 +64,8 @@ ResourceManager::ResourceManager()
     green = new QColor(0, 255, 0);
     blue = new QColor(0, 0, 255);
     orange = new QColor (255, 132, 0);
-    lightBlue = new QColor(0, 191, 255);
-    lightRed = new QColor (255, 176, 176);
+    lightBlue = new QColor(0, 190, 255);
+    lightRed = new QColor (255, 0, 150);
     black = new QColor(0, 0, 0);
     purple = new QColor(160, 0, 200);
 

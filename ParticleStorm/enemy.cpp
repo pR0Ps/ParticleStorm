@@ -4,6 +4,7 @@
 #include <cmath>
 
 const int Enemy::MAX_DAMAGE;
+const int Enemy::FORCE_DISSIPATION;
 const double Enemy::MAX_COLLISION_BUFFER_TIME;
 const int Enemy::MIN_ROTATION_SPD;
 const int Enemy::MAX_ROTATION_SPD;
@@ -144,7 +145,7 @@ void Enemy::update(double deltaTime){
 
             //apply the force
             ObjectManager::getInstance()->applyForce(ObjectManager::PARTICLE, x, y, 10000, 200);
-            ObjectManager::getInstance()->applyForce(ObjectManager::STAR, x, y, 10000, 200);
+            ObjectManager::getInstance()->applyForce(ObjectManager::STAR, x, y, 1000, 200);
         }
         else if (type == ObjectManager::SPRINTER){
             if(currTimer == maxTimer && !timerActive && !moving){
@@ -305,6 +306,19 @@ void Enemy::drawFaded() const{
     if (currentEnemy != NULL && timerActive && type == ObjectManager::HEALER){
         Util::drawJaggedLine(x, y, currentEnemy->getX(), currentEnemy->getY(), clr);
     }
+}
+
+void Enemy::applyForce(double x, double y, double mag, double range){
+    double dist = Util::distance(this->x, this->y, x, y);
+
+    //out of range
+    if (dist > range) return;
+
+    if(dist == 0) {
+        dist = 0.0001; //avoiding a div by 0 error in the next step
+    }
+    x_vel += (this->x - x) * mag / ((dist * dist) * FORCE_DISSIPATION);
+    y_vel += (this->y - y) * mag / ((dist * dist) * FORCE_DISSIPATION);
 }
 
 //pan the enemy (and their target)

@@ -24,7 +24,6 @@ public:
     void update(double deltaTime);
     void applyForce(double, double, double, double){}
 
-    double getRadius() const {return radius;}
     int getType() const {return type;}
     double getValue() const {return value;}
 
@@ -34,7 +33,6 @@ private:
     double spin;
     double angle;
     double ttl;
-    double radius;
 };
 
 #endif // POWERUP_H

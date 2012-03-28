@@ -90,19 +90,32 @@ public:
     static const int MIN_LIGHTNING_DRAW_DISTANCE;
 
     // Constants for the spray ability.
-    static const int PARTICLES_SPAWNED_PER_SEC;
+    static const int SPRAY_PPS;
     static const int SPRAY_MANA_COST;
     // The intial speed to be given to particles spawned by the spray ability.
     static const int SPRAY_PARTICLE_SPEED;
 
     // Constants for the vortex ability.
     static const int VORTEX_MANA_COST;
-    static const int VORTEX_PARTICLES_PER_SEC;
+    static const int VORTEX_PPS;
     // The distance from the player that particles will be spawned by the vortex
     // ability.
-    static const int VORTEX_SPAWN_RADIUS;
+    static const int VORTEX_SPAWN_RAD;
     // The initial velocity to apply to the particles spawned by vortex.
     static const int VORTEX_SPAWN_VELOCITY;
+
+    //constants for the shockwave ability
+    static const int SHOCKWAVE_MANA_COST;
+    static const int SHOCKWAVE_PPS;
+    static const int SHOCKWAVE_INNER_RAD;
+    static const int SHOCKWAVE_DPS;
+
+    //constants for the repulse ability
+    static const int REPULSE_RANGE;
+    static const int REPULSE_DPS;
+    static const int REPULSE_FORCE;
+    static const int REPULSE_MANA_COST;
+    static const double REPULSE_TIME;
 
     // Constructor/destructor.
     Player();
@@ -124,16 +137,14 @@ public:
     void drawFaded() const;
 
     //Have to override to do nothing
-    void applyForce(double x, double y, double mag, double range){}
-    void pan(double x, double y){}
+    void applyForce(double, double, double, double){}
+    void pan(double, double){}
     void die(){}
 
     //get player properties
     int getMana() const {return mana;}
     int getMaxMana() const {return MAX_MANA;}
     float getManaPercent() const {return mana/(float)MAX_MANA;}
-    //maybe change to diameter if needed, but I think most calculations should
-    //use radius
     double getRadius () const {return (MAX_DIAMETER * getLifePercent())/2.0;}
 
     //immunity for damage
@@ -171,6 +182,7 @@ private:
     //timers
     double collisionBufferTime;
     double hitDisplayTime;
+    double repulseDisplayTime;
 
     //score
     long int score;
@@ -275,6 +287,17 @@ private:
      * rapidly spin around the player, damaging any enemies that get too close.
      */
     void vortexAbility(double deltaTime, ObjectManager* manager);
+
+    /*
+     * Creates a shield-like ring of particles around the player
+     */
+    void shockwaveAbility(double deltaTime, ObjectManager* manager);
+
+    /*
+     * Implements the shockwave ability. Emits a shockwave that damages enemies
+     * and pushes them back.
+     */
+    void repulseAbility (double deltaTime, ObjectManager* manager);
 
     /*
      * Advances the player's currently selected special ability to the next one

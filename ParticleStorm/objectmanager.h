@@ -78,6 +78,9 @@ public:
     //get unused object to modify
     GameObject* getUnused(ObjectType t);
 
+    //get a list of objects within a certain range
+    std::vector<GameObject*>* getObjectsInRange(ObjectType t, double x, double y, double range);
+
     //do collisions
     void doEnemyParticleCollisions();
     void doPlayerEnemyCollisions();
@@ -103,8 +106,7 @@ public:
      * of an enemy, otherwise the closest enemy will be determined to be the
      * enemy itself.
      */
-    Enemy* getClosestEnemy(double x, double y, double minDistance = 1,
-            double maxDistance = 1000);
+    Enemy* getClosestEnemy(double x, double y, double minDistance = 1, double maxDistance = 1000);
 
     //get the object manager instance
     static ObjectManager* getInstance(){return instance;}

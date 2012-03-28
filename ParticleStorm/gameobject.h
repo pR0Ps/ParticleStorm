@@ -43,6 +43,7 @@ public:
     double getLife() const {return life;}
     double getMaxLife() const {return maxLife;}
     float getLifePercent() const {return life/(float)maxLife;}
+    double getRadius(){return radius;}
     double getX() const {return x;}
     double getY() const {return y;}
     double getXVel() const {return x_vel;}
@@ -53,6 +54,7 @@ protected:
     double x, y;
     double x_vel, y_vel;
     double life, maxLife;
+    double radius;
     const QColor *clr; //never need to modify it, just switch pointers
     bool inUse;
 };

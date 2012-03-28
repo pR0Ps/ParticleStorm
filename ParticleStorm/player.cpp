@@ -27,17 +27,26 @@ const double Player::MAX_COLLISION_BUFFER_TIME = 0.8;
 const double Player::COLLISON_INDICATION_TIME = 0.1;
 const double Player::TIME_BETWEEN_CHG_ABILITY = 0.5;
 const int Player::LIGHTNING_RANGE = 350;
-const int Player::LIGHTNING_DPS = 150;
-const int Player::LIGHTNING_MANA_COST = 50;
+const int Player::LIGHTNING_DPS = 250;
+const int Player::LIGHTNING_MANA_COST = 75;
 const int Player::MIN_LIGHTNING_DRAW_DISTANCE = 10;
-const int Player::PARTICLES_SPAWNED_PER_SEC = 100;
+const int Player::SPRAY_PPS = 100;
 const int Player::SPRAY_MANA_COST = 50;
 const double Player::LIGHTNING_HEAL_MODIFIER = 0.5;
 const int Player::SPRAY_PARTICLE_SPEED = 2000;
 const int Player::VORTEX_MANA_COST = 100;
-const int Player::VORTEX_PARTICLES_PER_SEC = 100;
-const int Player::VORTEX_SPAWN_RADIUS = 100;
+const int Player::VORTEX_PPS = 100;
+const int Player::VORTEX_SPAWN_RAD = 100;
 const int Player::VORTEX_SPAWN_VELOCITY = 1350;
+const int Player::SHOCKWAVE_MANA_COST = 100;
+const int Player::SHOCKWAVE_PPS = 100;
+const int Player::SHOCKWAVE_INNER_RAD = 60;
+const int Player::SHOCKWAVE_DPS = 250;
+const int Player::REPULSE_RANGE = 200;
+const int Player::REPULSE_DPS = 100;
+const int Player::REPULSE_FORCE = 500;
+const int Player::REPULSE_MANA_COST = 150;
+const double Player::REPULSE_TIME = 0.3;
 
 // Implementation of constructor and destructor.
 
@@ -46,9 +55,6 @@ const int Player::VORTEX_SPAWN_VELOCITY = 1350;
 // player's mouse movements, so these are not needed
 // inUse also doesn't matter, player is always in use
 Player::Player(): GameObject(){
-    // call parent class constructor
-
-    mana = MAX_MANA;
     maxLife = MAX_LIFE;
 
     reset();
@@ -87,6 +93,7 @@ void Player::reset(){
     //set not immune + hit
     collisionBufferTime = 0;
     hitDisplayTime = 0;
+    repulseDisplayTime = 0;
 
     //set initial score
     score = 0;
@@ -108,6 +115,8 @@ void Player::update(double deltaTime) {
         collisionBufferTime -= deltaTime;
     if(hitDisplayTime > 0)
         hitDisplayTime -= deltaTime;
+    if(repulseDisplayTime > 0)
+        repulseDisplayTime -= deltaTime;
 
     // Update the previous coordinates of the avatar with the current
     // coordinates.
@@ -157,6 +166,12 @@ void Player::drawFaded() const {
             Util::drawLine(x + size * Util::sind(angle + 90 + i), y + size * Util::cosd(angle + 90 + i),
                            x - size * Util::sind(angle + 90 + i), y - size * Util::cosd(angle + 90 + i));
         }
+    }
+
+    //repulsing enemies
+    if (repulseDisplayTime > 0){
+        Util::drawRoundShape(x, y, (1 - repulseDisplayTime/REPULSE_TIME) * REPULSE_RANGE, 20, false,
+                             ResourceManager::getInstance()->getColour(ResourceManager::LIGHTBLUE));
     }
 }
 
@@ -341,22 +356,23 @@ void Player::useAbility(double deltaTime, ObjectManager* manager) {
         sprayAbility(deltaTime, manager);
         break;
     case REPULSE:
+        repulseAbility(deltaTime, manager);
         break;
     case LIGHTNING:
         lightningAbility(deltaTime, manager);
         break;
     case SHOCKWAVE:
+        shockwaveAbility(deltaTime, manager);
         break;
     }
 }
 
-// Would be more efficient to check to see if the player has enough mana first
-// before finding the closest enemy.
 void Player::lightningAbility(double deltaTime, ObjectManager* manager) {
-    Enemy* closestEnemy = manager->getClosestEnemy(x, y, 0, LIGHTNING_RANGE);
-    double manaCost = deltaTime * LIGHTNING_MANA_COST;
 
-    if (closestEnemy != NULL && manaCost <= mana) {
+    const double manaCost = deltaTime * LIGHTNING_MANA_COST;
+    Enemy* closestEnemy = manager->getClosestEnemy(x, y, 0, LIGHTNING_RANGE);
+
+    if (closestEnemy != NULL && mana >= manaCost) {
         // then an enemy is in range of the lightning ability and the player has
         // enough mana left to perform the ability
         double damage = deltaTime * LIGHTNING_DPS;
@@ -399,7 +415,7 @@ void Player::sprayAbility(double deltaTime, ObjectManager *manager) {
         // per update. This may actually cause more particles to spawn per
         // second than is specified by one of the spray ability's constants, but
         // this is a minor issue.
-        int numParticles = ceil(deltaTime * PARTICLES_SPAWNED_PER_SEC);
+        int numParticles = ceil(deltaTime * SPRAY_PPS);
         for (int particleCount = 0; particleCount < numParticles;
              particleCount++) {
             // Randomly choose a degree of direction for the spawned particle.
@@ -428,12 +444,11 @@ void Player::vortexAbility(double deltaTime, ObjectManager* manager) {
         // the particle. This way, when a pulling force is applied to the
         // particles they will swirl around the player, creating the vortex.
         // (Thanks to Adam/Carey for this.)
-        int numParticles = ceil(deltaTime * VORTEX_PARTICLES_PER_SEC);
-        for (int particleCount = 0; particleCount < numParticles;
-             particleCount++) {
+        int numParticles = ceil(deltaTime * VORTEX_PPS);
+        for (int i = 0; i < numParticles; i++) {
                 int degree = Util::randInt(0, 360);
-                double xPos = x + Util::sind(degree) * VORTEX_SPAWN_RADIUS;
-                double yPos = y + Util::cosd(degree) * VORTEX_SPAWN_RADIUS;
+                double xPos = x + Util::sind(degree) * VORTEX_SPAWN_RAD;
+                double yPos = y + Util::cosd(degree) * VORTEX_SPAWN_RAD;
                 double xVel = Util::sind(degree + 90) * VORTEX_SPAWN_VELOCITY;
                 double yVel = Util::cosd(degree + 90) * VORTEX_SPAWN_VELOCITY;
 
@@ -445,6 +460,57 @@ void Player::vortexAbility(double deltaTime, ObjectManager* manager) {
         // the same as the force pull ability except that the force is not also
         // applied to stars.
         manager->applyForce(ObjectManager::PARTICLE, x, y, -Particle::FORCE_EXERT, Particle::FORCE_CUTOFF);
+    }
+}
+
+void Player::shockwaveAbility(double deltaTime, ObjectManager *manager){
+    //check mana
+    const double manaCost = deltaTime * SHOCKWAVE_MANA_COST;
+    if (manaCost <= mana){
+        modMana(-manaCost);
+
+        //particles are mostly for show
+        const int numParticles = ceil(deltaTime * SHOCKWAVE_PPS);
+        for (int i = 0; i < numParticles; i++) {
+                int degree = Util::randInt(0, 360);
+                double xPos = x + Util::sind(degree) * SHOCKWAVE_INNER_RAD;
+                double yPos = y + Util::cosd(degree) * SHOCKWAVE_INNER_RAD;
+                manager->spawnParticle(xPos, yPos, 0, 0);
+        }
+
+        //damage all nearby enemies
+        std::vector<GameObject*> *temp = manager->getObjectsInRange(ObjectManager::ENEMY, x, y, SHOCKWAVE_INNER_RAD);
+        for (unsigned int i = 0 ; i < temp->size() ; i++){
+            temp->at(i)->modLife(-SHOCKWAVE_DPS * deltaTime);
+        }
+        delete temp;
+
+        //pull particles in, but push them out as well. this creates a bunch of oscilating particles
+        manager->applyForce(ObjectManager::PARTICLE, x, y, -Particle::FORCE_EXERT, Particle::FORCE_CUTOFF);
+        manager->applyForce(ObjectManager::PARTICLE, x, y, Particle::FORCE_EXERT * 10, SHOCKWAVE_INNER_RAD + 10);
+    }
+}
+
+//pretty broken, enemies don't really take force being applied to them well
+void Player::repulseAbility(double deltaTime, ObjectManager *manager){
+    //check mana
+    const double manaCost = deltaTime * REPULSE_MANA_COST;
+    if (manaCost <= mana){
+        modMana(-manaCost);
+
+        //damage all nearby enemies
+        std::vector<GameObject*> *temp = manager->getObjectsInRange(ObjectManager::ENEMY, x, y, REPULSE_RANGE);
+        for (unsigned int i = 0 ; i < temp->size() ; i++){
+            temp->at(i)->modLife(-REPULSE_DPS * deltaTime);
+        }
+        delete temp;
+
+        //push them back
+        manager->applyForce(ObjectManager::ENEMY, x, y, REPULSE_FORCE, REPULSE_RANGE);
+
+        //show repulse animation
+        if(repulseDisplayTime <= 0)
+            repulseDisplayTime = REPULSE_TIME;
     }
 }
 

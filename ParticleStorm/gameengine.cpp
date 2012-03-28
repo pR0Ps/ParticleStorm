@@ -36,7 +36,7 @@ GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
     keyMap.insert(Qt::Key_S, PUSH);
     keyMap.insert(Qt::Key_D, PULL);
     keyMap.insert(Qt::Key_Space, ABILITY);
-    keyMap.insert(Qt::Key_Control, CHGABILITY);
+    keyMap.insert(Qt::Key_Shift, CHGABILITY);
     keyMap.insert(Qt::Key_Escape, EXIT);
 
     //initially paused

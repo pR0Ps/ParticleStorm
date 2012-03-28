@@ -225,13 +225,13 @@ void ObjectManager::extendPool(ObjectType t, unsigned int extra){
 
     if (t == ENEMY){
         enemies->reserve(enemies->size() + extra);
-        for (int i = 0 ; i < extra ; i++){
+        for (unsigned int i = 0 ; i < extra ; i++){
             enemies->push_back(new Enemy());
         }
     }
     else if (t == POWERUP){
         powerups->reserve(powerups->size() + extra);
-        for (int i = 0 ; i < extra ; i++){
+        for (unsigned int i = 0 ; i < extra ; i++){
             powerups->push_back(new Powerup());
         }
     }
@@ -296,6 +296,19 @@ GameObject* ObjectManager::getUnused(ObjectType t){
         extendPool(t, RESIZE_AMT);
         return getVector(t).at(temp.size());
     }
+}
+
+//return a vector of all things with a range
+std::vector<GameObject*>* ObjectManager::getObjectsInRange(ObjectType t, double x, double y, double range){
+    std::vector<GameObject*> *ret = new std::vector<GameObject*>;
+    std::vector<GameObject*> temp = getVector(t);
+    for (unsigned int i = 0 ; i < temp.size() ; i++){
+        GameObject *obj = temp.at(i);
+        if (obj->getInUse() && Util::distance(x, y, obj->getX(), obj->getY()) - obj->getRadius() < range){
+            ret->push_back(obj);
+        }
+    }
+    return ret;
 }
 
 //collisions

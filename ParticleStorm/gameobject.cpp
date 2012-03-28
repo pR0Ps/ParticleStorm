@@ -7,6 +7,7 @@
 GameObject::GameObject(){
     inUse = false;
     x = y = x_vel = y_vel = life = maxLife = 0;
+    radius = 0;
     clr = NULL;
 }
 

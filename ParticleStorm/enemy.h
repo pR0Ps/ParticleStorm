@@ -10,6 +10,7 @@ public:
 
     //redeclare in cpp file
     static const int MAX_DAMAGE = 10;
+    static const int FORCE_DISSIPATION = 10;
     static const double MAX_COLLISION_BUFFER_TIME = 1.0;
     static const int MAX_ROTATION_SPD = 360;
     static const int MIN_ROTATION_SPD = 45;
@@ -32,13 +33,12 @@ public:
     void startEnemy(int t, double x, double y, double x_tar, double y_tar);
 
     //apply force (do nothing, but still need to override)
-    void applyForce(double x, double y, double mag, double range){}
+    void applyForce(double x, double y, double mag, double range);
 
     void pan(double x, double y);
     void die();
     bool isImmune() const {return collisionBufferTime > 0;}
     int getDamage() const {return damage;}
-    double getRadius() const {return radius;}
     void setImmune() {collisionBufferTime = MAX_COLLISION_BUFFER_TIME;}
 
 private:
@@ -46,7 +46,6 @@ private:
     double damage;
     int type;
     double x_tar, y_tar;
-    double radius;
     double collisionBufferTime;
     Enemy *currentEnemy;
     int points;
