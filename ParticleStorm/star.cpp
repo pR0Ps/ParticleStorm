@@ -55,7 +55,7 @@ void Star::pan(double x, double y){
     this->y += y / dist;
 }
 
-void Star::applyForce(double x, double y, double mag, double range){
+void Star::applyForce(double x, double y, double mag, double range, double dissipation){
     double dist = Util::distance(this->x,this->y,x,y);
 
     //out of range
@@ -64,8 +64,8 @@ void Star::applyForce(double x, double y, double mag, double range){
     if(dist == 0) {
         dist = 0.0001; //avoiding a div by 0 error in the next step
     }
-    x_vel += (this->x - x) * mag / ((dist * dist) * FORCE_DISSIPATION * this->dist);
-    y_vel += (this->y - y) * mag / ((dist * dist) * FORCE_DISSIPATION * this->dist);
+    x_vel += (this->x - x) * mag / ((dist * dist) * dissipation * this->dist);
+    y_vel += (this->y - y) * mag / ((dist * dist) * dissipation * this->dist);
 }
 
 void Star::drawNoFade() const{

@@ -165,7 +165,7 @@ void ObjectManager::update(ObjectType t, double deltaTime){
         }
     }
 }
-void ObjectManager::applyForce(const ObjectType t, const double x, const double y, const double mag, const double range){
+void ObjectManager::applyForce(const ObjectType t, const double x, const double y, const double mag, const double range, const double dissipation){
     if (t == PLAYER){
         //cannot apply a force to player
         return;
@@ -174,7 +174,7 @@ void ObjectManager::applyForce(const ObjectType t, const double x, const double 
         std::vector<GameObject*> temp = getVector(t);
         for (unsigned int i = 0 ; i < temp.size() ; i++){
             if (temp.at(i)->getInUse()){
-                temp.at(i)->applyForce(x, y, mag, range);
+                temp.at(i)->applyForce(x, y, mag, range, dissipation);
             }
         }
     }

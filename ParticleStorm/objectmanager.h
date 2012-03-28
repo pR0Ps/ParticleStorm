@@ -64,7 +64,7 @@ public:
     void drawFaded(ObjectType t);
     void pan(ObjectType t, double x, double y);
     void update(ObjectType t, double deltaTime);
-    void applyForce(ObjectType t, double x, double y, double mag, double range);
+    void applyForce(ObjectType t, double x, double y, double mag, double range, double dissipation);
 
     //get number of objects
     unsigned int getNumObjects(ObjectType t);

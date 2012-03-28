@@ -144,8 +144,8 @@ void Enemy::update(double deltaTime){
             y += y_vel * speed * deltaTime;
 
             //apply the force
-            ObjectManager::getInstance()->applyForce(ObjectManager::PARTICLE, x, y, 10000, 200);
-            ObjectManager::getInstance()->applyForce(ObjectManager::STAR, x, y, 1000, 200);
+            ObjectManager::getInstance()->applyForce(ObjectManager::PARTICLE, x, y, 10000, 200, Particle::FORCE_DISSIPATION);
+            ObjectManager::getInstance()->applyForce(ObjectManager::STAR, x, y, 1000, 200, Star::FORCE_DISSIPATION);
         }
         else if (type == ObjectManager::SPRINTER){
             if(currTimer == maxTimer && !timerActive && !moving){
@@ -308,7 +308,7 @@ void Enemy::drawFaded() const{
     }
 }
 
-void Enemy::applyForce(double x, double y, double mag, double range){
+void Enemy::applyForce(double x, double y, double mag, double range, double dissipation){
     double dist = Util::distance(this->x, this->y, x, y);
 
     //out of range
@@ -317,8 +317,8 @@ void Enemy::applyForce(double x, double y, double mag, double range){
     if(dist == 0) {
         dist = 0.0001; //avoiding a div by 0 error in the next step
     }
-    x_vel += (this->x - x) * mag / ((dist * dist) * FORCE_DISSIPATION);
-    y_vel += (this->y - y) * mag / ((dist * dist) * FORCE_DISSIPATION);
+    x_vel += (this->x - x) * mag / ((dist * dist) * dissipation);
+    y_vel += (this->y - y) * mag / ((dist * dist) * dissipation);
 }
 
 //pan the enemy (and their target)

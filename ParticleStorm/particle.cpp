@@ -45,7 +45,7 @@ void Particle::drawFaded() const{
     Util::drawLine(x, y, x_old, y_old, clr);
 }
 
-void Particle::applyForce(double x, double y, double mag, double range){
+void Particle::applyForce(double x, double y, double mag, double range, double dissipation){
     double dist = Util::distance(this->x,this->y,x,y);
 
     //out of range
@@ -56,8 +56,8 @@ void Particle::applyForce(double x, double y, double mag, double range){
         dist = 0.0001; //avoiding a div by 0 error in the next step
     }
 
-    x_vel += (this->x - x) * mag / ((dist * dist) * FORCE_DISSIPATION);
-    y_vel += (this->y - y) * mag / ((dist * dist) * FORCE_DISSIPATION);
+    x_vel += (this->x - x) * mag / ((dist * dist) * dissipation);
+    y_vel += (this->y - y) * mag / ((dist * dist) * dissipation);
 
     if(Util::magnitude(x_vel,y_vel) > MAX_PARTICLE_SPEED) {
         double angle = Util::atand(y_vel,x_vel);
