@@ -74,7 +74,7 @@ void ObjectManager::reset(){
     deactivateAll(SHRAPNEL);
 
     //reset stars
-    for (int i = 0 ; i < stars->size() ; i++) static_cast<Star*>(stars->at(i))->initStar();
+    for (unsigned int i = 0 ; i < stars->size() ; i++) static_cast<Star*>(stars->at(i))->initStar();
 }
 
 //returns the correct vector to operate on based on object type
@@ -407,10 +407,10 @@ bool ObjectManager::playerCollision(double px1, double py1, double px2, double p
             closestY = py1 + (dotprod/mag)*(py2-py1);
         }
         //qDebug() << "New:" << px1 << py1 << "Old:" << px2 << py2 << "Slp:" << (px2-px1)/(py2-py1) << "Clse(x y):" << closestX << closestY;
-        return Util::magnitude(ex-closestX,ey-closestY) < radius;
+        return Util::magnitude(ex-closestX,ey-closestY) < (radius+player->getRadius());
     }
     else
-        return Util::magnitude(ex-px1,ey-py2) < radius;
+        return Util::magnitude(ex-px1,ey-py2) < (radius+player->getRadius());
 }
 
 //spawning
