@@ -74,6 +74,7 @@ void MainWindow::pauseGame(){
     resumeButton->enabled = true;
     engine->setVisible(false);
     instance->setVisible(true);
+    ResourceManager::getInstance()->playMainMusic(1, true); //pause music
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event){

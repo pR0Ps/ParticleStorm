@@ -166,15 +166,14 @@ const QColor* ResourceManager::getColour(Colours c){
 
 
 double musictime = ResourceManager::MAIN_LOOP_TIME;
-void ResourceManager::playMainMusic(double deltaTime, bool turnOff, bool pause){
-    if(pause==false){
-    musictime = musictime+deltaTime;
+void ResourceManager::playMainMusic(double deltaTime, bool turnOff){
+   musictime +=deltaTime;
 
     if (musictime > MAIN_LOOP_TIME && turnOff ==false ){
    QSound primarySong("../ParticleStorm/Resources/secondarysong.wav");
         //QSound primarySong(ResourceManager::getInstance()->getSound(music));//not sure why It is not working
          primarySong.play();
-    musictime =0;
+         musictime =0;
     }
     if (turnOff ==true){
         QSound primarySong("../ParticleStorm/Resources/secondarysong.wav");
@@ -182,12 +181,7 @@ void ResourceManager::playMainMusic(double deltaTime, bool turnOff, bool pause){
         musictime=MAIN_LOOP_TIME;
     }
   }
-    else{
-        QSound primarySong("../ParticleStorm/Resources/secondarysong.wav");
-        musictime = musictime+deltaTime;
-        primarySong.stop();
-    }
-}
+
 
 double musicTime2 =ResourceManager::GAME_LOOP_TIME;
 void ResourceManager::playSecondMusic(double deltaTime, bool turnOff)
