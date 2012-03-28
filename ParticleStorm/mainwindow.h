@@ -8,6 +8,7 @@
 #include <vector>
 #include <QImage>
 #include "gameengine.h"
+#include "soundmanager.h"
 
 class GameEngine;
 
@@ -38,6 +39,7 @@ public:
 
     //get this instance
     static MainWindow* getInstance(){return instance;}
+    SoundManager* getSoundManager(){return soundManager;}
 
     int getGameType(){return gameType;}
     void shakeGameScreen(double time, int amt);
@@ -49,6 +51,7 @@ private:
     static MainWindow *instance;
 
     GameEngine *engine;
+    SoundManager *soundManager;
 
     //star stuff
     struct mStar{
@@ -93,6 +96,7 @@ private:
     Button *zenButton;
     Button *exitButton;
     Button *resumeButton;
+    Button *soundButton;
 
     QPoint currMousePos;
 
@@ -103,6 +107,9 @@ private:
 
     //zen/nonstop/leveled
     int gameType;
+
+    //sound
+    bool muted;
 
     void initStars();
     void launchGame();

@@ -32,6 +32,8 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
 
     gameType = 0;
 
+    muted = false;
+
     //init stars
     initStars();
 
@@ -41,11 +43,15 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
     zenButton = new Button(170, 100, 410, 130);
     exitButton = new Button(6, 6, 126, 36);
     resumeButton = new Button(MAX_X - 186, 6, MAX_X - 6, 36, false);
+    soundButton = new Button (MAX_X - 180, MAX_Y - 15, MAX_X, MAX_Y);
 
     //timing stuff
     timer = new QTime();
     timer->start();
     startTimer(1/(double)GameEngine::MAX_FPS*1000);
+
+    //sounds
+    soundManager = new SoundManager();
 }
 
 MainWindow::~MainWindow(){
@@ -57,7 +63,9 @@ MainWindow::~MainWindow(){
     delete zenButton;
     delete endlessButton;
     delete resumeButton;
+    delete soundButton;
 
+    delete soundManager;
     delete engine;
 }
 
@@ -74,7 +82,6 @@ void MainWindow::pauseGame(){
     resumeButton->enabled = true;
     engine->setVisible(false);
     instance->setVisible(true);
-    ResourceManager::getInstance()->playMainMusic(1, true); //pause music
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event){
@@ -90,6 +97,9 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
     else if (resumeButton->mouseOver(currMousePos)){
         resumeButton->down = true;
     }
+    else if (soundButton->mouseOver(currMousePos)){
+        soundButton->down = true;
+    }
     else if (exitButton->mouseOver(currMousePos)){
         exitButton->down = true;
     }
@@ -98,23 +108,23 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
     if (levelButton->mouseOver(currMousePos) && levelButton->down){
         gameType = LevelManager::LEVELED;
         launchGame();
-         ResourceManager::getInstance()->playSecondMusic(1,true);
     }
     else if(endlessButton->mouseOver(currMousePos) && endlessButton->down){
         gameType = LevelManager::NONSTOP;
         launchGame();
-         ResourceManager::getInstance()->playSecondMusic(1,true);
     }
     else if(zenButton->mouseOver(currMousePos) && zenButton->down){
         gameType = LevelManager::ZEN;
         launchGame();
-        ResourceManager::getInstance()->playSecondMusic(1,true);
     }
     else if (resumeButton->mouseOver(currMousePos) && resumeButton->down){
         instance->setVisible(false);
         engine->setVisible(true);
         engine->resume();
-         ResourceManager::getInstance()->playSecondMusic(1,true);
+    }
+    else if (soundButton->mouseOver(currMousePos) && soundButton->down){
+        muted = !muted;
+        soundManager->playSound(muted ? SoundManager::NONE : SoundManager::TITLE);
     }
     else if (exitButton->mouseOver(currMousePos) && exitButton->down){
         exit(0);
@@ -126,6 +136,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
     zenButton->down = false;
     exitButton->down = false;
     resumeButton->down = false;
+    soundButton->down = false;
 }
 
 void MainWindow::initializeGL(){
@@ -155,7 +166,7 @@ void MainWindow::timerEvent(QTimerEvent *){
 void MainWindow::update(){
     double deltaTime = timer->restart()/(float)1000;
     if(!engine->isVisible()){
-        ResourceManager::getInstance()->playSecondMusic(deltaTime, false);
+        soundManager->update(deltaTime);
     }
     //get mouse position
     currMousePos = mapFromGlobal(QCursor::pos());
@@ -200,6 +211,7 @@ void MainWindow::paintGL(){
     Util::drawString("ENDLESS PLAY", 300, 200, fontTex, true, false, 2, 2, true);
     Util::drawString("ZEN MODE", 300, 100, fontTex, true, false, 2, 2, true);
     Util::drawString("EXIT",6, 6, fontTex, false, false, 2, 2, true);
+    Util::drawString("TOGGLE SOUND", MAX_X - 180, MAX_Y - 15, fontTex);
     if (resumeButton->enabled){
         Util::drawString("RESUME", MAX_X - 186, 6, fontTex, false, false, 2, 2, true);
     }
@@ -235,6 +247,7 @@ void MainWindow::launchGame(){
     instance->setVisible(false);
     engine->setVisible(true);
     engine->start(gameType);
+    soundManager->playSound(muted ? SoundManager::NONE : SoundManager::GAME);
 }
 
 //init the stars

@@ -22,24 +22,10 @@ ResourceManager::ResourceManager()
         ":/Images/Player.png"
     };
 
-    //defined sounds
-    const char* music_sounds[] ={
-       "../ParticleStorm/Resources/secondarysong.wav"
-        "../ParticleStorm/Resources/base-loop.wav"
-        "../ParticleStorm/Resources/zapping.wav"
-    };
-
     //load the textures
     textures = new std::vector<GLuint>;
     for (unsigned int i = 0 ; i < sizeof(tex_files)/sizeof(char*) ; i++){
         textures->push_back(loadTextureFromFile(tex_files[i]));
-    }
-
-    //load the music
-    sound = new std::vector<QSound*>;
-    for (unsigned int i = 0; i<sizeof(music_sounds)/sizeof(char*); i++){
-        //commented the line out because it doesn't do anything and causes a 5 sec pause when starting the game (for me anyway)
-        //sound->push_back(new QSound(music_sounds[i]));
     }
 
     //init colour arrays
@@ -124,10 +110,6 @@ GLuint ResourceManager::getTexture(Texture t){
     return textures->at(t);
 }
 
-const QSound *ResourceManager::getSound(Sound t){
-    return sound->at(t);
-    }
-
 //return the stored colour of the specified gradient
 const QColor* ResourceManager::getColourScale(const float f){
     if (f < 0){
@@ -162,57 +144,4 @@ const QColor* ResourceManager::getColour(Colours c){
         return purple;
     else
         return black;
-}
-
-
-double musictime = ResourceManager::MAIN_LOOP_TIME;
-void ResourceManager::playMainMusic(double deltaTime, bool turnOff){
-   musictime +=deltaTime;
-
-    if (musictime > MAIN_LOOP_TIME && turnOff ==false ){
-   QSound primarySong("../ParticleStorm/Resources/secondarysong.wav");
-        //QSound primarySong(ResourceManager::getInstance()->getSound(music));//not sure why It is not working
-         primarySong.play();
-         musictime =0;
-    }
-    if (turnOff ==true){
-        QSound primarySong("../ParticleStorm/Resources/secondarysong.wav");
-        primarySong.stop();
-        musictime=MAIN_LOOP_TIME;
-    }
-  }
-
-
-double musicTime2 =ResourceManager::GAME_LOOP_TIME;
-void ResourceManager::playSecondMusic(double deltaTime, bool turnOff)
-{
-    musicTime2=musicTime2 +deltaTime;
-    if(musicTime2 > GAME_LOOP_TIME && turnOff ==false){
-        QSound secondarysong("../ParticleStorm/Resources/base-loop.wav");
-        secondarysong.play();
-        musicTime2=0;
-    }
-        if (turnOff ==true){
-            QSound secondarysong("../ParticleStorm/Resources/base-loop.wav");
-                    secondarysong.stop();
-                    musicTime2 = GAME_LOOP_TIME;
-        }
-    }
-
-
-double musicTime3 =4;
-
-void ResourceManager::playZap(double deltaTime, bool turnOff){
-    musicTime3 =musicTime3 +deltaTime;
-    if(turnOff == false){
-        QSound zapping("../ParticleStorm/Resources/zapping.wav");
-        zapping.play();
-        musicTime3 = 0;
-    }
-    if(turnOff ==true){
-        QSound zapping("../ParticleStorm/Resources/zapping.wav");
-        zapping.stop();
-        musicTime3=4;
-    }
-
 }
