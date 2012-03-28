@@ -110,14 +110,6 @@ void Player::reset(){
 // Implementation of pure virtual functions.
 
 void Player::update(double deltaTime) {
-    //decrease collision buffer and hit time
-    if(collisionBufferTime > 0)
-        collisionBufferTime -= deltaTime;
-    if(hitDisplayTime > 0)
-        hitDisplayTime -= deltaTime;
-    if(repulseDisplayTime > 0)
-        repulseDisplayTime -= deltaTime;
-
     // Update the previous coordinates of the avatar with the current
     // coordinates.
     x_old = x;
@@ -139,6 +131,14 @@ void Player::update(double deltaTime) {
 
     // Perform an ability if any have been activated.
     performAbility(deltaTime, o, mw);
+
+    //decrease timers
+    if(collisionBufferTime > 0)
+        collisionBufferTime -= deltaTime;
+    if(hitDisplayTime > 0)
+        hitDisplayTime -= deltaTime;
+    if(repulseDisplayTime > 0)
+        repulseDisplayTime -= deltaTime;
 }
 
 //draw the player - these are called in the GameEngine

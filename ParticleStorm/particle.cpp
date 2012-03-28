@@ -20,6 +20,14 @@ Particle::Particle():GameObject(){
 
 void Particle::update(double deltaTime) {
 
+    //limit speed
+    if(Util::magnitude(x_vel,y_vel) > MAX_PARTICLE_SPEED) {
+        double angle = Util::atand(y_vel,x_vel);
+        x_vel = MAX_PARTICLE_SPEED*Util::cosd(angle);
+        y_vel = MAX_PARTICLE_SPEED*Util::sind(angle);
+    }
+
+    //apply air resistance
     x_vel -= AIR_RESIST * x_vel * deltaTime;
     y_vel -= AIR_RESIST * y_vel * deltaTime;
 
@@ -43,27 +51,6 @@ void Particle::drawFaded() const{
     //'tail' should take into account current speed
     //should be roughly the same location where the particle was last frame
     Util::drawLine(x, y, x_old, y_old, clr);
-}
-
-void Particle::applyForce(double x, double y, double mag, double range, double dissipation){
-    double dist = Util::distance(this->x,this->y,x,y);
-
-    //out of range
-    if (dist > range) return;
-
-    //calculating and updating x and y velocity using a 1/dist magnitude scaling
-    if(dist == 0) {
-        dist = 0.0001; //avoiding a div by 0 error in the next step
-    }
-
-    x_vel += (this->x - x) * mag / ((dist * dist) * dissipation);
-    y_vel += (this->y - y) * mag / ((dist * dist) * dissipation);
-
-    if(Util::magnitude(x_vel,y_vel) > MAX_PARTICLE_SPEED) {
-        double angle = Util::atand(y_vel,x_vel);
-        x_vel = MAX_PARTICLE_SPEED*Util::cosd(angle);
-        y_vel = MAX_PARTICLE_SPEED*Util::sind(angle);
-    }
 }
 
 void Particle::die() {

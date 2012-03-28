@@ -32,9 +32,6 @@ public:
     //y u no enemy type?
     void startEnemy(int t, double x, double y, double x_tar, double y_tar);
 
-    //apply force (do nothing, but still need to override)
-    void applyForce(double x, double y, double mag, double range, double dissipation);
-
     void pan(double x, double y);
     void die();
     bool isImmune() const {return collisionBufferTime > 0;}

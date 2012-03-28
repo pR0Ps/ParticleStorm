@@ -23,6 +23,20 @@ void GameObject::pan(const double x, const double y){
     this->y += y;
 }
 
+void GameObject::applyForce(double x, double y, double mag, double range, double dissipation){
+    double dist = Util::distance(this->x, this->y, x, y);
+
+    //out of range
+    if (dist > range) return;
+
+    //avoiding a div by 0 error in the next step
+    if(dist == 0) dist = 1;
+
+    //apply the velocity
+    x_vel += (this->x - x) * mag / ((dist * dist) * dissipation);
+    y_vel += (this->y - y) * mag / ((dist * dist) * dissipation);
+}
+
 void GameObject::die(){
     inUse = false;
 }

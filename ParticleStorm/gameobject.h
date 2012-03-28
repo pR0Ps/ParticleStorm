@@ -24,7 +24,7 @@ public:
     //apply force to the object
     //x, y is the point that the force originated from
     //mag is the magnitude of the force
-    virtual void applyForce(double x, double y, double mag, double range, double dissipation) = 0;
+    virtual void applyForce(double x, double y, double mag, double range, double dissipation);
 
     //kill the object
     virtual void die();

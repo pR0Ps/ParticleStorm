@@ -56,16 +56,8 @@ void Star::pan(double x, double y){
 }
 
 void Star::applyForce(double x, double y, double mag, double range, double dissipation){
-    double dist = Util::distance(this->x,this->y,x,y);
-
-    //out of range
-    if (dist > range) return;
-
-    if(dist == 0) {
-        dist = 0.0001; //avoiding a div by 0 error in the next step
-    }
-    x_vel += (this->x - x) * mag / ((dist * dist) * dissipation * this->dist);
-    y_vel += (this->y - y) * mag / ((dist * dist) * dissipation * this->dist);
+    //apply force using the dist
+    GameObject::applyForce(x, y, mag, range, dissipation * dist);
 }
 
 void Star::drawNoFade() const{
