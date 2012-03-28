@@ -15,22 +15,36 @@ double Util::distance(const double x1, const double y1, const double x2, const d
     return sqrt((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1));
 }
 
-double Util::max(double x, double y) {
+double Util::max(const double x, const double y) {
     if (x >= y)
         return x;
     return y;
 }
 
-double Util::min(double x, double y) {
+double Util::min(const double x, const double y) {
     if (x <= y)
         return x;
     return y;
 }
 
 //returns true if the point is in the rectangle
-bool Util::coordInRect(double px, double py, double rx1, double ry1, double rx2, double ry2){
+bool Util::coordInRect(const double px, const double py, const double rx1, const double ry1, const double rx2, const double ry2){
     return ((px >= rx1 && px <= rx2) || (px <= rx1 && px >= rx2)) && //check x
             ((py >= ry1 && py <= ry2) || (py <= ry1 && py >= ry2));  //check y
+}
+
+//returns a random point on the specified rectangle
+QPoint Util::randCoordOnRect(const double x1, const double y1, const double x2, const double y2){
+    switch(qrand()%4){
+    case 0:
+        return QPoint(x1, randInt(y1, y2));
+    case 1:
+        return QPoint(x2, randInt(y1, y2));
+    case 2:
+        return QPoint(randInt(x1, x2), y1);
+    default:
+        return QPoint(randInt(x1, x2), y2);
+    }
 }
 
 //returns the point of intersection between the lines spaning p1-p2 and p3-p4

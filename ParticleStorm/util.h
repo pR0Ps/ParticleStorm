@@ -45,6 +45,9 @@ public:
     //point in rectangle
     static bool coordInRect(double px1, double py1, double rx1, double ry1, double rx2, double ry2);
 
+    //get a point on a rectangle
+    static QPoint randCoordOnRect(double x1, double y1, double x2, double y3);
+
     //calculate the intersection point between 2 lines (if any)
     static QPointF* lineIntersect(const double x1, const double y1, const double x2, const double y2,
                                  const double x3, const double y3, const double x4, double y4);

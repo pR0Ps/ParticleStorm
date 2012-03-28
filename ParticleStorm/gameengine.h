@@ -87,6 +87,12 @@ private:
     //allow player to get thir bearings before putting them back into the game
     double resumeTimer;
 
+    //screen shaking
+    double shakeX;
+    double shakeY;
+    double shakeFactor;
+    double shakeDissipation;
+
     //game modifiers
     bool paused;
     double gameOverTimer;

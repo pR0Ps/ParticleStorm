@@ -179,6 +179,11 @@ void GameEngine::start(int mode){
         currKeys[i] = false;
     }
 
+    //don't initially shake the screen
+    shakeX = 0;
+    shakeY = 0;
+    shakeFactor = 0;
+
     //tell the framebuffer to clear properly
     initialClear = true;
 
@@ -210,7 +215,9 @@ void GameEngine::resume(){
 
 //shake the screen
 void GameEngine::shakeScreen(double time, int amt){
-    //TODO: shake the screen
+    //not working yet
+    //shakeFactor = amt;
+    //shakeDissipation = amt/time;
 }
 
 //fade the frame
@@ -295,9 +302,19 @@ void GameEngine::update(double deltaTime){
         MainWindow::getInstance()->pauseGame();
     }
 
+    //deal with shaking
+    const int shkAngle = qrand() % 359 + 1;
+    shakeX = (shakeFactor * Util::sind (shkAngle));
+    shakeY = (shakeFactor * Util::cosd (shkAngle));
+    shakeFactor -= (shakeDissipation * deltaTime);
+    if (shakeFactor < 1){
+        shakeFactor = 0;
+        shakeX = shakeY = 0;
+    }
+
     //pan everything
-    panX = (MAX_X / (double)2.0 - objectManager->getPlayer()->getX()) * PAN_SPEED * deltaTime;
-    panY = (MAX_Y / (double)2.0 - objectManager->getPlayer()->getY()) * PAN_SPEED * deltaTime;
+    panX = (MAX_X / (double)2.0 - objectManager->getPlayer()->getX()) * PAN_SPEED * deltaTime + shakeX;
+    panY = (MAX_Y / (double)2.0 - objectManager->getPlayer()->getY()) * PAN_SPEED * deltaTime + shakeY;
     objectManager->pan(ObjectManager::PARTICLE, panX, panY);
     objectManager->pan(ObjectManager::ENEMY, panX, panY);
     objectManager->pan(ObjectManager::STAR, panX, panY);

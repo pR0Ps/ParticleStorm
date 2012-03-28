@@ -196,15 +196,6 @@ void LevelManager::drawNoFade() const{
 
 //spawning enemies offscreen
 QPoint LevelManager::randomOffscreenPos(){
-    switch(qrand()%4){
-    case 0:
-        return QPoint(-ENEMY_SPAWN_DIST, qrand() % (GameEngine::MAX_Y + ENEMY_SPAWN_DIST * 2) - ENEMY_SPAWN_DIST);
-    case 1:
-        return QPoint(GameEngine::MAX_X + ENEMY_SPAWN_DIST, qrand() % (GameEngine::MAX_Y + ENEMY_SPAWN_DIST * 2) - ENEMY_SPAWN_DIST);
-    case 2:
-        return QPoint(qrand() % (GameEngine::MAX_X + ENEMY_SPAWN_DIST * 2) - ENEMY_SPAWN_DIST, -ENEMY_SPAWN_DIST);
-    default:
-        return QPoint(qrand() % (GameEngine::MAX_X + ENEMY_SPAWN_DIST * 2) - ENEMY_SPAWN_DIST, GameEngine::MAX_Y + ENEMY_SPAWN_DIST);
-    }
+    return Util::randCoordOnRect(-ENEMY_SPAWN_DIST, -ENEMY_SPAWN_DIST, GameEngine::MAX_X + ENEMY_SPAWN_DIST, GameEngine::MAX_Y + ENEMY_SPAWN_DIST);
 }
 

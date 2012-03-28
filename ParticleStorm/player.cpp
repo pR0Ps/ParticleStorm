@@ -334,7 +334,7 @@ void Player::setImmune(){
         ResourceManager::getInstance()->getColourScale(1 - getLifePercent() * 1.1));
 
     //screen shake
-    MainWindow::getInstance()->shakeGameScreen(0.5, 50);
+    MainWindow::getInstance()->shakeGameScreen(5, 10);
 }
 
 void Player::forcePush(ObjectManager* manager) const {
