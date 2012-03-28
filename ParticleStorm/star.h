@@ -16,6 +16,8 @@ public:
 
     Star();
 
+    void initStar();
+
     void drawNoFade() const;
     void drawFaded() const{}
     void pan(double x, double y);

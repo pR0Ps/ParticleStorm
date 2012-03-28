@@ -72,7 +72,9 @@ void ObjectManager::reset(){
     deactivateAll(ENEMY);
     deactivateAll(POWERUP);
     deactivateAll(SHRAPNEL);
-    //deactivateAll(STAR);
+
+    //reset stars
+    for (int i = 0 ; i < stars->size() ; i++) static_cast<Star*>(stars->at(i))->initStar();
 }
 
 //returns the correct vector to operate on based on object type

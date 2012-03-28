@@ -10,12 +10,14 @@ const double Star::FORCE_CUTOFF;
 const int Star::MAX_DIST;
 
 Star::Star():GameObject(){
-    //init the star
+    initStar();
+}
+
+void Star::initStar(){
     inUse = true;
     x = x_old = qrand() % GameEngine::MAX_X;
     y = y_old = qrand() % GameEngine::MAX_Y;
     clr = ResourceManager::getInstance()->getColour(ResourceManager::WHITE);
-
     dist = qrand() % 3 == 1 ? 2 : qrand() % 3 == 1 ? MAX_DIST : Util::randInt(2, MAX_DIST);
 }
 
