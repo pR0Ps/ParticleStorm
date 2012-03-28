@@ -33,6 +33,7 @@ public:
         ORANGE,
         LIGHTBLUE,
         LIGHTRED,
+        PURPLE,
         BLACK
     };
     enum Sound{
@@ -80,6 +81,7 @@ private:
     const QColor *orange;
     const QColor *lightBlue;
     const QColor *lightRed;
+    const QColor *purple;
     const QColor *black;
 
     //self-reference

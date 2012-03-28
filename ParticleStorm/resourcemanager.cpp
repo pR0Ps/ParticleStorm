@@ -64,9 +64,10 @@ ResourceManager::ResourceManager()
     green = new QColor(0, 255, 0);
     blue = new QColor(0, 0, 255);
     orange = new QColor (255, 132, 0);
-    lightBlue = new QColor(185, 190, 255);
+    lightBlue = new QColor(0, 191, 255);
     lightRed = new QColor (255, 176, 176);
     black = new QColor(0, 0, 0);
+    purple = new QColor(160, 0, 200);
 
     //set up self reference
     instance = this;
@@ -91,6 +92,7 @@ ResourceManager::~ResourceManager()
     delete red;
     delete green;
     delete blue;
+    delete purple;
     delete black;
 }
 
@@ -156,6 +158,8 @@ const QColor* ResourceManager::getColour(Colours c){
         return lightBlue;
     else if (c == LIGHTRED)
         return lightRed;
+    else if (c == PURPLE)
+        return purple;
     else
         return black;
 }
