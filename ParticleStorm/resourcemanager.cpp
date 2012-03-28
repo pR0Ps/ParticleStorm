@@ -166,7 +166,8 @@ const QColor* ResourceManager::getColour(Colours c){
 
 
 double musictime = ResourceManager::MAIN_LOOP_TIME;
-void ResourceManager::playMainMusic(double deltaTime, bool turnOff){
+void ResourceManager::playMainMusic(double deltaTime, bool turnOff, bool pause){
+    if(pause==false){
     musictime = musictime+deltaTime;
 
     if (musictime > MAIN_LOOP_TIME && turnOff ==false ){
@@ -179,6 +180,12 @@ void ResourceManager::playMainMusic(double deltaTime, bool turnOff){
         QSound primarySong("../ParticleStorm/Resources/secondarysong.wav");
         primarySong.stop();
         musictime=MAIN_LOOP_TIME;
+    }
+  }
+    else{
+        QSound primarySong("../ParticleStorm/Resources/secondarysong.wav");
+        musictime = musictime+deltaTime;
+        primarySong.stop();
     }
 }
 

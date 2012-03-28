@@ -97,19 +97,23 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
     if (levelButton->mouseOver(currMousePos) && levelButton->down){
         gameType = LevelManager::LEVELED;
         launchGame();
+         ResourceManager::getInstance()->playSecondMusic(1,true);
     }
     else if(endlessButton->mouseOver(currMousePos) && endlessButton->down){
         gameType = LevelManager::NONSTOP;
         launchGame();
+         ResourceManager::getInstance()->playSecondMusic(1,true);
     }
     else if(zenButton->mouseOver(currMousePos) && zenButton->down){
         gameType = LevelManager::ZEN;
         launchGame();
+        ResourceManager::getInstance()->playSecondMusic(1,true);
     }
     else if (resumeButton->mouseOver(currMousePos) && resumeButton->down){
         instance->setVisible(false);
         engine->setVisible(true);
         engine->resume();
+         ResourceManager::getInstance()->playSecondMusic(1,true);
     }
     else if (exitButton->mouseOver(currMousePos) && exitButton->down){
         exit(0);

@@ -263,8 +263,8 @@ void GameEngine::drawHUD(){
 //update game logic - automatically called by timer
 void GameEngine::update(double deltaTime){
 
-    //play main music
-    //ResourceManager::getInstance()->playMainMusic(deltaTime, false);
+    //play ingame music
+    ResourceManager::getInstance()->playMainMusic(deltaTime, false, false);
 
     //FPS monitoring
     framecnt++;
@@ -291,6 +291,7 @@ void GameEngine::update(double deltaTime){
     //deal with keyboard input
     if (getKeyPressed(EXIT)){
         paused = true;
+        ResourceManager::getInstance()->playMainMusic(1, true, true); //turn game music off
         MainWindow::getInstance()->pauseGame();
     }
 
@@ -376,6 +377,6 @@ void GameEngine::paintGL(){
         //fade screen (or other game-overy stuff) for GAME_OVER_FRAMES frames
         Util::drawString("Game Over", MAX_X/2, MAX_Y/2, resourceManager->getTexture(ResourceManager::TEXT), true, true, 5, 5);
         //end music
-        ResourceManager::getInstance()->playMainMusic(1, true);
+        ResourceManager::getInstance()->playMainMusic(1, true, false);
     }
 }

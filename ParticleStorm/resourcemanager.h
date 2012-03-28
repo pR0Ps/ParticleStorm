@@ -54,7 +54,7 @@ public:
     //get colours
     const QColor* getColourScale(float f);
     const QColor* getColour (Colours c);
-    void playMainMusic(double deltaTime, bool turnOff);
+    void playMainMusic(double deltaTime, bool turnOff, bool pause);
     void playSecondMusic(double deltaTime, bool turnOff);
     void playZap(double deltaTime,bool turnOff);
 
