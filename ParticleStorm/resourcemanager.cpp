@@ -6,6 +6,8 @@
 ResourceManager* ResourceManager::instance = NULL;
 
 const int ResourceManager::NUM_COLOURS;
+const int ResourceManager::MAIN_LOOP_TIME;
+const int ResourceManager::GAME_LOOP_TIME;
 
 ResourceManager::ResourceManager()
 {
@@ -22,8 +24,8 @@ ResourceManager::ResourceManager()
 
     //defined sounds
     const char* music_sounds[] ={
+       "../ParticleStorm/Resources/secondarysong.wav"
         "../ParticleStorm/Resources/base-loop.wav"
-        "../ParticleStorm/Resources/secondarysong.wav"
         "../ParticleStorm/Resources/zapping.wav"
     };
 
@@ -159,36 +161,36 @@ const QColor* ResourceManager::getColour(Colours c){
 }
 
 
-double musictime = 34;
+double musictime = ResourceManager::MAIN_LOOP_TIME;
 void ResourceManager::playMainMusic(double deltaTime, bool turnOff){
     musictime = musictime+deltaTime;
 
-    if (musictime > 34 && turnOff ==false ){
-   QSound primarySong("../ParticleStorm/Resources/base-loop.wav");
+    if (musictime > MAIN_LOOP_TIME && turnOff ==false ){
+   QSound primarySong("../ParticleStorm/Resources/secondarysong.wav");
         //QSound primarySong(ResourceManager::getInstance()->getSound(music));//not sure why It is not working
          primarySong.play();
     musictime =0;
     }
     if (turnOff ==true){
-        QSound primarySong("../ParticleStorm/Resources/base-loop.wav");
+        QSound primarySong("../ParticleStorm/Resources/secondarysong.wav");
         primarySong.stop();
-        musictime=34;
+        musictime=MAIN_LOOP_TIME;
     }
 }
 
-double musicTime2 =55;
+double musicTime2 =ResourceManager::GAME_LOOP_TIME;
 void ResourceManager::playSecondMusic(double deltaTime, bool turnOff)
 {
     musicTime2=musicTime2 +deltaTime;
-    if(musicTime2 > 55 && turnOff ==false){
-        QSound secondarysong("../ParticleStorm/Resources/secondarysong.wav");
+    if(musicTime2 > GAME_LOOP_TIME && turnOff ==false){
+        QSound secondarysong("../ParticleStorm/Resources/base-loop.wav");
         secondarysong.play();
         musicTime2=0;
     }
         if (turnOff ==true){
-            QSound secondarysong("../ParticleStorm/Resources/secondarysong.wav");
+            QSound secondarysong("../ParticleStorm/Resources/base-loop.wav");
                     secondarysong.stop();
-                    musicTime2 = 55;
+                    musicTime2 = GAME_LOOP_TIME;
         }
     }
 
