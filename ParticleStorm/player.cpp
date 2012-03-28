@@ -68,6 +68,9 @@ void Player::reset(){
     // the Wiki).
     life = maxLife;
 
+    //set mana
+    mana = MAX_MANA;
+
     // Actually, may want to intialize this to the coordinates of the mouse,
     // if this information is available when the screen is first drawn.
     // may need to change this later to take the avatar's size into
