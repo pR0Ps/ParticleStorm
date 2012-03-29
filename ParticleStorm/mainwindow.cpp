@@ -36,7 +36,6 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
     gameType = 0;
     muted = false;
     pausedGame = false;
-    highScores = false;
 
     //init stars
     initStars();
@@ -63,6 +62,9 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
     //sounds
     soundManager = new SoundManager();
     soundManager->playSound(SoundManager::TITLE);
+
+    //start with the main menu
+    setMode(MENU);
 }
 
 MainWindow::~MainWindow(){
@@ -92,6 +94,7 @@ void MainWindow::doneGame(const unsigned int score){
     instance->setVisible(true);
     engine->reset();
     addScore("CAM", score);
+    setMode(HIGHSCORES);
 }
 
 void MainWindow::pauseGame(){
@@ -137,15 +140,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
     }
     else if ((highScoresButton->mouseOver(currMousePos) && highScoresButton->down) ||
              (backButton->mouseOver(currMousePos) && backButton->down)){
-        //set all the buttons
-        levelButton->enabled = highScores;
-        endlessButton->enabled = highScores;
-        zenButton->enabled = highScores;
-        resumeButton->enabled = highScores;
-        backButton->enabled = !highScores;
-        exitButton->enabled = highScores;
-
-        highScores = !highScores;
+        setMode(menuMode == HIGHSCORES ? MENU : HIGHSCORES);
     }
     else if (exitButton->mouseOver(currMousePos) && exitButton->down){
         exit(0);
@@ -229,21 +224,29 @@ void MainWindow::paintGL(){
     }
     glEnd();
 
-    if (highScores){
-        //highscores scene
+    //draw the menus
+    if (menuMode == HIGHSCORES){ //highscores scene
+        //top buttons
+        Util::drawString("HIGHSCORES", 0, MAX_Y - 15, fontTex);
+        Util::drawString("TOGGLE SOUND", MAX_X - 180, MAX_Y - 15, fontTex);
+
+        //highscores display
         Util::drawString("HIGHSCORES", MAX_X / 2, MAX_Y - 100, fontTex, true, false, 3, 3);
         for (int i = 0 ; i < std::min((int)highScoreValues->size(), MAX_HIGHSCORES) ; i++){
             Util::drawString(Util::doubleToString(highScoreValues->at(i)->score, 25, 0), 100, MAX_Y - 170 - i * HIGHSCORES_SPACING, fontTex);
             Util::drawString(Util::doubleToString(i+1, 2, 0) + ". " + highScoreValues->at(i)->name, 100, MAX_Y - 170 - i * HIGHSCORES_SPACING, fontTex);
         }
+
+        //back button
         Util::drawString("BACK", 6, 6, fontTex, false, false, 2, 2, true);
         if (backButton->mouseOver(currMousePos)){
             Util::drawTexture(backButton->x2 + CURSOR_OFFSET + 23, backButton->y1 - 5, backButton->x2 + CURSOR_OFFSET, backButton->y2 + 5, cursorTex);
         }
     }
-    else{
-        //regular menu scene
-        //draw the button options
+    else if (menuMode == MENU){ //regular menu scene
+        //draw the button text
+        Util::drawString("HIGHSCORES", 0, MAX_Y - 15, fontTex);
+        Util::drawString("TOGGLE SOUND", MAX_X - 180, MAX_Y - 15, fontTex);
         Util::drawString("LEVEL MODE", 300, 300, fontTex, true, false, 2, 2, true);
         Util::drawString("ENDLESS PLAY", 300, 200, fontTex, true, false, 2, 2, true);
         Util::drawString("ZEN MODE", 300, 100, fontTex, true, false, 2, 2, true);
@@ -275,10 +278,6 @@ void MainWindow::paintGL(){
         //draw the title ew ew hard code. IMG has width 552, height 106
         Util::drawTexture((MAX_X-552)/2, (MAX_Y-50-106), (((MAX_X-552)/2)+552), (MAX_Y-50), titleTex);
     }
-
-    //both highscores and menu
-    Util::drawString("HIGHSCORES", 0, MAX_Y - 15, fontTex);
-    Util::drawString("TOGGLE SOUND", MAX_X - 180, MAX_Y - 15, fontTex);
 }
 
 //launch the game
@@ -331,7 +330,6 @@ void MainWindow::loadScores(){
     }
     sortScores();
 }
-
 void MainWindow::sortScores(){
     std::sort(highScoreValues->begin(), highScoreValues->end(), compareHS);
     while(highScoreValues->size() > MAX_HIGHSCORES) highScoreValues->pop_back();
@@ -339,6 +337,18 @@ void MainWindow::sortScores(){
 void MainWindow::addScore(std::string name, int score){
     highScoreValues->push_back(new HighScoreEntry(name, score));
     sortScores();
+}
+void MainWindow::setMode(Mode m){
+    //set all the buttons
+    levelButton->enabled = m == MENU;
+    endlessButton->enabled =  m == MENU;
+    zenButton->enabled =  m == MENU;
+    resumeButton->enabled =  m == MENU;
+    exitButton->enabled = m == MENU;
+    backButton->enabled = m == HIGHSCORES;
+    highScoresButton->enabled = (m == HIGHSCORES || m == MENU);
+    soundButton->enabled = (m == HIGHSCORES || m == MENU);
+    this->menuMode = m;
 }
 
 //ENGINE STUFF (refactor this?)

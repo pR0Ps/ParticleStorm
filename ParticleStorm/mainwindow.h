@@ -52,6 +52,12 @@ private:
     //self reference
     static MainWindow *instance;
 
+    enum Mode{
+        MENU,
+        HIGHSCORES
+    };
+    Mode menuMode;
+
     GameEngine *engine;
     SoundManager *soundManager;
 
@@ -114,9 +120,9 @@ private:
     };
     static bool compareHS(const HighScoreEntry *h1, const HighScoreEntry *h2){return h1->score > h2->score;}
 
-    bool highScores;
     std::vector<HighScoreEntry*> *highScoreValues;
 
+    void setMode(bool highscores);
     void loadScores();
     void sortScores();
     void addScore(std::string name, int score);
