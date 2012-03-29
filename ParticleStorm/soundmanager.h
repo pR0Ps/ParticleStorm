@@ -10,8 +10,8 @@ public:
     ~SoundManager();
 
     enum Sound{
-        TITLE,
         GAME,
+        TITLE,
         NONE
     };
 
