@@ -54,7 +54,8 @@ private:
 
     enum Mode{
         MENU,
-        HIGHSCORES
+        HIGHSCORES,
+        CREDITS
     };
     Mode menuMode;
 
@@ -105,8 +106,11 @@ private:
     Button *resumeButton;
     Button *soundButton;
     Button *highScoresButton;
+    Button *creditsButton;
     Button *backButton;
     Button *exitButton;
+
+    void displayHover(Button *b, bool l, bool r);
 
     //highscores
     struct HighScoreEntry{
@@ -114,7 +118,6 @@ private:
             this->name = name;
             this->score = score;
         }
-        //bool operator<(HighScoreEntry &h1){return h1.score > score;}
         std::string name;
         int score;
     };

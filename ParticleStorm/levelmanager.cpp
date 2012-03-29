@@ -16,6 +16,13 @@ void LevelManager::startLevel(LevelType t, int lvl) {
     levelDone = false;
     enemiesStarted = false;
 
+    //check if game beaten
+    //TODO: better effects ('you win' graphic) but this gets the job done
+    if (currLvl > 25){
+        MainWindow::getInstance()->doneGame(ObjectManager::getInstance()->getPlayer()->getScore());
+        return;
+    }
+
     //init timers
     text_ttl = TEXT_DISPLAY_TIME;
     enemyCheck_ttl = ENEMY_CHECK_RATE;

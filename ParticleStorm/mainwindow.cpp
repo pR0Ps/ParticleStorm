@@ -48,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
     backButton = new Button(6, 6, 126, 36);
     soundButton = new Button (MAX_X - 180, MAX_Y - 15, MAX_X, MAX_Y);
     highScoresButton = new Button (0, MAX_X - 15, 150, MAX_X);
+    creditsButton = new Button (245, MAX_Y - 15, 350, MAX_Y);
     exitButton = new Button(6, 6, 126, 36);
 
     //highscores
@@ -78,6 +79,7 @@ MainWindow::~MainWindow(){
     delete resumeButton;
     delete backButton;
     delete soundButton;
+    delete creditsButton;
     delete highScoresButton;
     delete exitButton;
 
@@ -111,6 +113,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
     else if (resumeButton->mouseOver(currMousePos)) resumeButton->down = true;
     else if (backButton->mouseOver(currMousePos)) backButton->down = true;
     else if (soundButton->mouseOver(currMousePos)) soundButton->down = true;
+    else if (creditsButton->mouseOver(currMousePos)) creditsButton->down = true;
     else if (highScoresButton->mouseOver(currMousePos)) highScoresButton->down = true;
     else if (exitButton->mouseOver(currMousePos)) exitButton->down = true;
 }
@@ -131,16 +134,20 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
         instance->setVisible(false);
         engine->setVisible(true);
         engine->resume();
-        soundManager = new SoundManager();
         soundManager->playSound(muted ? SoundManager::NONE : SoundManager::GAME);
     }
     else if (soundButton->mouseOver(currMousePos) && soundButton->down){
         muted = !muted;
         soundManager->playSound(muted ? SoundManager::NONE : SoundManager::TITLE);
     }
-    else if ((highScoresButton->mouseOver(currMousePos) && highScoresButton->down) ||
-             (backButton->mouseOver(currMousePos) && backButton->down)){
+    else if (creditsButton->mouseOver(currMousePos) && creditsButton->down){
+        setMode(menuMode == CREDITS ? MENU : CREDITS);
+    }
+    else if (highScoresButton->mouseOver(currMousePos) && highScoresButton->down){
         setMode(menuMode == HIGHSCORES ? MENU : HIGHSCORES);
+    }
+    else if (backButton->mouseOver(currMousePos) && backButton->down){
+        setMode(MENU);
     }
     else if (exitButton->mouseOver(currMousePos) && exitButton->down){
         exit(0);
@@ -153,6 +160,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
     resumeButton->down = false;
     soundButton->down = false;
     highScoresButton->down = false;
+    creditsButton->down = false;
     backButton->down = false;
     exitButton->down = false;
 }
@@ -196,19 +204,12 @@ void MainWindow::update(){
     for (int i = 0 ; i < NUM_STARS ; i++){
         stars->at(i)->x += panX/(float)stars->at(i)->dist;
         stars->at(i)->y += panY/(float)stars->at(i)->dist;
+
         //wrap the star around when panned offscreen
-        if (stars->at(i)->x > MAX_X){
-            stars->at(i)->x -= MAX_X;
-        }
-        else if (stars->at(i)->x < 0){
-            stars->at(i)->x = MAX_X - stars->at(i)->x;
-        }
-        if (stars->at(i)->y > MAX_Y){
-            stars->at(i)->y -= MAX_Y;
-        }
-        else if (stars->at(i)->y < 0){
-            stars->at(i)->y = MAX_Y - stars->at(i)->y;
-        }
+        if (stars->at(i)->x > MAX_X)  stars->at(i)->x -= MAX_X;
+        else if (stars->at(i)->x < 0) stars->at(i)->x = MAX_X - stars->at(i)->x;
+        if (stars->at(i)->y > MAX_Y)  stars->at(i)->y -= MAX_Y;
+        else if (stars->at(i)->y < 0) stars->at(i)->y = MAX_Y - stars->at(i)->y;
     }
 }
 
@@ -224,10 +225,13 @@ void MainWindow::paintGL(){
     }
     glEnd();
 
+    //qDebug() << currMousePos;
+
     //draw the menus
     if (menuMode == HIGHSCORES){ //highscores scene
         //top buttons
         Util::drawString("HIGHSCORES", 0, MAX_Y - 15, fontTex);
+        Util::drawString("CREDITS", MAX_X/2, MAX_Y - 15, fontTex, true);
         Util::drawString("TOGGLE SOUND", MAX_X - 180, MAX_Y - 15, fontTex);
 
         //highscores display
@@ -239,44 +243,64 @@ void MainWindow::paintGL(){
 
         //back button
         Util::drawString("BACK", 6, 6, fontTex, false, false, 2, 2, true);
-        if (backButton->mouseOver(currMousePos)){
-            Util::drawTexture(backButton->x2 + CURSOR_OFFSET + 23, backButton->y1 - 5, backButton->x2 + CURSOR_OFFSET, backButton->y2 + 5, cursorTex);
+        displayHover(backButton, false, true);
+    }
+    else if (menuMode == CREDITS){ //show credits
+        //top buttons
+        Util::drawString("HIGHSCORES", 0, MAX_Y - 15, fontTex);
+        Util::drawString("CREDITS", MAX_X/2, MAX_Y - 15, fontTex, true);
+        Util::drawString("TOGGLE SOUND", MAX_X - 180, MAX_Y - 15, fontTex);;
+
+        //I wanted to declare this in the constructor, but apprently it's not possible
+        const char* credits[6] = {
+            "DANIEL BAMBRICK..RECORD KEEPER",
+            "MARK DION............AI MASTER",
+            "JULIA GREIG............MANAGER",
+            "DONALD KESTER...LEVEL DESIGNER",
+            "ANDREW MCMULLEN....CODE MONKEY",
+            "CAREY METCALFE.......ARCHITECT",
+        };
+
+        //draw credits
+        Util::drawString("CREDITS", MAX_X / 2, MAX_Y - 100, fontTex, true, false, 3, 3);
+        for (unsigned int i = 0; i < sizeof(credits)/sizeof(char*); i++){
+            Util::drawString(credits[i], MAX_X/2, MAX_Y - 200 - i * 60, fontTex, true);
         }
+
+        //back button
+        Util::drawString("BACK", 6, 6, fontTex, false, false, 2, 2, true);
+        displayHover(backButton, false, true);
     }
     else if (menuMode == MENU){ //regular menu scene
         //draw the button text
         Util::drawString("HIGHSCORES", 0, MAX_Y - 15, fontTex);
+        Util::drawString("CREDITS", MAX_X/2, MAX_Y - 15, fontTex, true);
         Util::drawString("TOGGLE SOUND", MAX_X - 180, MAX_Y - 15, fontTex);
-        Util::drawString("LEVEL MODE", 300, 300, fontTex, true, false, 2, 2, true);
-        Util::drawString("ENDLESS PLAY", 300, 200, fontTex, true, false, 2, 2, true);
-        Util::drawString("ZEN MODE", 300, 100, fontTex, true, false, 2, 2, true);
-        Util::drawString("EXIT",6, 6, fontTex, false, false, 2, 2, true);
+        Util::drawString("LEVEL MODE", MAX_X/2, 300, fontTex, true, false, 2, 2);
+        Util::drawString("ENDLESS PLAY", MAX_X/2, 200, fontTex, true, false, 2, 2);
+        Util::drawString("ZEN MODE", MAX_X/2, 100, fontTex, true, false, 2, 2);
+        Util::drawString("EXIT",6, 6, fontTex, false, false, 2, 2);
         if (pausedGame){
             Util::drawString("RESUME", MAX_X - 186, 6, fontTex, false, false, 2, 2, true);
         }
 
         //hovering stuff
-        if (levelButton->mouseOver(currMousePos)){
-            Util::drawTexture(levelButton->x1 - CURSOR_OFFSET - 23, levelButton->y1 - 5, levelButton->x1 - CURSOR_OFFSET, levelButton->y2 + 5, cursorTex);
-            Util::drawTexture(levelButton->x2 + CURSOR_OFFSET + 23, levelButton->y1 - 5, levelButton->x2 + CURSOR_OFFSET, levelButton->y2 + 5, cursorTex);
-        }
-        if (endlessButton->mouseOver(currMousePos)){
-            Util::drawTexture(endlessButton->x1 - CURSOR_OFFSET - 23, endlessButton->y1 - 5, endlessButton->x1 - CURSOR_OFFSET, endlessButton->y2 + 5, cursorTex);
-            Util::drawTexture(endlessButton->x2 + CURSOR_OFFSET + 23, endlessButton->y1 - 5, endlessButton->x2 + CURSOR_OFFSET, endlessButton->y2 + 5, cursorTex);
-        }
-        if (zenButton->mouseOver(currMousePos)){
-            Util::drawTexture(zenButton->x1 - CURSOR_OFFSET - 23, zenButton->y1 - 5, zenButton->x1 - CURSOR_OFFSET, zenButton->y2 + 5, cursorTex);
-            Util::drawTexture(zenButton->x2 + CURSOR_OFFSET + 23, zenButton->y1 - 5, zenButton->x2 + CURSOR_OFFSET, zenButton->y2 + 5, cursorTex);
-        }
-        if (pausedGame && resumeButton->mouseOver(currMousePos)){
-            Util::drawTexture(resumeButton->x1 - CURSOR_OFFSET - 23, resumeButton->y1 - 5, resumeButton->x1 - CURSOR_OFFSET, resumeButton->y2 + 5, cursorTex);
-        }
-        if (exitButton->mouseOver(currMousePos)){
-            Util::drawTexture(exitButton->x2 + CURSOR_OFFSET + 23, exitButton->y1 - 5, exitButton->x2 + CURSOR_OFFSET, exitButton->y2 + 5, cursorTex);
-        }
+        displayHover(levelButton, true, true);
+        displayHover(endlessButton, true, true);
+        displayHover(zenButton, true, true);
+        if (pausedGame) displayHover(resumeButton, true, false);
+        displayHover(exitButton, false, true);
 
         //draw the title ew ew hard code. IMG has width 552, height 106
-        Util::drawTexture((MAX_X-552)/2, (MAX_Y-50-106), (((MAX_X-552)/2)+552), (MAX_Y-50), titleTex);
+        Util::drawTexture((MAX_X-552)/2, (MAX_Y-75-106), (((MAX_X-552)/2)+552), (MAX_Y-75), titleTex);
+    }
+}
+
+//displays the hover icon(s)
+void MainWindow::displayHover(Button *b, bool l, bool r){
+    if (b->mouseOver(currMousePos)){
+        if (l) Util::drawTexture(b->x1 - CURSOR_OFFSET - 23, b->y1 - 5, b->x1 - CURSOR_OFFSET, b->y2 + 5, cursorTex);
+        if (r) Util::drawTexture(b->x2 + CURSOR_OFFSET + 23, b->y1 - 5, b->x2 + CURSOR_OFFSET, b->y2 + 5, cursorTex);
     }
 }
 
@@ -345,9 +369,10 @@ void MainWindow::setMode(Mode m){
     zenButton->enabled =  m == MENU;
     resumeButton->enabled =  m == MENU;
     exitButton->enabled = m == MENU;
-    backButton->enabled = m == HIGHSCORES;
-    highScoresButton->enabled = (m == HIGHSCORES || m == MENU);
-    soundButton->enabled = (m == HIGHSCORES || m == MENU);
+    creditsButton->enabled = (m == CREDITS || m == HIGHSCORES || m == MENU);
+    backButton->enabled = (m == HIGHSCORES || m == CREDITS);
+    highScoresButton->enabled = (m == CREDITS || m == HIGHSCORES || m == MENU);
+    soundButton->enabled = (m == CREDITS || m == HIGHSCORES || m == MENU);
     this->menuMode = m;
 }
 
