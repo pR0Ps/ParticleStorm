@@ -27,6 +27,8 @@ public:
     static const int MAX_HIGHSCORES = 10;
     static const int HIGHSCORES_SPACING = 35;
     static const int MAX_HIGHSCORE_LETTERS = 3;
+    static const int HIGHSCORE_ENTRY_SPACING = 20;
+    static const char* HS_FILE;
 
     /*
      * This function returns the position of the mouse relative to the OpenGL
@@ -138,6 +140,7 @@ private:
 
     void setMode(Mode m);
     void loadScores();
+    void saveScores();
     void sortScores();
     void addScore(std::string name, int score);
 

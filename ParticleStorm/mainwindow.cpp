@@ -2,9 +2,8 @@
 #include "gameengine.h"
 #include "util.h"
 #include "algorithm"
-#include <QSound>
-#include <QDir>
-#include <iostream>
+#include "fstream"
+#include "ostream"
 
 const int MainWindow::MAX_X;
 const int MainWindow::MAX_Y;
@@ -16,6 +15,8 @@ const int MainWindow::CURSOR_OFFSET;
 const int MainWindow::MAX_HIGHSCORES;
 const int MainWindow::HIGHSCORES_SPACING;
 const int MainWindow::MAX_HIGHSCORE_LETTERS;
+const int MainWindow::HIGHSCORE_ENTRY_SPACING;
+const char* MainWindow::HS_FILE = "highscores.dat";
 
 MainWindow* MainWindow::instance = NULL;
 
@@ -78,7 +79,7 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
     setMode(MENU);
 }
 
-MainWindow::~MainWindow(){
+MainWindow::~MainWindow(){  
     while(!stars->empty()) delete stars->back(), stars->pop_back();
     delete stars;
     delete starClr;
@@ -113,7 +114,6 @@ void MainWindow::doneGame(const unsigned int score){
     instance->setVisible(true);
     engine->reset();
     currScore = score;
-    //addScore("CAM", score);
     setMode(HSENTRY);
 }
 
@@ -172,6 +172,8 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
         setMode(MENU);
     }
     else if (exitButton->mouseOver(currMousePos) && exitButton->down){
+        //save scores
+        saveScores();
         exit(0);
     }
     else if (upEntry->mouseOver(currMousePos) && upEntry->down){
@@ -296,8 +298,8 @@ void MainWindow::paintGL(){
     else if (menuMode == HSENTRY){
         Util::drawString("ENTER YOUR NAME", MAX_X/2, MAX_Y - 200, fontTex, true);
         //draw letters
-        for (int i = 0 ; i < 3 ; i++){
-            Util::drawChar(nameEnter->at(i), (MAX_X - MAX_HIGHSCORE_LETTERS * Util::FONT_CHAR_DIMENSION_X)/2 + i * 20 , MAX_Y - 350, fontTex);
+        for (int i = 0 ; i < MAX_HIGHSCORE_LETTERS ; i++){
+            Util::drawChar(nameEnter->at(i), (MAX_X - MAX_HIGHSCORE_LETTERS * HIGHSCORE_ENTRY_SPACING)/2 + i * HIGHSCORE_ENTRY_SPACING , MAX_Y - 350, fontTex);
         }
         //draw buttons
         Util::drawChar('+', upEntry->x1, upEntry->y1, fontTex);
@@ -368,26 +370,26 @@ void MainWindow::displayHover(Button *b, bool l, bool r){
 void MainWindow::setCurrLetter(int i){
     currEntry= i;
     //change button positions
-    const int nX1 = (MAX_X - MAX_HIGHSCORE_LETTERS * Util::FONT_CHAR_DIMENSION_X)/2 + (MAX_HIGHSCORE_LETTERS + 1) * 20;
-    const int cX1 = (MAX_X - MAX_HIGHSCORE_LETTERS * Util::FONT_CHAR_DIMENSION_X)/2 + currEntry * 20;
+    const int nX1 = (MAX_X - MAX_HIGHSCORE_LETTERS * HIGHSCORE_ENTRY_SPACING)/2 + (MAX_HIGHSCORE_LETTERS + 1) * HIGHSCORE_ENTRY_SPACING;
+    const int cX1 = (MAX_X - MAX_HIGHSCORE_LETTERS * HIGHSCORE_ENTRY_SPACING)/2 + currEntry * HIGHSCORE_ENTRY_SPACING;
 
     //next button
     nextEntry->x1 = nX1;
-    nextEntry->x2 = nX1 + Util::FONT_CHAR_DIMENSION_X;
+    nextEntry->x2 = nX1 + HIGHSCORE_ENTRY_SPACING;
     nextEntry->y1 = MAX_Y - 350;
-    nextEntry->y2 = MAX_Y - 350 + Util::FONT_CHAR_DIMENSION_Y;
+    nextEntry->y2 = MAX_Y - 350 + HIGHSCORE_ENTRY_SPACING;
 
     //up button
     upEntry->x1 = cX1;
     upEntry->x2 = cX1 + Util::FONT_CHAR_DIMENSION_X;
-    upEntry->y1 = (MAX_Y - 345) + Util::FONT_CHAR_DIMENSION_Y + 3;
-    upEntry->y2 = (MAX_Y - 345) + Util::FONT_CHAR_DIMENSION_Y * 2 + 3;
+    upEntry->y1 = (MAX_Y - 345) + HIGHSCORE_ENTRY_SPACING + 3;
+    upEntry->y2 = (MAX_Y - 345) + HIGHSCORE_ENTRY_SPACING * 2 + 3;
 
     //down button
     downEntry->x1 = cX1;
     downEntry->x2 = cX1 + Util::FONT_CHAR_DIMENSION_X;
-    downEntry->y1 = (MAX_Y - 345) - Util::FONT_CHAR_DIMENSION_Y * 2 - 3;
-    downEntry->y2 = (MAX_Y - 345) - Util::FONT_CHAR_DIMENSION_Y - 3;
+    downEntry->y1 = (MAX_Y - 345) - HIGHSCORE_ENTRY_SPACING * 2 - 3;
+    downEntry->y2 = (MAX_Y - 345) - HIGHSCORE_ENTRY_SPACING - 3;
 }
 
 //launch the game
@@ -434,13 +436,34 @@ GLuint MainWindow::loadTexture(const char* c){
 
 //highscores stuff
 void MainWindow::loadScores(){
-    //temp scores
-    for (int i = 0 ; i < MAX_HIGHSCORES-1 ; i++){
-        highScoreValues->push_back(new HighScoreEntry("AAA", qrand() % 10000));
+    std::ifstream inFile;
+    inFile.open(HS_FILE, std::ifstream::in);
+
+    //no highscores found
+    if (inFile.fail()) return;
+
+    //read in the highscores
+    std::string tempName, tempScore;
+    while (true){
+            inFile >> tempName;
+            inFile >> tempScore;
+            if (inFile.eof()) break;
+            highScoreValues->push_back(new HighScoreEntry(tempName, atoi(tempScore.c_str())));
     }
-    highScoreValues->push_back(new HighScoreEntry("AAA", 100));
     sortScores();
 }
+void MainWindow::saveScores(){
+    //write the scores to a file
+    std::ofstream outFile;
+    outFile.open(HS_FILE, std::ofstream::out | std::ofstream::trunc);
+    for(unsigned int i = 0 ; i < highScoreValues->size() ; i++){
+        outFile << highScoreValues->at(i)->name << "\n";
+        outFile << highScoreValues->at(i)->score << "\n";
+    }
+    outFile.flush();
+    outFile.close();
+}
+
 void MainWindow::sortScores(){
     std::sort(highScoreValues->begin(), highScoreValues->end(), compareHS);
     while(highScoreValues->size() > MAX_HIGHSCORES) highScoreValues->pop_back();
