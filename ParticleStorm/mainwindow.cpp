@@ -83,6 +83,7 @@ void MainWindow::pauseGame(){
     resumeButton->enabled = true;
     engine->setVisible(false);
     instance->setVisible(true);
+    soundManager->playSound(muted ? SoundManager::NONE : SoundManager::TITLE);
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event){
@@ -122,6 +123,8 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
         instance->setVisible(false);
         engine->setVisible(true);
         engine->resume();
+        soundManager = new SoundManager();
+        soundManager->playSound(SoundManager::GAME);
     }
     else if (soundButton->mouseOver(currMousePos) && soundButton->down){
         muted = !muted;
