@@ -26,6 +26,7 @@ public:
     static const int CURSOR_OFFSET = 10;
     static const int MAX_HIGHSCORES = 10;
     static const int HIGHSCORES_SPACING = 35;
+    static const int MAX_HIGHSCORE_LETTERS = 3;
 
     /*
      * This function returns the position of the mouse relative to the OpenGL
@@ -55,6 +56,7 @@ private:
     enum Mode{
         MENU,
         HIGHSCORES,
+        HSENTRY,
         CREDITS
     };
     Mode menuMode;
@@ -109,6 +111,15 @@ private:
     Button *creditsButton;
     Button *backButton;
     Button *exitButton;
+
+    //entry
+    Button *upEntry;
+    Button *downEntry;
+    Button *nextEntry;
+    int currEntry;
+    std::vector<char> *nameEnter;
+    int currScore;
+    void setCurrLetter(int i);
 
     void displayHover(Button *b, bool l, bool r);
 

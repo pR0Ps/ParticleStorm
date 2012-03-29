@@ -78,6 +78,7 @@ public:
     //draw a string to the screen. When using the centering options, don't try to render multi-line strings (use 2 calls instead)
     static void drawString(const std::string &s, double x, double y, const GLuint tex, bool center_x = false, bool center_y = false,
                            float scale_x = 1, float scale_y = 1, bool useAlpha = true);
+    static void drawChar (char c, double x, double y, const GLuint tex);
 
     //draw a texture to the screen. Note that the texture coords are in % of texture dimension, not hard values
     static void drawTexture(double x1, double y1, double x2, double y2,
@@ -89,7 +90,6 @@ public:
 
 private:
     //helper functions
-    static void drawChar (char c, double x, double y, const GLuint tex);
 
     static void drawJaggedLineHelper(double x1, double y1, double x2, double y2,
                                      unsigned int var, unsigned int seg_len);

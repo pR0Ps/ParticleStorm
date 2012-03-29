@@ -15,6 +15,7 @@ const int MainWindow::STAR_PAN_Y;
 const int MainWindow::CURSOR_OFFSET;
 const int MainWindow::MAX_HIGHSCORES;
 const int MainWindow::HIGHSCORES_SPACING;
+const int MainWindow::MAX_HIGHSCORE_LETTERS;
 
 MainWindow* MainWindow::instance = NULL;
 
@@ -50,10 +51,19 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
     highScoresButton = new Button (0, MAX_X - 15, 150, MAX_X);
     creditsButton = new Button (245, MAX_Y - 15, 350, MAX_Y);
     exitButton = new Button(6, 6, 126, 36);
+    //entry (set them later)
+    upEntry = new Button(0, 0, 0, 0);
+    downEntry = new Button(0, 0, 0, 0);
+    nextEntry = new Button(0, 0, 0,0);
 
     //highscores
     highScoreValues = new std::vector<HighScoreEntry*>();
     loadScores();
+    //name entry
+    setCurrLetter(0);
+    nameEnter = new std::vector<char>();
+    for (int i = 0 ; i < MAX_HIGHSCORE_LETTERS ; i++)
+        nameEnter->push_back('A');
 
     //timing stuff
     timer = new QTime();
@@ -82,9 +92,16 @@ MainWindow::~MainWindow(){
     delete creditsButton;
     delete highScoresButton;
     delete exitButton;
+    //entry
+    delete upEntry;
+    delete downEntry;
+    delete nextEntry;
+    delete nameEnter;
 
     while(!highScoreValues->empty()) delete highScoreValues->back(), highScoreValues->pop_back();
     delete highScoreValues;
+
+
 
     delete soundManager;
     delete engine;
@@ -95,8 +112,9 @@ void MainWindow::doneGame(const unsigned int score){
     engine->setVisible(false);
     instance->setVisible(true);
     engine->reset();
-    addScore("CAM", score);
-    setMode(HIGHSCORES);
+    currScore = score;
+    //addScore("CAM", score);
+    setMode(HSENTRY);
 }
 
 void MainWindow::pauseGame(){
@@ -116,6 +134,10 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
     else if (creditsButton->mouseOver(currMousePos)) creditsButton->down = true;
     else if (highScoresButton->mouseOver(currMousePos)) highScoresButton->down = true;
     else if (exitButton->mouseOver(currMousePos)) exitButton->down = true;
+    //entry
+    else if (upEntry->mouseOver(currMousePos)) upEntry->down = true;
+    else if (downEntry->mouseOver(currMousePos)) downEntry->down = true;
+    else if (nextEntry->mouseOver(currMousePos)) nextEntry->down = true;
 }
 void MainWindow::mouseReleaseEvent(QMouseEvent *event){
     if (levelButton->mouseOver(currMousePos) && levelButton->down){
@@ -152,6 +174,28 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
     else if (exitButton->mouseOver(currMousePos) && exitButton->down){
         exit(0);
     }
+    else if (upEntry->mouseOver(currMousePos) && upEntry->down){
+        //increment curr letter
+        nameEnter->at(currEntry)++;
+        if (nameEnter->at(currEntry) > 90) nameEnter->at(currEntry) = 65;
+    }
+    else if (downEntry->mouseOver(currMousePos) && downEntry->down){
+        //decrement curr letter
+        nameEnter->at(currEntry)--;
+        if (nameEnter->at(currEntry) < 65) nameEnter->at(currEntry) = 90;
+    }
+    else if (nextEntry->mouseOver(currMousePos) && nextEntry->down){
+        if (currEntry < MAX_HIGHSCORE_LETTERS - 1)
+            setCurrLetter(currEntry + 1);
+        else{
+            std::string temp= "";
+            for (int i = 0 ; i < MAX_HIGHSCORE_LETTERS ; i++)
+                temp += nameEnter->at(i);
+            addScore(temp, currScore);
+            setCurrLetter(0);
+            setMode(HIGHSCORES);
+        }
+    }
 
     //reset button states
     levelButton->down = false;
@@ -163,6 +207,10 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
     creditsButton->down = false;
     backButton->down = false;
     exitButton->down = false;
+    //entry
+    upEntry->down = false;
+    downEntry->down = false;
+    nextEntry->down = false;
 }
 
 void MainWindow::initializeGL(){
@@ -228,7 +276,7 @@ void MainWindow::paintGL(){
     //qDebug() << currMousePos;
 
     //draw the menus
-    if (menuMode == HIGHSCORES){ //highscores scene
+    if (menuMode == HIGHSCORES){ //highscores sceneMAX_HIGHSCORE_LETTERS
         //top buttons
         Util::drawString("HIGHSCORES", 0, MAX_Y - 15, fontTex);
         Util::drawString("CREDITS", MAX_X/2, MAX_Y - 15, fontTex, true);
@@ -245,11 +293,22 @@ void MainWindow::paintGL(){
         Util::drawString("BACK", 6, 6, fontTex, false, false, 2, 2, true);
         displayHover(backButton, false, true);
     }
+    else if (menuMode == HSENTRY){
+        Util::drawString("ENTER YOUR NAME", MAX_X/2, MAX_Y - 200, fontTex, true);
+        //draw letters
+        for (int i = 0 ; i < 3 ; i++){
+            Util::drawChar(nameEnter->at(i), (MAX_X - MAX_HIGHSCORE_LETTERS * Util::FONT_CHAR_DIMENSION_X)/2 + i * 20 , MAX_Y - 350, fontTex);
+        }
+        //draw buttons
+        Util::drawChar('+', upEntry->x1, upEntry->y1, fontTex);
+        Util::drawChar('-', downEntry->x1, downEntry->y1, fontTex);
+        Util::drawChar('>', nextEntry->x1, nextEntry->y1, fontTex);
+    }
     else if (menuMode == CREDITS){ //show credits
         //top buttons
         Util::drawString("HIGHSCORES", 0, MAX_Y - 15, fontTex);
         Util::drawString("CREDITS", MAX_X/2, MAX_Y - 15, fontTex, true);
-        Util::drawString("TOGGLE SOUND", MAX_X - 180, MAX_Y - 15, fontTex);;
+        Util::drawString("TOGGLE SOUND", MAX_X - 180, MAX_Y - 15, fontTex);
 
         //I wanted to declare this in the constructor, but apprently it's not possible
         const char* credits[7] = {
@@ -303,6 +362,32 @@ void MainWindow::displayHover(Button *b, bool l, bool r){
         if (l) Util::drawTexture(b->x1 - CURSOR_OFFSET - 23, b->y1 - 5, b->x1 - CURSOR_OFFSET, b->y2 + 5, cursorTex);
         if (r) Util::drawTexture(b->x2 + CURSOR_OFFSET + 23, b->y1 - 5, b->x2 + CURSOR_OFFSET, b->y2 + 5, cursorTex);
     }
+}
+
+//set the location of the +/-/> buttons
+void MainWindow::setCurrLetter(int i){
+    currEntry= i;
+    //change button positions
+    const int nX1 = (MAX_X - MAX_HIGHSCORE_LETTERS * Util::FONT_CHAR_DIMENSION_X)/2 + (MAX_HIGHSCORE_LETTERS + 1) * 20;
+    const int cX1 = (MAX_X - MAX_HIGHSCORE_LETTERS * Util::FONT_CHAR_DIMENSION_X)/2 + currEntry * 20;
+
+    //next button
+    nextEntry->x1 = nX1;
+    nextEntry->x2 = nX1 + Util::FONT_CHAR_DIMENSION_X;
+    nextEntry->y1 = MAX_Y - 350;
+    nextEntry->y2 = MAX_Y - 350 + Util::FONT_CHAR_DIMENSION_Y;
+
+    //up button
+    upEntry->x1 = cX1;
+    upEntry->x2 = cX1 + Util::FONT_CHAR_DIMENSION_X;
+    upEntry->y1 = (MAX_Y - 345) + Util::FONT_CHAR_DIMENSION_Y + 3;
+    upEntry->y2 = (MAX_Y - 345) + Util::FONT_CHAR_DIMENSION_Y * 2 + 3;
+
+    //down button
+    downEntry->x1 = cX1;
+    downEntry->x2 = cX1 + Util::FONT_CHAR_DIMENSION_X;
+    downEntry->y1 = (MAX_Y - 345) - Util::FONT_CHAR_DIMENSION_Y * 2 - 3;
+    downEntry->y2 = (MAX_Y - 345) - Util::FONT_CHAR_DIMENSION_Y - 3;
 }
 
 //launch the game
@@ -375,6 +460,10 @@ void MainWindow::setMode(Mode m){
     backButton->enabled = (m == HIGHSCORES || m == CREDITS);
     highScoresButton->enabled = (m == CREDITS || m == HIGHSCORES || m == MENU);
     soundButton->enabled = (m == CREDITS || m == HIGHSCORES || m == MENU);
+    //entry
+    upEntry->enabled = (m == HSENTRY);
+    downEntry->enabled = (m == HSENTRY);
+    nextEntry->enabled = (m == HSENTRY);
     this->menuMode = m;
 }
 
