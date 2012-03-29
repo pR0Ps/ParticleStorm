@@ -25,13 +25,13 @@ const int Player::MANA_REGEN_RATE = 50;
 
 const double Player::TIME_BETWEEN_CHG_ABILITY = 0.5;
 const int Player::LIGHTNING_RANGE = 350;
-const int Player::LIGHTNING_DPS = 150;
+const int Player::LIGHTNING_DPS = 175;
 const int Player::LIGHTNING_MANA_COST = 75;
 const int Player::MIN_LIGHTNING_DRAW_DISTANCE = 10;
 const int Player::SPRAY_PPS = 100;
 const int Player::SPRAY_MANA_COST = 50;
-const double Player::LIGHTNING_HEAL_MODIFIER = 0.5;
-const int Player::SPRAY_PARTICLE_SPEED = 2000;
+const double Player::LIGHTNING_HEAL_MODIFIER = 0.25;
+const int Player::SPRAY_PARTICLE_SPEED = 5000;
 const int Player::VORTEX_MANA_COST = 100;
 const int Player::VORTEX_PPS = 100;
 const int Player::VORTEX_SPAWN_RAD = 100;

@@ -22,7 +22,7 @@ public:
     static const int MAX_Y = 680;
     static const int MAX_FPS = 60;
     static const int FPS_COUNT_FRAME_INTERVAL = 50;
-    static const int LINES_PER_FADE = 200;
+    static const int LINES_PER_FADE = 175;
     static const int CLEAR_BORDER_AMT = 5;
     static const double GAME_OVER_SECONDS = 5;
     static const float PAN_SPEED = 0.5;
