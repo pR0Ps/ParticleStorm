@@ -122,7 +122,7 @@ private:
 
     std::vector<HighScoreEntry*> *highScoreValues;
 
-    void setMode(bool highscores);
+    void setMode(Mode m);
     void loadScores();
     void sortScores();
     void addScore(std::string name, int score);
