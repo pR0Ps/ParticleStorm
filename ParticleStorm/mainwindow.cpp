@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "gameengine.h"
 #include "util.h"
+#include "algorithm"
 #include <QSound>
 #include <QDir>
 #include <iostream>
@@ -12,6 +13,7 @@ const int MainWindow::NUM_STARS;
 const int MainWindow::STAR_PAN_X;
 const int MainWindow::STAR_PAN_Y;
 const int MainWindow::CURSOR_OFFSET;
+const int MainWindow::MAX_HIGHSCORES;
 
 MainWindow* MainWindow::instance = NULL;
 
@@ -38,14 +40,19 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
     //init stars
     initStars();
 
-    //Buttons relative to texture centers
+    //Menu buttons
     levelButton = new Button(145, 300, 440, 330);
     endlessButton = new Button(110, 200, 470, 230);
     zenButton = new Button(170, 100, 410, 130);
-    exitButton = new Button(6, 6, 126, 36);
     resumeButton = new Button(MAX_X - 186, 6, MAX_X - 6, 36);
+    backButton = new Button(MAX_X - 126, 6, MAX_X - 6, 36);
     soundButton = new Button (MAX_X - 180, MAX_Y - 15, MAX_X, MAX_Y);
     highScoresButton = new Button (0, MAX_X - 15, 150, MAX_X);
+    exitButton = new Button(6, 6, 126, 36);
+
+    //highscores
+    highScoreValues = new std::vector<int>();
+    loadScores();
 
     //timing stuff
     timer = new QTime();
@@ -66,8 +73,10 @@ MainWindow::~MainWindow(){
     delete zenButton;
     delete endlessButton;
     delete resumeButton;
+    delete backButton;
     delete soundButton;
     delete highScoresButton;
+    delete exitButton;
 
     delete soundManager;
     delete engine;
@@ -79,7 +88,7 @@ void MainWindow::doneGame(const unsigned int score){
     instance->setVisible(true);
     engine->reset();
     qDebug() << "Final score was " << score;
-    //highscores(score)
+    addScore(score);
 }
 
 void MainWindow::pauseGame(){
@@ -90,27 +99,14 @@ void MainWindow::pauseGame(){
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event){
-    if (levelButton->mouseOver(currMousePos)){
-        levelButton->down = true;
-    }
-    else if (endlessButton->mouseOver(currMousePos)){
-        endlessButton->down = true;
-    }
-    else if (zenButton->mouseOver(currMousePos)){
-        zenButton->down = true;
-    }
-    else if (resumeButton->mouseOver(currMousePos)){
-        resumeButton->down = true;
-    }
-    else if (soundButton->mouseOver(currMousePos)){
-        soundButton->down = true;
-    }
-    else if (highScoresButton->mouseOver(currMousePos)){
-        highScoresButton->down = true;
-    }
-    else if (exitButton->mouseOver(currMousePos)){
-        exitButton->down = true;
-    }
+    if (levelButton->mouseOver(currMousePos)) levelButton->down = true;
+    else if (endlessButton->mouseOver(currMousePos)) endlessButton->down = true;
+    else if (zenButton->mouseOver(currMousePos)) zenButton->down = true;
+    else if (resumeButton->mouseOver(currMousePos)) resumeButton->down = true;
+    else if (backButton->mouseOver(currMousePos)) backButton->down = true;
+    else if (soundButton->mouseOver(currMousePos)) soundButton->down = true;
+    else if (highScoresButton->mouseOver(currMousePos)) highScoresButton->down = true;
+    else if (exitButton->mouseOver(currMousePos)) exitButton->down = true;
 }
 void MainWindow::mouseReleaseEvent(QMouseEvent *event){
     if (levelButton->mouseOver(currMousePos) && levelButton->down){
@@ -136,14 +132,14 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
         muted = !muted;
         soundManager->playSound(muted ? SoundManager::NONE : SoundManager::TITLE);
     }
-    else if (highScoresButton->mouseOver(currMousePos) && highScoresButton->down){
+    else if ((highScoresButton->mouseOver(currMousePos) && highScoresButton->down) ||
+             (backButton->mouseOver(currMousePos) && backButton->down)){
         //set all the buttons
         levelButton->enabled = highScores;
         endlessButton->enabled = highScores;
         zenButton->enabled = highScores;
-        exitButton->enabled = highScores;
         resumeButton->enabled = highScores;
-        soundButton->enabled = highScores;
+        backButton->enabled = !highScores;
 
         highScores = !highScores;
     }
@@ -155,10 +151,11 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
     levelButton->down = false;
     endlessButton->down = false;
     zenButton->down = false;
-    exitButton->down = false;
     resumeButton->down = false;
     soundButton->down = false;
     highScoresButton->down = false;
+    backButton->down = false;
+    exitButton->down = false;
 }
 
 void MainWindow::initializeGL(){
@@ -228,19 +225,23 @@ void MainWindow::paintGL(){
     }
     glEnd();
 
-    //draw the highscores button
-    Util::drawString("HIGHSCORES", 0, MAX_Y - 15, fontTex);
-
     if (highScores){
-
+        //highscores scene
+        Util::drawString("HIGHSCORES", MAX_X / 2, MAX_Y - 100, fontTex, true, false, 3, 3);
+        for (int i = 0 ; i < std::min((int)highScoreValues->size(), MAX_HIGHSCORES) ; i++){
+            Util::drawString("Player" + Util::doubleToString(highScoreValues->at(i), 20, 0), MAX_X/2, MAX_Y - 170 - i * 25, fontTex, true);
+        }
+        Util::drawString("BACK", MAX_X - 126, 6, fontTex, false, false, 2, 2, true);
+        if (backButton->mouseOver(currMousePos)){
+            Util::drawTexture(backButton->x1 - CURSOR_OFFSET - 23, backButton->y1 - 5, backButton->x1 - CURSOR_OFFSET, backButton->y2 + 5, cursorTex);
+        }
     }
     else{
+        //regular menu scene
         //draw the button options
         Util::drawString("LEVEL MODE", 300, 300, fontTex, true, false, 2, 2, true);
         Util::drawString("ENDLESS PLAY", 300, 200, fontTex, true, false, 2, 2, true);
         Util::drawString("ZEN MODE", 300, 100, fontTex, true, false, 2, 2, true);
-        Util::drawString("EXIT",6, 6, fontTex, false, false, 2, 2, true);
-        Util::drawString("TOGGLE SOUND", MAX_X - 180, MAX_Y - 15, fontTex);
         if (pausedGame){
             Util::drawString("RESUME", MAX_X - 186, 6, fontTex, false, false, 2, 2, true);
         }
@@ -258,15 +259,20 @@ void MainWindow::paintGL(){
             Util::drawTexture(zenButton->x1 - CURSOR_OFFSET - 23, zenButton->y1 - 5, zenButton->x1 - CURSOR_OFFSET, zenButton->y2 + 5, cursorTex);
             Util::drawTexture(zenButton->x2 + CURSOR_OFFSET + 23, zenButton->y1 - 5, zenButton->x2 + CURSOR_OFFSET, zenButton->y2 + 5, cursorTex);
         }
-        if (exitButton->mouseOver(currMousePos)){
-            Util::drawTexture(exitButton->x2 + CURSOR_OFFSET + 23, exitButton->y1 - 5, exitButton->x2 + CURSOR_OFFSET, exitButton->y2 + 5, cursorTex);
-        }
         if (pausedGame && resumeButton->mouseOver(currMousePos)){
             Util::drawTexture(resumeButton->x1 - CURSOR_OFFSET - 23, resumeButton->y1 - 5, resumeButton->x1 - CURSOR_OFFSET, resumeButton->y2 + 5, cursorTex);
         }
 
         //draw the title ew ew hard code. IMG has width 552, height 106
         Util::drawTexture((MAX_X-552)/2, (MAX_Y-50-106), (((MAX_X-552)/2)+552), (MAX_Y-50), titleTex);
+    }
+
+    //both highscores and menu
+    Util::drawString("HIGHSCORES", 0, MAX_Y - 15, fontTex);
+    Util::drawString("TOGGLE SOUND", MAX_X - 180, MAX_Y - 15, fontTex);
+    Util::drawString("EXIT",6, 6, fontTex, false, false, 2, 2, true);
+    if (exitButton->mouseOver(currMousePos)){
+        Util::drawTexture(exitButton->x2 + CURSOR_OFFSET + 23, exitButton->y1 - 5, exitButton->x2 + CURSOR_OFFSET, exitButton->y2 + 5, cursorTex);
     }
 }
 
@@ -310,6 +316,24 @@ GLuint MainWindow::loadTexture(const char* c){
     //restore settings
     glPopAttrib();
     return ret;
+}
+
+//highscores stuff
+void MainWindow::loadScores(){
+    //temp scores
+    for (int i = 0 ; i < MAX_HIGHSCORES ; i++){
+        highScoreValues->push_back(i * 100);
+    }
+    sortScores();
+}
+void MainWindow::sortScores(){
+    std::sort(highScoreValues->begin(), highScoreValues->end());
+    std::reverse(highScoreValues->begin(), highScoreValues->end());
+    while(highScoreValues->size() > MAX_HIGHSCORES) highScoreValues->pop_back();
+}
+void MainWindow::addScore(int score){
+    highScoreValues->push_back(score);
+    sortScores();
 }
 
 //ENGINE STUFF (refactor this?)
