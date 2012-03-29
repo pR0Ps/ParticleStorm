@@ -252,19 +252,20 @@ void MainWindow::paintGL(){
         Util::drawString("TOGGLE SOUND", MAX_X - 180, MAX_Y - 15, fontTex);;
 
         //I wanted to declare this in the constructor, but apprently it's not possible
-        const char* credits[6] = {
+        const char* credits[7] = {
             "DANIEL BAMBRICK..RECORD KEEPER",
             "MARK DION............AI MASTER",
             "JULIA GREIG............MANAGER",
             "DONALD KESTER...LEVEL DESIGNER",
             "ANDREW MCMULLEN....CODE MONKEY",
             "CAREY METCALFE.......ARCHITECT",
+            "LUKE WALKER...ABILITY DESIGNER"
         };
 
         //draw credits
         Util::drawString("CREDITS", MAX_X / 2, MAX_Y - 100, fontTex, true, false, 3, 3);
         for (unsigned int i = 0; i < sizeof(credits)/sizeof(char*); i++){
-            Util::drawString(credits[i], MAX_X/2, MAX_Y - 200 - i * 60, fontTex, true);
+            Util::drawString(credits[i], MAX_X/2, MAX_Y - 175 - i * 55, fontTex, true);
         }
 
         //back button
