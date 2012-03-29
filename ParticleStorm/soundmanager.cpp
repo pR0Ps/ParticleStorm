@@ -20,9 +20,11 @@ SoundManager::SoundManager(){
 
     //load the music
     sounds = new std::vector<QSound*>;
+    #ifndef Q_WS_X11
     for (unsigned int i = 0; i<sizeof(sound_files)/sizeof(char*); i++){
         sounds->push_back(new QSound(sound_files[i]));
     }
+    #endif
 }
 
 SoundManager::~SoundManager(){
@@ -33,6 +35,9 @@ SoundManager::~SoundManager(){
 }
 
 void SoundManager::update(double deltaTime){
+    #ifdef Q_WS_X11
+    return;
+    #endif
     //check if playing anything
     if (currSound == NONE) return;
 
@@ -46,6 +51,9 @@ void SoundManager::update(double deltaTime){
 }
 
 void SoundManager::playSound(Sound s){
+    #ifdef Q_WS_X11
+    return;
+    #endif
     //turning sound off
     if (s == NONE && currSound != NONE){
         sounds->at(currSound)->stop();
