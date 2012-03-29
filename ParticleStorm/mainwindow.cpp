@@ -31,8 +31,9 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
     instance = this;
 
     gameType = 0;
-
     muted = false;
+    pausedGame = false;
+    highScores = false;
 
     //init stars
     initStars();
@@ -42,8 +43,9 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
     endlessButton = new Button(110, 200, 470, 230);
     zenButton = new Button(170, 100, 410, 130);
     exitButton = new Button(6, 6, 126, 36);
-    resumeButton = new Button(MAX_X - 186, 6, MAX_X - 6, 36, false);
+    resumeButton = new Button(MAX_X - 186, 6, MAX_X - 6, 36);
     soundButton = new Button (MAX_X - 180, MAX_Y - 15, MAX_X, MAX_Y);
+    highScoresButton = new Button (0, MAX_X - 15, 150, MAX_X);
 
     //timing stuff
     timer = new QTime();
@@ -65,13 +67,14 @@ MainWindow::~MainWindow(){
     delete endlessButton;
     delete resumeButton;
     delete soundButton;
+    delete highScoresButton;
 
     delete soundManager;
     delete engine;
 }
 
 void MainWindow::doneGame(const unsigned int score){
-    resumeButton->enabled = false;
+    pausedGame = false;
     engine->setVisible(false);
     instance->setVisible(true);
     engine->reset();
@@ -80,7 +83,7 @@ void MainWindow::doneGame(const unsigned int score){
 }
 
 void MainWindow::pauseGame(){
-    resumeButton->enabled = true;
+    pausedGame = true;
     engine->setVisible(false);
     instance->setVisible(true);
     soundManager->playSound(muted ? SoundManager::NONE : SoundManager::TITLE);
@@ -102,6 +105,9 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
     else if (soundButton->mouseOver(currMousePos)){
         soundButton->down = true;
     }
+    else if (highScoresButton->mouseOver(currMousePos)){
+        highScoresButton->down = true;
+    }
     else if (exitButton->mouseOver(currMousePos)){
         exitButton->down = true;
     }
@@ -119,7 +125,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
         gameType = LevelManager::ZEN;
         launchGame();
     }
-    else if (resumeButton->mouseOver(currMousePos) && resumeButton->down){
+    else if (pausedGame && resumeButton->mouseOver(currMousePos) && resumeButton->down){
         instance->setVisible(false);
         engine->setVisible(true);
         engine->resume();
@@ -129,6 +135,17 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
     else if (soundButton->mouseOver(currMousePos) && soundButton->down){
         muted = !muted;
         soundManager->playSound(muted ? SoundManager::NONE : SoundManager::TITLE);
+    }
+    else if (highScoresButton->mouseOver(currMousePos) && highScoresButton->down){
+        //set all the buttons
+        levelButton->enabled = highScores;
+        endlessButton->enabled = highScores;
+        zenButton->enabled = highScores;
+        exitButton->enabled = highScores;
+        resumeButton->enabled = highScores;
+        soundButton->enabled = highScores;
+
+        highScores = !highScores;
     }
     else if (exitButton->mouseOver(currMousePos) && exitButton->down){
         exit(0);
@@ -141,6 +158,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
     exitButton->down = false;
     resumeButton->down = false;
     soundButton->down = false;
+    highScoresButton->down = false;
 }
 
 void MainWindow::initializeGL(){
@@ -210,44 +228,51 @@ void MainWindow::paintGL(){
     }
     glEnd();
 
-    //draw the button options
-    Util::drawString("LEVEL MODE", 300, 300, fontTex, true, false, 2, 2, true);
-    Util::drawString("ENDLESS PLAY", 300, 200, fontTex, true, false, 2, 2, true);
-    Util::drawString("ZEN MODE", 300, 100, fontTex, true, false, 2, 2, true);
-    Util::drawString("EXIT",6, 6, fontTex, false, false, 2, 2, true);
-    Util::drawString("TOGGLE SOUND", MAX_X - 180, MAX_Y - 15, fontTex);
-    if (resumeButton->enabled){
-        Util::drawString("RESUME", MAX_X - 186, 6, fontTex, false, false, 2, 2, true);
-    }
+    //draw the highscores button
+    Util::drawString("HIGHSCORES", 0, MAX_Y - 15, fontTex);
 
-    //hovering stuff
-    if (levelButton->mouseOver(currMousePos)){
-        Util::drawTexture(levelButton->x1 - CURSOR_OFFSET - 23, levelButton->y1 - 5, levelButton->x1 - CURSOR_OFFSET, levelButton->y2 + 5, cursorTex);
-        Util::drawTexture(levelButton->x2 + CURSOR_OFFSET + 23, levelButton->y1 - 5, levelButton->x2 + CURSOR_OFFSET, levelButton->y2 + 5, cursorTex);
-    }
-    if (endlessButton->mouseOver(currMousePos)){
-        Util::drawTexture(endlessButton->x1 - CURSOR_OFFSET - 23, endlessButton->y1 - 5, endlessButton->x1 - CURSOR_OFFSET, endlessButton->y2 + 5, cursorTex);
-        Util::drawTexture(endlessButton->x2 + CURSOR_OFFSET + 23, endlessButton->y1 - 5, endlessButton->x2 + CURSOR_OFFSET, endlessButton->y2 + 5, cursorTex);
-    }
-    if (zenButton->mouseOver(currMousePos)){
-        Util::drawTexture(zenButton->x1 - CURSOR_OFFSET - 23, zenButton->y1 - 5, zenButton->x1 - CURSOR_OFFSET, zenButton->y2 + 5, cursorTex);
-        Util::drawTexture(zenButton->x2 + CURSOR_OFFSET + 23, zenButton->y1 - 5, zenButton->x2 + CURSOR_OFFSET, zenButton->y2 + 5, cursorTex);
-    }
-    if (exitButton->mouseOver(currMousePos)){
-        Util::drawTexture(exitButton->x2 + CURSOR_OFFSET + 23, exitButton->y1 - 5, exitButton->x2 + CURSOR_OFFSET, exitButton->y2 + 5, cursorTex);
-    }
-    if (resumeButton->mouseOver(currMousePos)){
-        Util::drawTexture(resumeButton->x1 - CURSOR_OFFSET - 23, resumeButton->y1 - 5, resumeButton->x1 - CURSOR_OFFSET, resumeButton->y2 + 5, cursorTex);
-    }
+    if (highScores){
 
+    }
+    else{
+        //draw the button options
+        Util::drawString("LEVEL MODE", 300, 300, fontTex, true, false, 2, 2, true);
+        Util::drawString("ENDLESS PLAY", 300, 200, fontTex, true, false, 2, 2, true);
+        Util::drawString("ZEN MODE", 300, 100, fontTex, true, false, 2, 2, true);
+        Util::drawString("EXIT",6, 6, fontTex, false, false, 2, 2, true);
+        Util::drawString("TOGGLE SOUND", MAX_X - 180, MAX_Y - 15, fontTex);
+        if (pausedGame){
+            Util::drawString("RESUME", MAX_X - 186, 6, fontTex, false, false, 2, 2, true);
+        }
 
-    //draw the title ew ew hard code. IMG has width 552, height 106
-    Util::drawTexture((MAX_X-552)/2, (MAX_Y-50-106), (((MAX_X-552)/2)+552), (MAX_Y-50), titleTex);
+        //hovering stuff
+        if (levelButton->mouseOver(currMousePos)){
+            Util::drawTexture(levelButton->x1 - CURSOR_OFFSET - 23, levelButton->y1 - 5, levelButton->x1 - CURSOR_OFFSET, levelButton->y2 + 5, cursorTex);
+            Util::drawTexture(levelButton->x2 + CURSOR_OFFSET + 23, levelButton->y1 - 5, levelButton->x2 + CURSOR_OFFSET, levelButton->y2 + 5, cursorTex);
+        }
+        if (endlessButton->mouseOver(currMousePos)){
+            Util::drawTexture(endlessButton->x1 - CURSOR_OFFSET - 23, endlessButton->y1 - 5, endlessButton->x1 - CURSOR_OFFSET, endlessButton->y2 + 5, cursorTex);
+            Util::drawTexture(endlessButton->x2 + CURSOR_OFFSET + 23, endlessButton->y1 - 5, endlessButton->x2 + CURSOR_OFFSET, endlessButton->y2 + 5, cursorTex);
+        }
+        if (zenButton->mouseOver(currMousePos)){
+            Util::drawTexture(zenButton->x1 - CURSOR_OFFSET - 23, zenButton->y1 - 5, zenButton->x1 - CURSOR_OFFSET, zenButton->y2 + 5, cursorTex);
+            Util::drawTexture(zenButton->x2 + CURSOR_OFFSET + 23, zenButton->y1 - 5, zenButton->x2 + CURSOR_OFFSET, zenButton->y2 + 5, cursorTex);
+        }
+        if (exitButton->mouseOver(currMousePos)){
+            Util::drawTexture(exitButton->x2 + CURSOR_OFFSET + 23, exitButton->y1 - 5, exitButton->x2 + CURSOR_OFFSET, exitButton->y2 + 5, cursorTex);
+        }
+        if (pausedGame && resumeButton->mouseOver(currMousePos)){
+            Util::drawTexture(resumeButton->x1 - CURSOR_OFFSET - 23, resumeButton->y1 - 5, resumeButton->x1 - CURSOR_OFFSET, resumeButton->y2 + 5, cursorTex);
+        }
+
+        //draw the title ew ew hard code. IMG has width 552, height 106
+        Util::drawTexture((MAX_X-552)/2, (MAX_Y-50-106), (((MAX_X-552)/2)+552), (MAX_Y-50), titleTex);
+    }
 }
 
 //launch the game
 void MainWindow::launchGame(){
-    if (resumeButton->enabled) engine->reset();
+    if (pausedGame) engine->reset();
     instance->setVisible(false);
     engine->setVisible(true);
     engine->start(gameType);

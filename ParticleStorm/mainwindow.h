@@ -97,6 +97,7 @@ private:
     Button *exitButton;
     Button *resumeButton;
     Button *soundButton;
+    Button *highScoresButton;
 
     QPoint currMousePos;
 
@@ -108,8 +109,14 @@ private:
     //zen/nonstop/leveled
     int gameType;
 
+    //there is a game that's paused
+    bool pausedGame;
+
     //sound
     bool muted;
+
+    //menu mode
+    bool highScores;
 
     void initStars();
     void launchGame();
