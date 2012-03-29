@@ -124,7 +124,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
         engine->setVisible(true);
         engine->resume();
         soundManager = new SoundManager();
-        soundManager->playSound(SoundManager::GAME);
+        soundManager->playSound(muted ? SoundManager::NONE : SoundManager::GAME);
     }
     else if (soundButton->mouseOver(currMousePos) && soundButton->down){
         muted = !muted;
