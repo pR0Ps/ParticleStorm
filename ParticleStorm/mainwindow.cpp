@@ -14,6 +14,7 @@ const int MainWindow::STAR_PAN_X;
 const int MainWindow::STAR_PAN_Y;
 const int MainWindow::CURSOR_OFFSET;
 const int MainWindow::MAX_HIGHSCORES;
+const int MainWindow::HIGHSCORES_SPACING;
 
 MainWindow* MainWindow::instance = NULL;
 
@@ -45,13 +46,13 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
     endlessButton = new Button(110, 200, 470, 230);
     zenButton = new Button(170, 100, 410, 130);
     resumeButton = new Button(MAX_X - 186, 6, MAX_X - 6, 36);
-    backButton = new Button(MAX_X - 126, 6, MAX_X - 6, 36);
+    backButton = new Button(6, 6, 126, 36);
     soundButton = new Button (MAX_X - 180, MAX_Y - 15, MAX_X, MAX_Y);
     highScoresButton = new Button (0, MAX_X - 15, 150, MAX_X);
     exitButton = new Button(6, 6, 126, 36);
 
     //highscores
-    highScoreValues = new std::vector<int>();
+    highScoreValues = new std::vector<HighScoreEntry*>();
     loadScores();
 
     //timing stuff
@@ -78,6 +79,9 @@ MainWindow::~MainWindow(){
     delete highScoresButton;
     delete exitButton;
 
+    while(!highScoreValues->empty()) delete highScoreValues->back(), highScoreValues->pop_back();
+    delete highScoreValues;
+
     delete soundManager;
     delete engine;
 }
@@ -87,8 +91,7 @@ void MainWindow::doneGame(const unsigned int score){
     engine->setVisible(false);
     instance->setVisible(true);
     engine->reset();
-    qDebug() << "Final score was " << score;
-    addScore(score);
+    addScore("CAM", score);
 }
 
 void MainWindow::pauseGame(){
@@ -140,6 +143,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
         zenButton->enabled = highScores;
         resumeButton->enabled = highScores;
         backButton->enabled = !highScores;
+        exitButton->enabled = highScores;
 
         highScores = !highScores;
     }
@@ -229,11 +233,12 @@ void MainWindow::paintGL(){
         //highscores scene
         Util::drawString("HIGHSCORES", MAX_X / 2, MAX_Y - 100, fontTex, true, false, 3, 3);
         for (int i = 0 ; i < std::min((int)highScoreValues->size(), MAX_HIGHSCORES) ; i++){
-            Util::drawString("Player" + Util::doubleToString(highScoreValues->at(i), 20, 0), MAX_X/2, MAX_Y - 170 - i * 25, fontTex, true);
+            Util::drawString(Util::doubleToString(highScoreValues->at(i)->score, 25, 0), 100, MAX_Y - 170 - i * HIGHSCORES_SPACING, fontTex);
+            Util::drawString(Util::doubleToString(i+1, 2, 0) + ". " + highScoreValues->at(i)->name, 100, MAX_Y - 170 - i * HIGHSCORES_SPACING, fontTex);
         }
-        Util::drawString("BACK", MAX_X - 126, 6, fontTex, false, false, 2, 2, true);
+        Util::drawString("BACK", 6, 6, fontTex, false, false, 2, 2, true);
         if (backButton->mouseOver(currMousePos)){
-            Util::drawTexture(backButton->x1 - CURSOR_OFFSET - 23, backButton->y1 - 5, backButton->x1 - CURSOR_OFFSET, backButton->y2 + 5, cursorTex);
+            Util::drawTexture(backButton->x2 + CURSOR_OFFSET + 23, backButton->y1 - 5, backButton->x2 + CURSOR_OFFSET, backButton->y2 + 5, cursorTex);
         }
     }
     else{
@@ -242,6 +247,7 @@ void MainWindow::paintGL(){
         Util::drawString("LEVEL MODE", 300, 300, fontTex, true, false, 2, 2, true);
         Util::drawString("ENDLESS PLAY", 300, 200, fontTex, true, false, 2, 2, true);
         Util::drawString("ZEN MODE", 300, 100, fontTex, true, false, 2, 2, true);
+        Util::drawString("EXIT",6, 6, fontTex, false, false, 2, 2, true);
         if (pausedGame){
             Util::drawString("RESUME", MAX_X - 186, 6, fontTex, false, false, 2, 2, true);
         }
@@ -262,6 +268,9 @@ void MainWindow::paintGL(){
         if (pausedGame && resumeButton->mouseOver(currMousePos)){
             Util::drawTexture(resumeButton->x1 - CURSOR_OFFSET - 23, resumeButton->y1 - 5, resumeButton->x1 - CURSOR_OFFSET, resumeButton->y2 + 5, cursorTex);
         }
+        if (exitButton->mouseOver(currMousePos)){
+            Util::drawTexture(exitButton->x2 + CURSOR_OFFSET + 23, exitButton->y1 - 5, exitButton->x2 + CURSOR_OFFSET, exitButton->y2 + 5, cursorTex);
+        }
 
         //draw the title ew ew hard code. IMG has width 552, height 106
         Util::drawTexture((MAX_X-552)/2, (MAX_Y-50-106), (((MAX_X-552)/2)+552), (MAX_Y-50), titleTex);
@@ -270,10 +279,6 @@ void MainWindow::paintGL(){
     //both highscores and menu
     Util::drawString("HIGHSCORES", 0, MAX_Y - 15, fontTex);
     Util::drawString("TOGGLE SOUND", MAX_X - 180, MAX_Y - 15, fontTex);
-    Util::drawString("EXIT",6, 6, fontTex, false, false, 2, 2, true);
-    if (exitButton->mouseOver(currMousePos)){
-        Util::drawTexture(exitButton->x2 + CURSOR_OFFSET + 23, exitButton->y1 - 5, exitButton->x2 + CURSOR_OFFSET, exitButton->y2 + 5, cursorTex);
-    }
 }
 
 //launch the game
@@ -322,17 +327,17 @@ GLuint MainWindow::loadTexture(const char* c){
 void MainWindow::loadScores(){
     //temp scores
     for (int i = 0 ; i < MAX_HIGHSCORES ; i++){
-        highScoreValues->push_back(i * 100);
+        highScoreValues->push_back(new HighScoreEntry("AAA", qrand() % 10000));
     }
     sortScores();
 }
+
 void MainWindow::sortScores(){
-    std::sort(highScoreValues->begin(), highScoreValues->end());
-    std::reverse(highScoreValues->begin(), highScoreValues->end());
+    std::sort(highScoreValues->begin(), highScoreValues->end(), compareHS);
     while(highScoreValues->size() > MAX_HIGHSCORES) highScoreValues->pop_back();
 }
-void MainWindow::addScore(int score){
-    highScoreValues->push_back(score);
+void MainWindow::addScore(std::string name, int score){
+    highScoreValues->push_back(new HighScoreEntry(name, score));
     sortScores();
 }
 

@@ -24,7 +24,8 @@ public:
     static const int STAR_PAN_X = 500;
     static const int STAR_PAN_Y = 0;
     static const int CURSOR_OFFSET = 10;
-    static const int MAX_HIGHSCORES = 15;
+    static const int MAX_HIGHSCORES = 10;
+    static const int HIGHSCORES_SPACING = 35;
 
     /*
      * This function returns the position of the mouse relative to the OpenGL
@@ -102,12 +103,23 @@ private:
     Button *exitButton;
 
     //highscores
+    struct HighScoreEntry{
+        HighScoreEntry(std::string name, int score){
+            this->name = name;
+            this->score = score;
+        }
+        //bool operator<(HighScoreEntry &h1){return h1.score > score;}
+        std::string name;
+        int score;
+    };
+    static bool compareHS(const HighScoreEntry *h1, const HighScoreEntry *h2){return h1->score > h2->score;}
+
     bool highScores;
-    std::vector<int> *highScoreValues;
+    std::vector<HighScoreEntry*> *highScoreValues;
 
     void loadScores();
     void sortScores();
-    void addScore(int score);
+    void addScore(std::string name, int score);
 
     QPoint currMousePos;
 
