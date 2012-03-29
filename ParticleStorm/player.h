@@ -2,26 +2,7 @@
  * Header file for the Player class.
  *
  * Last modified by: Luke
- * Last modified on: March 25, 2012
- *
- * Notes:
- * - will add more documentation as I implement functions
- *
- * Todo:
- * - implement draw and update to get a basic prototype up and running
- * - update should be fairly simple, at least until abilities are involved. Just
- * need to update the player's x and y coordinates with the location of the
- * mouse.
- * - draw should also be fairly simple initially. Draw a simple circle to
- * represent the player's avatar (will need some OpenGL for this).
- * - applyForce and doCollision will be more complicated... although the
- * majority of collision detection will be performed in a more abstract class
- *
- * Questions:
- * - how should abilities be represented? Could just use a set of enum constants
- * to identify them and have the Player class handle the rest, but this may be
- * inadequate. A better approach may be to add an inner class within Player to
- * represent them.
+ * Last modified on: March 29, 2012
  */
 
 #ifndef PLAYER_H
@@ -67,12 +48,12 @@ public:
 
     // Enumeration for the player's special abilities.
     enum ability {
-        VORTEX,
         SPRAY,
+        VORTEX,
         REPULSE,
+        SHOCKWAVE,
         LIGHTNING,
-        STORM,
-        SHOCKWAVE
+        STORM
     };
 
     // The amount of time that must pass before the player's special ability can

@@ -2,18 +2,13 @@
  * Implementation file for the Player class.
  *
  * Last modified by: Luke
- * Last modified on: March 25, 2012
- *
- * To do:
- * - make the player invulnerable when it takes damage
- * - spawn shrapnel when the player takes damage
+ * Last modified on: March 29, 2012
  */
 
 #include "player.h"
 #include "gameengine.h"
 #include "mainwindow.h"
 #include "resourcemanager.h"
-
 
 // Initialization of constants. Some of these can be modified to alter the
 // difficulty of the gameplay.
@@ -107,7 +102,7 @@ void Player::reset(){
 
     //set initial score
     score = 0;
-    currentAbility = VORTEX;
+    currentAbility = SPRAY;
 
     // Initialize variables for keeping track of when change ability was last
     // used.
@@ -261,18 +256,18 @@ void Player::modMana(double amount, bool rel) {
 
 std::string Player::getAbilityString() const {
     switch (currentAbility) {
-    case VORTEX:
-        return "VORTEX";
     case SPRAY:
         return "SPRAY";
+    case VORTEX:
+        return "VORTEX";
     case REPULSE:
         return "REPULSE";
+    case SHOCKWAVE:
+        return "SHOCKWAVE";
     case LIGHTNING:
         return "LIGHTNING";
     case STORM:
         return "STORM";
-    case SHOCKWAVE:
-        return "SHOCKWAVE";
     }
 
     return "NONE"; // dummy return statement to remove compilation warning
@@ -387,23 +382,23 @@ void Player::forcePull(ObjectManager* manager) const {
 
 void Player::useAbility(double deltaTime, ObjectManager* manager) {
     switch (currentAbility) {
-    case VORTEX:
-        vortexAbility(deltaTime, manager);
-        break;
     case SPRAY:
         sprayAbility(deltaTime, manager);
         break;
+    case VORTEX:
+        vortexAbility(deltaTime, manager);
+        break;
     case REPULSE:
         repulseAbility(deltaTime, manager);
+        break;
+    case SHOCKWAVE:
+        shockwaveAbility(deltaTime, manager);
         break;
     case LIGHTNING:
         lightningAbility(deltaTime, manager);
         break;
     case STORM:
         stormAbility(deltaTime, manager);
-        break;
-    case SHOCKWAVE:
-        shockwaveAbility(deltaTime, manager);
         break;
     }
 }
@@ -652,9 +647,9 @@ void Player::changeAbility(double deltaTime) {
     // ahead and change it.
     if (!chgAbilityActivatedOnLastUpdate ||
             timeSinceLastChgAbility > TIME_BETWEEN_CHG_ABILITY) {
-        if (currentAbility == SHOCKWAVE)
-            // then wraparound back to vortex
-            currentAbility = VORTEX;
+        if (currentAbility == STORM)
+            // then wrap around back to spray
+            currentAbility = SPRAY;
         else
             currentAbility++;
 
