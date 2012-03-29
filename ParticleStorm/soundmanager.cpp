@@ -6,13 +6,13 @@ SoundManager::SoundManager(){
 
     //defined sounds (ugly hackish code, look into this)
     const char* sound_files[] ={
-        "../ParticleStorm/Resources/secondarysong.wav",
+        "../ParticleStorm/Resources/chaosinvaders.wav",
         "../ParticleStorm/Resources/base-loop.wav"
     };
 
     //yuck
     sound_times = new std::vector<double>();
-    sound_times->push_back(55);
+    sound_times->push_back(109);
     sound_times->push_back(34);
 
     currSoundTime = 0;

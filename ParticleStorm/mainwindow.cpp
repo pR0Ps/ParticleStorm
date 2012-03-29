@@ -350,9 +350,10 @@ GLuint MainWindow::loadTexture(const char* c){
 //highscores stuff
 void MainWindow::loadScores(){
     //temp scores
-    for (int i = 0 ; i < MAX_HIGHSCORES ; i++){
+    for (int i = 0 ; i < MAX_HIGHSCORES-1 ; i++){
         highScoreValues->push_back(new HighScoreEntry("AAA", qrand() % 10000));
     }
+    highScoreValues->push_back(new HighScoreEntry("AAA", 100));
     sortScores();
 }
 void MainWindow::sortScores(){
