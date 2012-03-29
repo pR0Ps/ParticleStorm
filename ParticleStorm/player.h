@@ -61,6 +61,10 @@ public:
     static const double MAX_COLLISION_BUFFER_TIME;
     static const double COLLISON_INDICATION_TIME;
 
+    // Constants for mana regeneration.
+    static const int MANA_REGEN_DELAY; // measured in seconds
+    static const int MANA_REGEN_RATE; // per second
+
     // Enumeration for the player's special abilities.
     enum ability {
         VORTEX,
@@ -186,6 +190,10 @@ private:
 
     //score
     long int score;
+
+    // The amount of time remaining before the player's mana will start to
+    // automatically regenerate. Mana will be regenerated when this reaches 0.
+    double manaRegenTime;
 
     // The player's currently selected special ability. This should only be
     // assigned values from the ability enum.
@@ -314,6 +322,24 @@ private:
      * as the target enemy is not too close to the player.
      */
     void drawLightning() const;
+
+    /*
+     * Resets the player's remaining time until mana regeneration to the delay.
+     * Should be called whenever a special ability is performed IF it actually
+     * consumes mana.
+     */
+    void resetManaRegenTime() { manaRegenTime = MANA_REGEN_DELAY; }
+
+    /*
+     * Automatically regenerates a certain amount of the player's mana when
+     * enough time has passed since a special ability was last used.
+     *
+     * Parameter: the time (in seconds) since the last game update.
+     *
+     * Note: this function will still be called while in Zen Mode, but the call
+     * to modMana will do nothing.
+     */
+    void regenMana(double deltaTime);
 };
 
 #endif // PLAYER_H

@@ -25,6 +25,9 @@ const int Player::PARTICLE_SPACING = 15;
 const int Player::RAM_DAMAGE = 10;
 const double Player::MAX_COLLISION_BUFFER_TIME = 0.8;
 const double Player::COLLISON_INDICATION_TIME = 0.1;
+const int Player::MANA_REGEN_DELAY = 5;
+const int Player::MANA_REGEN_RATE = 50;
+
 const double Player::TIME_BETWEEN_CHG_ABILITY = 0.5;
 const int Player::LIGHTNING_RANGE = 350;
 const int Player::LIGHTNING_DPS = 250;
@@ -94,6 +97,7 @@ void Player::reset(){
     collisionBufferTime = 0;
     hitDisplayTime = 0;
     repulseDisplayTime = 0;
+    manaRegenTime = 0;
 
     //set initial score
     score = 0;
@@ -139,6 +143,13 @@ void Player::update(double deltaTime) {
         hitDisplayTime -= deltaTime;
     if(repulseDisplayTime > 0)
         repulseDisplayTime -= deltaTime;
+
+    // Attempt to regenerate mana if enough time has passed. This should be
+    // called regardless of whether or not the special ability key is pressed on
+    // the current update, since mana should regenerate if the player does not
+    // have enough mana to perform the ability or no enemies are in range in the
+    // case of lightning.
+    regenMana(deltaTime);
 }
 
 //draw the player - these are called in the GameEngine
@@ -368,7 +379,6 @@ void Player::useAbility(double deltaTime, ObjectManager* manager) {
 }
 
 void Player::lightningAbility(double deltaTime, ObjectManager* manager) {
-
     const double manaCost = deltaTime * LIGHTNING_MANA_COST;
     Enemy* closestEnemy = manager->getClosestEnemy(x, y, 0, LIGHTNING_RANGE);
 
@@ -379,6 +389,7 @@ void Player::lightningAbility(double deltaTime, ObjectManager* manager) {
 
         closestEnemy->modLife(-damage);
         modMana(-manaCost);
+        resetManaRegenTime();
 
         // Heal the player for a percentage of the damage dealt to the target.
         // If the damage of the lightning ability was greater than the enemy's
@@ -388,19 +399,20 @@ void Player::lightningAbility(double deltaTime, ObjectManager* manager) {
         modLife(damageDealt * LIGHTNING_HEAL_MODIFIER);
 
         lightningTarget = closestEnemy;
+
         //try and play zap and stop current music[technically not working but still sounds cool]
         //ResourceManager::getInstance()->playMainMusic(1, true);
        // ResourceManager::getInstance()->playZap(deltaTime, false);
-
     }
-    else{
+    else {
         // reset the current target of the lightning ability to null so that the
         // lightning effect will not be drawn
         lightningTarget = NULL;
+
         //try to stop play zap
         // ResourceManager::getInstance()->playZap(1, true);
-        }
     }
+}
 
 void Player::sprayAbility(double deltaTime, ObjectManager *manager) {
     // First check to see if the player has enough mana to perform the ability.
@@ -408,6 +420,7 @@ void Player::sprayAbility(double deltaTime, ObjectManager *manager) {
 
     if (manaCost <= mana) {
         modMana(-manaCost);
+        resetManaRegenTime();
 
         // Spawn numParticles at the player's current position and give them an
         // initial velocity. This controls their direction.
@@ -436,6 +449,7 @@ void Player::vortexAbility(double deltaTime, ObjectManager* manager) {
     double manaCost = deltaTime * VORTEX_MANA_COST;
     if (manaCost <= mana) {
         modMana(-manaCost);
+        resetManaRegenTime();
 
         // Spawn particles around the player. The location of the spawned
         // particles is randomly chosen.
@@ -468,6 +482,7 @@ void Player::shockwaveAbility(double deltaTime, ObjectManager *manager){
     const double manaCost = deltaTime * SHOCKWAVE_MANA_COST;
     if (manaCost <= mana){
         modMana(-manaCost);
+        resetManaRegenTime();
 
         //particles are mostly for show
         const int numParticles = ceil(deltaTime * SHOCKWAVE_PPS);
@@ -497,6 +512,7 @@ void Player::repulseAbility(double deltaTime, ObjectManager *manager){
     const double manaCost = deltaTime * REPULSE_MANA_COST;
     if (manaCost <= mana){
         modMana(-manaCost);
+        resetManaRegenTime();
 
         //damage all nearby enemies
         std::vector<GameObject*> *temp = manager->getObjectsInRange(ObjectManager::ENEMY, x, y, REPULSE_RANGE);
@@ -532,4 +548,11 @@ void Player::changeAbility(double deltaTime) {
         timeSinceLastChgAbility += deltaTime;
 
     chgAbilityActivatedOnLastUpdate = true;
+}
+
+void Player::regenMana(double deltaTime) {
+    if (manaRegenTime <= 0)
+        modMana(deltaTime * MANA_REGEN_RATE);
+    else
+        manaRegenTime -= deltaTime;
 }
