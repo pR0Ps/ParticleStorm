@@ -30,7 +30,7 @@ const int Player::MANA_REGEN_RATE = 50;
 
 const double Player::TIME_BETWEEN_CHG_ABILITY = 0.5;
 const int Player::LIGHTNING_RANGE = 350;
-const int Player::LIGHTNING_DPS = 250;
+const int Player::LIGHTNING_DPS = 150;
 const int Player::LIGHTNING_MANA_COST = 75;
 const int Player::MIN_LIGHTNING_DRAW_DISTANCE = 10;
 const int Player::SPRAY_PPS = 100;
@@ -50,6 +50,12 @@ const int Player::REPULSE_DPS = 100;
 const int Player::REPULSE_FORCE = 500;
 const int Player::REPULSE_MANA_COST = 150;
 const double Player::REPULSE_TIME = 0.3;
+const int Player::STORM_MANA_COST = Player::LIGHTNING_MANA_COST * 2;
+// Assign storm the same range as lightning for now.
+const int Player::STORM_RANGE = Player::LIGHTNING_RANGE;
+const unsigned int Player::NUM_STORM_TARGETS = 3;
+// And the same damage per second.
+const int Player::STORM_DPS = Player::LIGHTNING_DPS;
 
 // Implementation of constructor and destructor.
 
@@ -109,6 +115,7 @@ void Player::reset(){
     timeSinceLastChgAbility = 0;
 
     lightningTarget = NULL;
+    stormTargets = std::vector<Enemy*>();
 }
 
 // Implementation of pure virtual functions.
@@ -163,7 +170,9 @@ void Player::drawFaded() const {
     if (MainWindow::getInstance()->getMouseState() & Qt::LeftButton){
         drawPlayer();
     }
+
     drawLightning();
+    drawStorm();
 
     //hit indication (an X)
     if (hitDisplayTime > 0){
@@ -215,6 +224,20 @@ void Player::drawLightning() const {
     }
 }
 
+void Player::drawStorm() const {
+    // Iterate through the list of enemies targeted by storm and draw lightning
+    // to them so long as they are not too close to the player. No lightning
+    // will be drawn if this vector is empty.
+    for (unsigned int i = 0; i < stormTargets.size(); i++) {
+        double enemyX = stormTargets[i]->getX();
+        double enemyY = stormTargets[i]->getY();
+
+        if (Util::distance(x, y, enemyX, enemyY) > MIN_LIGHTNING_DRAW_DISTANCE)
+            Util::drawJaggedLine(x, y, enemyX, enemyY,
+            ResourceManager::getInstance()->getColour(ResourceManager::PURPLE));
+    }
+}
+
 //change the score
 // Note: there is no upper bound on the player's score, unlike the player's
 // mana.
@@ -246,6 +269,8 @@ std::string Player::getAbilityString() const {
         return "REPULSE";
     case LIGHTNING:
         return "LIGHTNING";
+    case STORM:
+        return "STORM";
     case SHOCKWAVE:
         return "SHOCKWAVE";
     }
@@ -290,6 +315,8 @@ void Player::performAbility(double deltaTime, ObjectManager* manager,
         // continuing to be drawn if this ability was activated on the last call
         // to update.
         lightningTarget = NULL;
+        // Ditto for storm targets.
+        stormTargets.clear();
     }
     // If the change ability button is not pressed, then reset the variables for
     // keeping track of how often the player's special ability can be changed.
@@ -372,12 +399,19 @@ void Player::useAbility(double deltaTime, ObjectManager* manager) {
     case LIGHTNING:
         lightningAbility(deltaTime, manager);
         break;
+    case STORM:
+        stormAbility(deltaTime, manager);
+        break;
     case SHOCKWAVE:
         shockwaveAbility(deltaTime, manager);
         break;
     }
 }
 
+// Would be more efficient to check to see if the player has enough mana first
+// before finding the closest enemy.
+// Also, use the lightningTarget attribute instead of the intermediary
+// closestEnemey variable (unneeded).
 void Player::lightningAbility(double deltaTime, ObjectManager* manager) {
     const double manaCost = deltaTime * LIGHTNING_MANA_COST;
     Enemy* closestEnemy = manager->getClosestEnemy(x, y, 0, LIGHTNING_RANGE);
@@ -414,7 +448,89 @@ void Player::lightningAbility(double deltaTime, ObjectManager* manager) {
     }
 }
 
-void Player::sprayAbility(double deltaTime, ObjectManager *manager) {
+void Player::stormAbility(double deltaTime, ObjectManager* manager) {
+    // Clear the list of storm targets so that the lightning effect will not be
+    // drawn if the player runs out of mana while using the ability, and so that
+    // comparisons will not be made to previous storm targets when inserting
+    // enemies into the list.
+    // It should be noted here that the clear function, as well as pop_back,
+    // actually invokes the destructor of elements removed from the vector.
+    // However, this is not the same as explicitly deleting a pointer, and there
+    // does not appear to be the risk of replacing enemies in the game with
+    // garbage when code like this is used.
+    stormTargets.clear();
+
+    // Perform mana check first.
+    double manaCost = deltaTime * STORM_MANA_COST;
+    if (manaCost <= mana) {
+        // Find the closest n enemies to the player, if there are any.
+        findStormTargets(manager);
+
+        // Apply mana cost and damage if any targets were in range of the storm.
+        if (!stormTargets.empty()) {
+            modMana(-manaCost);
+            resetManaRegenTime();
+
+            double damage = deltaTime * STORM_DPS;
+            for (unsigned int i = 0; i < stormTargets.size(); i++)
+                stormTargets[i]->modLife(-damage);
+        }
+    }
+}
+
+void Player::findStormTargets(ObjectManager* manager) {
+    // The getObjectsInRange function returns a vector of GameObjects within the
+    // specified range that are still in use. Make sure to delete this vector
+    // when done with it.
+    std::vector<GameObject*>* enemies =
+            manager->getObjectsInRange(ObjectManager::ENEMY, x, y, STORM_RANGE);
+
+    // Iterate over the list of current enemies and add them to the list of
+    // valid storm targets as applicable. The list of storm targets must be kept
+    // in nondecreasing order by player distance to enemy in this process so
+    // that the closest enemies are targeted by storm, and not just enemies that
+    // happen to be in range.
+    for (unsigned int i = 0; i < enemies->size(); i++)
+        insertEnemy(dynamic_cast<Enemy*> (enemies->at(i)));
+
+    delete enemies;
+}
+
+void Player::insertEnemy(Enemy* enemy) {
+    double distance = Util::distance(x, y, enemy->getX(), enemy->getY());
+
+    // An iterator must be used here so that we can use the insert function.
+    // As soon as a modification is made to the vector, all iterators become
+    // invalidated, so we should immediately break out of the loop after the
+    // insertion.
+    bool inserted = false;
+    std::vector<Enemy*>::iterator target = stormTargets.begin();
+
+    while (!inserted && target != stormTargets.end()) {
+        if (distance < Util::distance(x, y, (*target)->getX(),
+                                      (*target)->getY())) {
+            // then the enemy is closer to the player then the currently
+            // examined target
+            stormTargets.insert(target, enemy);
+            inserted = true;
+        }
+
+        target++;
+    }
+
+    // If we iterated through the entire list of storm targets without inserting
+    // the enemy and the number of targets selected so far has not reached the
+    // maximum, then the enemy can be added to the end of the list.
+    if (!inserted && stormTargets.size() < NUM_STORM_TARGETS)
+        stormTargets.push_back(enemy);
+
+    // If instead the maximum number of storm targets was exceeded by inserting
+    // the current enemy, then remove the last enemy in the list.
+    if (stormTargets.size() > NUM_STORM_TARGETS)
+        stormTargets.pop_back();
+}
+
+void Player::sprayAbility(double deltaTime, ObjectManager* manager) {
     // First check to see if the player has enough mana to perform the ability.
     double manaCost = deltaTime * SPRAY_MANA_COST;
 

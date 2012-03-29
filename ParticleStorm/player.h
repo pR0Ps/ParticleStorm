@@ -71,6 +71,7 @@ public:
         SPRAY,
         REPULSE,
         LIGHTNING,
+        STORM,
         SHOCKWAVE
     };
 
@@ -91,7 +92,7 @@ public:
     // Don't draw the lightning effect if the enemy is closer than 10 pixels to
     // the player since the drawJaggedLine function may cause the program to
     // crash otherwise.
-    static const int MIN_LIGHTNING_DRAW_DISTANCE;
+    static const int MIN_LIGHTNING_DRAW_DISTANCE; // used by storm as well
 
     // Constants for the spray ability.
     static const int SPRAY_PPS;
@@ -120,6 +121,12 @@ public:
     static const int REPULSE_FORCE;
     static const int REPULSE_MANA_COST;
     static const double REPULSE_TIME;
+
+    // Constants for the storm ability.
+    static const int STORM_MANA_COST;
+    static const int STORM_RANGE;
+    static const unsigned int NUM_STORM_TARGETS;
+    static const int STORM_DPS;
 
     // Constructor/destructor.
     Player();
@@ -205,6 +212,9 @@ private:
     // Used to determine when jagged lines should be drawn in the Player's draw
     // method for the lightning ability.
     Enemy* lightningTarget;
+    // Similar to the lightningTarget attribute, this is used to determine when
+    // jagged lines should be drawn to enemies hit by the storm abililty.
+    std::vector<Enemy*> stormTargets;
 
     // Private member functions.
 
@@ -308,6 +318,41 @@ private:
     void repulseAbility (double deltaTime, ObjectManager* manager);
 
     /*
+     * Performs the storm abilitly. This is similar to the lightning abililty
+     * except that it hits multiple targets and doesn't heal the player based
+     * upon the amount of damage dealt.
+     *
+     * Parameters: the time since the last game update and a pointer to the
+     * current Objectmanager.
+     */
+    void stormAbility(double deltaTime, ObjectManager* manager);
+
+    /*
+     * Iterates through the enemies currently alive in the game and targets the
+     * enemies closest to the player. The number of targets selected is
+     * controlled by the NUM_STORM_TARGETS constant.
+     *
+     * Parameter: a pointer to the current ObjectManager.
+     *
+     * Note: this function and insertEnemy could be generalized to find the
+     * closest n GameObjects to the player for other purposes, instead of only
+     * working for the storm ability.
+     */
+    void findStormTargets(ObjectManager* manager);
+
+    /*
+     * A helper function for findStormTargets. Attempts to insert the given
+     * enemy into the list of storm targets based upon the distance between the
+     * player and the enemy. Enemies are inserted into this list in
+     * nondecreasing order of distance so that the closest enemies are targeted
+     * by the storm ability instead of just enemies within range of it.
+     *
+     * Parameters: a pointer to the enemy to insert into the list of storm
+     * targets.
+     */
+    void insertEnemy(Enemy* enemy);
+
+    /*
      * Advances the player's currently selected special ability to the next one
      * in the sequence when the change ability button is pressed. The ability
      * can be changed a limited number of times per second when the change
@@ -322,6 +367,12 @@ private:
      * as the target enemy is not too close to the player.
      */
     void drawLightning() const;
+
+    /*
+     * Draws a lightning effect to each of the enemies targeted by the storm
+     * ability, but only if they are a minimum distance away from the player.
+     */
+    void drawStorm() const;
 
     /*
      * Resets the player's remaining time until mana regeneration to the delay.
