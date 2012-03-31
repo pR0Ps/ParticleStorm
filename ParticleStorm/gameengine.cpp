@@ -271,7 +271,7 @@ void GameEngine::drawHUD(){
 void GameEngine::update(double deltaTime){
 
     //play ingame music
-    MainWindow::getInstance()->getSoundManager()->update(deltaTime);
+    SoundManager::getInstance()->update(deltaTime);
 
     //FPS monitoring
     framecnt++;

@@ -28,6 +28,7 @@ public:
     static const int HIGHSCORES_SPACING = 35;
     static const int MAX_HIGHSCORE_LETTERS = 3;
     static const int HIGHSCORE_ENTRY_SPACING = 20;
+    static const int HIGHSCORE_ENTRY_BASEPOS = MAX_Y - 350;
     static const char* HS_FILE;
 
     /*
@@ -44,7 +45,6 @@ public:
 
     //get this instance
     static MainWindow* getInstance(){return instance;}
-    SoundManager* getSoundManager(){return soundManager;}
 
     int getGameType(){return gameType;}
     void shakeGameScreen(double time, int amt);

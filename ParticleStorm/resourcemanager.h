@@ -16,15 +16,14 @@ public:
     static const int MAIN_LOOP_TIME =55;
     static const int GAME_LOOP_TIME = 34;
 
-    //textures to load (KEEP IN SYNC WITH FILES)
+    //NOTE: modifying the enums requires changing code in the constructor
+    //textures to load
     enum Texture{
-        TEXT,
-        PLAYER
+        TEXT
     };
-
     //colours
     enum Colours{
-        WHITE,
+        WHITE, //must be first
         YELLOW,
         RED,
         GREEN,
@@ -33,7 +32,7 @@ public:
         LIGHTBLUE,
         LIGHTRED,
         PURPLE,
-        BLACK
+        BLACK //must be last
     };
 
     //get instance
@@ -53,20 +52,9 @@ private:
     //the array of textures
     std::vector<GLuint> *textures;
 
-    //holds array of colours
-    std::vector<const QColor*> *colours;
-
-    //static colours
-    const QColor *white;
-    const QColor *yellow;
-    const QColor *red;
-    const QColor *green;
-    const QColor *blue;
-    const QColor *orange;
-    const QColor *lightBlue;
-    const QColor *lightRed;
-    const QColor *purple;
-    const QColor *black;
+    //holds the colours
+    std::vector<const QColor*> *gradientColours;
+    std::vector<const QColor*> *basicColours;
 
     //self-reference
     static ResourceManager* instance;

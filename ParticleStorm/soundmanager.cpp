@@ -2,15 +2,16 @@
 #include "QDebug"
 #include "QDir"
 
+SoundManager* SoundManager::instance = NULL;
+
 SoundManager::SoundManager(){
 
-    //defined sounds (ugly hackish code, look into this)
-    const char* sound_files[] ={
-        "../ParticleStorm/Resources/chaosinvaders.wav",
-        "../ParticleStorm/Resources/base-loop.wav"
-    };
+    if(instance){
+        qDebug() << "Only one instance of SoundManager allowed";
+        return;
+    }
 
-    //yuck
+    //define the sound lengths
     sound_times = new std::vector<double>();
     sound_times->push_back(109);
     sound_times->push_back(34);
@@ -21,10 +22,11 @@ SoundManager::SoundManager(){
     //load the music
     sounds = new std::vector<QSound*>;
     #ifndef Q_WS_X11
-    for (unsigned int i = 0; i<sizeof(sound_files)/sizeof(char*); i++){
-        sounds->push_back(new QSound(sound_files[i]));
-    }
+    sounds->push_back(new QSound("../ParticleStorm/Resources/chaosinvaders.wav"));
+    sounds->push_back(new QSound("../ParticleStorm/Resources/base-loop.wav"));
     #endif
+
+    instance = this;
 }
 
 SoundManager::~SoundManager(){

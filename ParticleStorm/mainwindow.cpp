@@ -16,6 +16,7 @@ const int MainWindow::MAX_HIGHSCORES;
 const int MainWindow::HIGHSCORES_SPACING;
 const int MainWindow::MAX_HIGHSCORE_LETTERS;
 const int MainWindow::HIGHSCORE_ENTRY_SPACING;
+const int MainWindow::HIGHSCORE_ENTRY_BASEPOS;
 const char* MainWindow::HS_FILE = "highscores.dat";
 
 MainWindow* MainWindow::instance = NULL;
@@ -102,8 +103,6 @@ MainWindow::~MainWindow(){
     while(!highScoreValues->empty()) delete highScoreValues->back(), highScoreValues->pop_back();
     delete highScoreValues;
 
-
-
     delete soundManager;
     delete engine;
 }
@@ -140,6 +139,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
     else if (nextEntry->mouseOver(currMousePos)) nextEntry->down = true;
 }
 void MainWindow::mouseReleaseEvent(QMouseEvent *event){
+    //starting a new game
     if (levelButton->mouseOver(currMousePos) && levelButton->down){
         gameType = LevelManager::LEVELED;
         launchGame();
@@ -152,12 +152,16 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
         gameType = LevelManager::ZEN;
         launchGame();
     }
+
+    //resume a game in progress
     else if (pausedGame && resumeButton->mouseOver(currMousePos) && resumeButton->down){
         instance->setVisible(false);
         engine->setVisible(true);
         engine->resume();
         soundManager->playSound(muted ? SoundManager::NONE : SoundManager::GAME);
     }
+
+    //toggle menu modes
     else if (soundButton->mouseOver(currMousePos) && soundButton->down){
         muted = !muted;
         soundManager->playSound(muted ? SoundManager::NONE : SoundManager::TITLE);
@@ -171,11 +175,15 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
     else if (backButton->mouseOver(currMousePos) && backButton->down){
         setMode(MENU);
     }
+
+    //exit
     else if (exitButton->mouseOver(currMousePos) && exitButton->down){
         //save scores
         saveScores();
         exit(0);
     }
+
+    //highscore entry buttons
     else if (upEntry->mouseOver(currMousePos) && upEntry->down){
         //increment curr letter
         nameEnter->at(currEntry)++;
@@ -187,6 +195,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
         if (nameEnter->at(currEntry) < 65) nameEnter->at(currEntry) = 90;
     }
     else if (nextEntry->mouseOver(currMousePos) && nextEntry->down){
+        //move to the next letter/finish entry
         if (currEntry < MAX_HIGHSCORE_LETTERS - 1)
             setCurrLetter(currEntry + 1);
         else{
@@ -235,15 +244,18 @@ void MainWindow::initializeGL(){
 }
 
 void MainWindow::timerEvent(QTimerEvent *){
-    update();
-    updateGL();
+    if (instance->isVisible()){
+        update();
+        updateGL();
+    }
 }
 
 void MainWindow::update(){
     double deltaTime = timer->restart()/(float)1000;
-    if(!engine->isVisible()){
-        soundManager->update(deltaTime);
-    }
+
+    //update the sound manager
+    soundManager->update(deltaTime);
+
     //get mouse position
     currMousePos = mapFromGlobal(QCursor::pos());
     currMousePos.setY(MAX_Y - currMousePos.y());
@@ -278,12 +290,7 @@ void MainWindow::paintGL(){
     //qDebug() << currMousePos;
 
     //draw the menus
-    if (menuMode == HIGHSCORES){ //highscores sceneMAX_HIGHSCORE_LETTERS
-        //top buttons
-        Util::drawString("HIGHSCORES", 0, MAX_Y - 15, fontTex);
-        Util::drawString("CREDITS", MAX_X/2, MAX_Y - 15, fontTex, true);
-        Util::drawString("TOGGLE SOUND", MAX_X - 180, MAX_Y - 15, fontTex);
-
+    if (menuMode == HIGHSCORES){ //highscores scene
         //highscores display
         Util::drawString("HIGHSCORES", MAX_X / 2, MAX_Y - 100, fontTex, true, false, 3, 3);
         for (int i = 0 ; i < std::min((int)highScoreValues->size(), MAX_HIGHSCORES) ; i++){
@@ -291,45 +298,43 @@ void MainWindow::paintGL(){
             Util::drawString(Util::doubleToString(i+1, 2, 0) + ". " + highScoreValues->at(i)->name, 100, MAX_Y - 170 - i * HIGHSCORES_SPACING, fontTex);
         }
 
-        //back button
+        //buttons
+        Util::drawString("HIGHSCORES", 0, MAX_Y - 15, fontTex);
+        Util::drawString("CREDITS", MAX_X/2, MAX_Y - 15, fontTex, true);
+        Util::drawString("TOGGLE SOUND", MAX_X - 180, MAX_Y - 15, fontTex);
         Util::drawString("BACK", 6, 6, fontTex, false, false, 2, 2, true);
         displayHover(backButton, false, true);
+
     }
-    else if (menuMode == HSENTRY){
+    else if (menuMode == HSENTRY){ //entering highscore name
         Util::drawString("ENTER YOUR NAME", MAX_X/2, MAX_Y - 200, fontTex, true);
         //draw letters
         for (int i = 0 ; i < MAX_HIGHSCORE_LETTERS ; i++){
             Util::drawChar(nameEnter->at(i), (MAX_X - MAX_HIGHSCORE_LETTERS * HIGHSCORE_ENTRY_SPACING)/2 + i * HIGHSCORE_ENTRY_SPACING , MAX_Y - 350, fontTex);
         }
+
         //draw buttons
         Util::drawChar('+', upEntry->x1, upEntry->y1, fontTex);
         Util::drawChar('-', downEntry->x1, downEntry->y1, fontTex);
         Util::drawChar('>', nextEntry->x1, nextEntry->y1, fontTex);
     }
     else if (menuMode == CREDITS){ //show credits
-        //top buttons
+        //draw credits
+        Util::drawString("CREDITS", MAX_X / 2, MAX_Y - 100, fontTex, true, false, 3, 3);
+
+        //could for loop it, but would have to define the array to iterate over
+        Util::drawString("DANIEL BAMBRICK..RECORD KEEPER", MAX_X/2, MAX_Y - 175 - 0 * 55, fontTex, true);
+        Util::drawString("MARK DION............AI MASTER", MAX_X/2, MAX_Y - 175 - 1 * 55, fontTex, true);
+        Util::drawString("JULIA GREIG............MANAGER", MAX_X/2, MAX_Y - 175 - 2 * 55, fontTex, true);
+        Util::drawString("DONALD KESTER...LEVEL DESIGNER", MAX_X/2, MAX_Y - 175 - 3 * 55, fontTex, true);
+        Util::drawString("ANDREW MCMULLEN....CODE MONKEY", MAX_X/2, MAX_Y - 175 - 4 * 55, fontTex, true);
+        Util::drawString("CAREY METCALFE.......ARCHITECT", MAX_X/2, MAX_Y - 175 - 5 * 55, fontTex, true);
+        Util::drawString("LUKE WALKER...ABILITY DESIGNER", MAX_X/2, MAX_Y - 175 - 6 * 55, fontTex, true);
+
+        //buttons
         Util::drawString("HIGHSCORES", 0, MAX_Y - 15, fontTex);
         Util::drawString("CREDITS", MAX_X/2, MAX_Y - 15, fontTex, true);
         Util::drawString("TOGGLE SOUND", MAX_X - 180, MAX_Y - 15, fontTex);
-
-        //I wanted to declare this in the constructor, but apprently it's not possible
-        const char* credits[7] = {
-            "DANIEL BAMBRICK..RECORD KEEPER",
-            "MARK DION............AI MASTER",
-            "JULIA GREIG............MANAGER",
-            "DONALD KESTER...LEVEL DESIGNER",
-            "ANDREW MCMULLEN....CODE MONKEY",
-            "CAREY METCALFE.......ARCHITECT",
-            "LUKE WALKER...ABILITY DESIGNER"
-        };
-
-        //draw credits
-        Util::drawString("CREDITS", MAX_X / 2, MAX_Y - 100, fontTex, true, false, 3, 3);
-        for (unsigned int i = 0; i < sizeof(credits)/sizeof(char*); i++){
-            Util::drawString(credits[i], MAX_X/2, MAX_Y - 175 - i * 55, fontTex, true);
-        }
-
-        //back button
         Util::drawString("BACK", 6, 6, fontTex, false, false, 2, 2, true);
         displayHover(backButton, false, true);
     }
@@ -338,20 +343,23 @@ void MainWindow::paintGL(){
         Util::drawString("HIGHSCORES", 0, MAX_Y - 15, fontTex);
         Util::drawString("CREDITS", MAX_X/2, MAX_Y - 15, fontTex, true);
         Util::drawString("TOGGLE SOUND", MAX_X - 180, MAX_Y - 15, fontTex);
+
         Util::drawString("LEVEL MODE", MAX_X/2, 300, fontTex, true, false, 2, 2);
+        displayHover(levelButton, true, true);
+
         Util::drawString("ENDLESS PLAY", MAX_X/2, 200, fontTex, true, false, 2, 2);
+        displayHover(endlessButton, true, true);
+
         Util::drawString("ZEN MODE", MAX_X/2, 100, fontTex, true, false, 2, 2);
+        displayHover(zenButton, true, true);
+
         Util::drawString("EXIT",6, 6, fontTex, false, false, 2, 2);
+        displayHover(exitButton, false, true);
+
         if (pausedGame){
             Util::drawString("RESUME", MAX_X - 186, 6, fontTex, false, false, 2, 2, true);
+            displayHover(resumeButton, true, false);
         }
-
-        //hovering stuff
-        displayHover(levelButton, true, true);
-        displayHover(endlessButton, true, true);
-        displayHover(zenButton, true, true);
-        if (pausedGame) displayHover(resumeButton, true, false);
-        displayHover(exitButton, false, true);
 
         //draw the title ew ew hard code. IMG has width 552, height 106
         Util::drawTexture((MAX_X-552)/2, (MAX_Y-75-106), (((MAX_X-552)/2)+552), (MAX_Y-75), titleTex);
@@ -359,10 +367,10 @@ void MainWindow::paintGL(){
 }
 
 //displays the hover icon(s)
-void MainWindow::displayHover(Button *b, bool l, bool r){
+void MainWindow::displayHover(Button *b, bool left, bool right){
     if (b->mouseOver(currMousePos)){
-        if (l) Util::drawTexture(b->x1 - CURSOR_OFFSET - 23, b->y1 - 5, b->x1 - CURSOR_OFFSET, b->y2 + 5, cursorTex);
-        if (r) Util::drawTexture(b->x2 + CURSOR_OFFSET + 23, b->y1 - 5, b->x2 + CURSOR_OFFSET, b->y2 + 5, cursorTex);
+        if (left) Util::drawTexture(b->x1 - CURSOR_OFFSET - 23, b->y1 - 5, b->x1 - CURSOR_OFFSET, b->y2 + 5, cursorTex);
+        if (right) Util::drawTexture(b->x2 + CURSOR_OFFSET + 23, b->y1 - 5, b->x2 + CURSOR_OFFSET, b->y2 + 5, cursorTex);
     }
 }
 
@@ -376,20 +384,20 @@ void MainWindow::setCurrLetter(int i){
     //next button
     nextEntry->x1 = nX1;
     nextEntry->x2 = nX1 + HIGHSCORE_ENTRY_SPACING;
-    nextEntry->y1 = MAX_Y - 350;
-    nextEntry->y2 = MAX_Y - 350 + HIGHSCORE_ENTRY_SPACING;
+    nextEntry->y1 = HIGHSCORE_ENTRY_BASEPOS;
+    nextEntry->y2 = HIGHSCORE_ENTRY_BASEPOS + HIGHSCORE_ENTRY_SPACING;
 
     //up button
     upEntry->x1 = cX1;
     upEntry->x2 = cX1 + Util::FONT_CHAR_DIMENSION_X;
-    upEntry->y1 = (MAX_Y - 345) + HIGHSCORE_ENTRY_SPACING + 3;
-    upEntry->y2 = (MAX_Y - 345) + HIGHSCORE_ENTRY_SPACING * 2 + 3;
+    upEntry->y1 = HIGHSCORE_ENTRY_BASEPOS + Util::FONT_CHAR_DIMENSION_Y + 3;
+    upEntry->y2 = HIGHSCORE_ENTRY_BASEPOS + Util::FONT_CHAR_DIMENSION_Y * 2 + 3;
 
     //down button
     downEntry->x1 = cX1;
     downEntry->x2 = cX1 + Util::FONT_CHAR_DIMENSION_X;
-    downEntry->y1 = (MAX_Y - 345) - HIGHSCORE_ENTRY_SPACING * 2 - 3;
-    downEntry->y2 = (MAX_Y - 345) - HIGHSCORE_ENTRY_SPACING - 3;
+    downEntry->y1 = HIGHSCORE_ENTRY_BASEPOS - Util::FONT_CHAR_DIMENSION_Y - 3;
+    downEntry->y2 = HIGHSCORE_ENTRY_BASEPOS - 3;
 }
 
 //launch the game
@@ -444,7 +452,7 @@ void MainWindow::loadScores(){
 
     //read in the highscores
     std::string tempName, tempScore;
-    while (true){
+    for(;;){
             inFile >> tempName;
             inFile >> tempScore;
             if (inFile.eof()) break;

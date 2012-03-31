@@ -15,19 +15,23 @@ public:
         NONE
     };
 
+    static SoundManager* getInstance(){return instance;}
+
     void update(double deltaTime);
     void playSound(Sound s);
     void stopSound(){playSound(NONE);}
 
 private:
     //sound management
-    static const char* sound_files[];
     std::vector<double> *sound_times;
 
     //holds the sounds
     std::vector<QSound*> *sounds;
     double currSoundTime;
     Sound currSound;
+
+    //self reference
+    static SoundManager *instance;
 };
 
 #endif // SOUNDMANAGER_H
