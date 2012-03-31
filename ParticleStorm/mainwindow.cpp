@@ -5,18 +5,18 @@
 #include "fstream"
 #include "ostream"
 
-const int MainWindow::MAX_X;
-const int MainWindow::MAX_Y;
-const int MainWindow::MAX_DIST;
-const int MainWindow::NUM_STARS;
-const int MainWindow::STAR_PAN_X;
-const int MainWindow::STAR_PAN_Y;
-const int MainWindow::CURSOR_OFFSET;
-const int MainWindow::MAX_HIGHSCORES;
-const int MainWindow::HIGHSCORES_SPACING;
-const int MainWindow::MAX_HIGHSCORE_LETTERS;
-const int MainWindow::HIGHSCORE_ENTRY_SPACING;
-const int MainWindow::HIGHSCORE_ENTRY_BASEPOS;
+const int MainWindow::MAX_X = 600;
+const int MainWindow::MAX_Y = 600;
+const int MainWindow::MAX_DIST = 10;
+const int MainWindow::NUM_STARS = 255;
+const int MainWindow::STAR_PAN_X = 500;
+const int MainWindow::STAR_PAN_Y = 0;
+const int MainWindow::CURSOR_OFFSET = 10;
+const int MainWindow::MAX_HIGHSCORES = 10;
+const int MainWindow::HIGHSCORES_SPACING = 35;
+const int MainWindow::MAX_HIGHSCORE_LETTERS = 3;
+const int MainWindow::HIGHSCORE_ENTRY_SPACING = 20;
+const int MainWindow::HIGHSCORE_ENTRY_BASEPOS = MAX_Y - 350;
 const char* MainWindow::HS_FILE = "highscores.dat";
 
 MainWindow* MainWindow::instance = NULL;

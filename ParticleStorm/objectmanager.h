@@ -21,13 +21,13 @@ public:
     ObjectManager();
     ~ObjectManager();
 
-    //constants (redeclare in implementation)
-    static const int MAX_PARTICLES = 700;
-    static const int INIT_ENEMIES = 100;
-    static const int INIT_POWERUPS = 30;
-    static const int MAX_SHRAPNEL = 40;
-    static const int MAX_STARS = 250;
-    static const int RESIZE_AMT = 20;
+    //constants (declare in implementation)
+    static const int MAX_PARTICLES;
+    static const int INIT_ENEMIES;
+    static const int INIT_POWERUPS;
+    static const int MAX_SHRAPNEL;
+    static const int MAX_STARS;
+    static const int RESIZE_AMT;
 
     //object types
     enum ObjectType{

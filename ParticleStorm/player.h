@@ -47,7 +47,7 @@ public:
     static const int MANA_REGEN_RATE; // per second
 
     // Enumeration for the player's special abilities.
-    enum ability {
+    enum Ability {
         SPRAY,
         VORTEX,
         REPULSE,

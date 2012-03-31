@@ -9,13 +9,15 @@ class Powerup : public GameObject
 public:
     Powerup();
 
-    static const float AIR_RESIST = 1;
-    static const int MAX_ROTATION_SPD = 900;
-    static const int MIN_ROTATION_SPD = 540;
-    static const double INITIAL_TTL = 10;
-    static const int NUM_LIGHTNING = 5;
-    static const double COLLECT_RING_SIZE = .8;
-    static const double VALUE_RATIO = 0.5;
+    //declare in implementation
+    static const float AIR_RESIST;
+    static const int MAX_ROTATION_SPD;
+    static const int MIN_ROTATION_SPD;
+    static const double INITIAL_TTL;
+    static const int NUM_LIGHTNING;
+    static const double COLLECT_RING_SIZE;
+    static const double VALUE_RATIO_HEALTH;
+    static const double VALUE_RATIO_MANA;
 
     void startPowerup(int type, double x, double y, double x_vel, double y_vel, int value);
 

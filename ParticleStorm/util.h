@@ -16,11 +16,11 @@ private:
     Util();
 public:
     //constants (redeclare in implementation)
-    static const int FONT_IMG_DIMENSION_X = 16;
-    static const int FONT_IMG_DIMENSION_Y = 16;
-    static const int FONT_CHAR_DIMENSION_X = 16;
-    static const int FONT_CHAR_DIMENSION_Y = 16;
-    static const double PI = 3.141592654;
+    static const int CHAR_PER_ROW;
+    static const int CHAR_PER_COL;
+    static const int FONT_CHAR_DIMENSION_X;
+    static const int FONT_CHAR_DIMENSION_Y;
+    static const double PI;
 
     //calculations:
     static double distance(double x1, double y1, double x2, double y2);

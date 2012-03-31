@@ -8,14 +8,14 @@
 class Enemy : public GameObject{
 public:
 
-    //redeclare in cpp file
-    static const int MAX_DAMAGE = 10;
-    static const int FORCE_DISSIPATION = 10;
-    static const double MAX_COLLISION_BUFFER_TIME = 1.0;
-    static const int MAX_ROTATION_SPD = 360;
-    static const int MIN_ROTATION_SPD = 45;
-    static const int OOB_LIMIT = 400;
-    static const int OOB_ALLOWANCE = 250;
+    //define in implementation
+    static const int MAX_DAMAGE;
+    static const int FORCE_DISSIPATION;
+    static const double MAX_COLLISION_BUFFER_TIME;
+    static const int MAX_ROTATION_SPD;
+    static const int MIN_ROTATION_SPD;
+    static const int OOB_LIMIT;
+    static const int OOB_ALLOWANCE;
 
     Enemy();
 
@@ -30,7 +30,7 @@ public:
 
     //reset an enemy (almost identical to constructor)
     //y u no enemy type?
-    void startEnemy(int t, double x, double y, double x_tar, double y_tar);
+    void startEnemy(int type, double x, double y, double x_tar, double y_tar);
 
     void pan(double x, double y);
     void die();

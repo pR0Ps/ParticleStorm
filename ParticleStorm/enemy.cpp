@@ -3,20 +3,20 @@
 #include <QDebug>
 #include <cmath>
 
-const int Enemy::MAX_DAMAGE;
-const int Enemy::FORCE_DISSIPATION;
-const double Enemy::MAX_COLLISION_BUFFER_TIME;
-const int Enemy::MIN_ROTATION_SPD;
-const int Enemy::MAX_ROTATION_SPD;
-const int Enemy::OOB_LIMIT;
-const int Enemy::OOB_ALLOWANCE;
+const int Enemy::MAX_DAMAGE = 10;
+const int Enemy::FORCE_DISSIPATION = 10;
+const double Enemy::MAX_COLLISION_BUFFER_TIME = 1.0;
+const int Enemy::MIN_ROTATION_SPD = 360;
+const int Enemy::MAX_ROTATION_SPD = 45;
+const int Enemy::OOB_LIMIT = 400;
+const int Enemy::OOB_ALLOWANCE = 250;
 
 Enemy::Enemy():GameObject(){
 }
 
 //y u no enemytype?
-void Enemy::startEnemy(int t, double x, double y, double x_tar, double y_tar){
-    this->type = t;
+void Enemy::startEnemy(int type, double x, double y, double x_tar, double y_tar){
+    this->type = type;
     this->x=x;
     this->y=y;
     this->x_tar = x_tar;
@@ -119,12 +119,13 @@ void Enemy::update(double deltaTime){
     if (timerActive && currTimer > 0)
         currTimer -= deltaTime;
 
+    //outside the screen, get back in
     if(!Util::coordInRect(x, y, -OOB_ALLOWANCE, -OOB_ALLOWANCE, GameEngine::MAX_X + OOB_ALLOWANCE, GameEngine::MAX_Y + OOB_ALLOWANCE) && type != ObjectManager::BULLET){
         findDirection(x, y, player->getX(), player->getY());
         x += x_vel * speed * deltaTime;
         y += y_vel * speed * deltaTime;
     }
-
+    //AI section
     else{
         if(type == ObjectManager::GRUNT){
 

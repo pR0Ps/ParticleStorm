@@ -1,11 +1,11 @@
 #include "levelmanager.h"
 
-const double LevelManager::TEXT_DISPLAY_TIME;
-const double LevelManager::ENEMY_CHECK_RATE;
-const int LevelManager::MAX_ENEMIES;
-const int LevelManager::MIN_ENEMIES;
-const int LevelManager::ENEMY_GROWTH;
-const int LevelManager::ENEMY_SPAWN_DIST;
+const double LevelManager::TEXT_DISPLAY_TIME = 5;
+const double LevelManager::ENEMY_CHECK_RATE = 5;
+const int LevelManager::MAX_ENEMIES = 70;
+const int LevelManager::MIN_ENEMIES = 5;
+const int LevelManager::ENEMY_GROWTH = 3;
+const int LevelManager::ENEMY_SPAWN_DIST = 300;
 
 LevelManager::LevelManager() {
 }

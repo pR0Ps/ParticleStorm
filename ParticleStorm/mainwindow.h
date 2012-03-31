@@ -17,18 +17,19 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    static const int MAX_X = 600;
-    static const int MAX_Y = 600;
-    static const int MAX_DIST = 10;
-    static const int NUM_STARS = 255;
-    static const int STAR_PAN_X = 500;
-    static const int STAR_PAN_Y = 0;
-    static const int CURSOR_OFFSET = 10;
-    static const int MAX_HIGHSCORES = 10;
-    static const int HIGHSCORES_SPACING = 35;
-    static const int MAX_HIGHSCORE_LETTERS = 3;
-    static const int HIGHSCORE_ENTRY_SPACING = 20;
-    static const int HIGHSCORE_ENTRY_BASEPOS = MAX_Y - 350;
+    //define in implementation
+    static const int MAX_X;
+    static const int MAX_Y;
+    static const int MAX_DIST;
+    static const int NUM_STARS;
+    static const int STAR_PAN_X;
+    static const int STAR_PAN_Y;
+    static const int CURSOR_OFFSET;
+    static const int MAX_HIGHSCORES;
+    static const int HIGHSCORES_SPACING;
+    static const int MAX_HIGHSCORE_LETTERS;
+    static const int HIGHSCORE_ENTRY_SPACING;
+    static const int HIGHSCORE_ENTRY_BASEPOS;
     static const char* HS_FILE;
 
     /*

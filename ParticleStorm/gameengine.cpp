@@ -6,15 +6,15 @@
 #include <QDebug>
 
 //ick, redundancy
-const int GameEngine::MAX_X;
-const int GameEngine::MAX_Y;
-const int GameEngine::MAX_FPS;
-const int GameEngine::FPS_COUNT_FRAME_INTERVAL;
-const int GameEngine::LINES_PER_FADE;
-const int GameEngine::CLEAR_BORDER_AMT;
-const double GameEngine::GAME_OVER_SECONDS;
-const float GameEngine::PAN_SPEED;
-const double GameEngine::RESUME_GAME_LAG;
+const int GameEngine::MAX_X = 1024;
+const int GameEngine::MAX_Y = 680;
+const int GameEngine::MAX_FPS = 60;
+const int GameEngine::FPS_COUNT_FRAME_INTERVAL = 50;
+const int GameEngine::LINES_PER_FADE = 175;
+const int GameEngine::CLEAR_BORDER_AMT = 5;
+const double GameEngine::GAME_OVER_SECONDS = 5;
+const float GameEngine::PAN_SPEED = 0.5;
+const double GameEngine::RESUME_GAME_LAG = 2;
 
 GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
     setFixedSize(MAX_X, MAX_Y);

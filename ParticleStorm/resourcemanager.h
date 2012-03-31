@@ -11,10 +11,7 @@ public:
     ~ResourceManager();
 
     //number of colours to generate
-    static const int NUM_COLOURS = 10;
-    //loop constants so we don't keep on having to change how long we want a clip to loop
-    static const int MAIN_LOOP_TIME =55;
-    static const int GAME_LOOP_TIME = 34;
+    static const int NUM_GRADIENT_COLOURS;
 
     //NOTE: modifying the enums requires changing code in the constructor
     //textures to load

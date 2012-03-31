@@ -10,14 +10,14 @@ class Particle : public GameObject
 public:
     Particle();
 
-    //constants (redeclare in implementation)
-    static const int MAX_PARTICLE_SPEED = 1500;
-    static const float SPEED_MULTIPLIER = 1;
-    static const float AIR_RESIST = 1;
-    static const float FORCE_DISSIPATION = 5;
-    static const double FORCE_CUTOFF = 1500;
-    static const int FORCE_EXERT = 100000;
-    static const double INITITAL_TTL = 20;
+    //constants (declare in implementation)
+    static const int MAX_PARTICLE_SPEED;
+    static const float SPEED_MULTIPLIER;
+    static const float AIR_RESIST;
+    static const float FORCE_DISSIPATION;
+    static const double FORCE_CUTOFF;
+    static const int FORCE_EXERT;
+    static const double INITITAL_TTL;
 
     void drawNoFade() const{}
     void drawFaded() const;

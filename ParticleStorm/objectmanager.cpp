@@ -5,12 +5,12 @@
 
 ObjectManager* ObjectManager::instance = NULL;
 
-const int ObjectManager::MAX_PARTICLES;
-const int ObjectManager::INIT_ENEMIES;
-const int ObjectManager::INIT_POWERUPS;
-const int ObjectManager::MAX_SHRAPNEL;
-const int ObjectManager::MAX_STARS;
-const int ObjectManager::RESIZE_AMT;
+const int ObjectManager::MAX_PARTICLES = 700;
+const int ObjectManager::INIT_ENEMIES = 100;
+const int ObjectManager::INIT_POWERUPS = 30;
+const int ObjectManager::MAX_SHRAPNEL = 40;
+const int ObjectManager::MAX_STARS = 250;
+const int ObjectManager::RESIZE_AMT = 20;
 
 ObjectManager::ObjectManager(){
     if (instance){
@@ -373,10 +373,10 @@ void ObjectManager::doPlayerPowerupCollisions(){
                 Powerup* pow = static_cast<Powerup*>(powerups[i]);
                 //mod the player
                 if (pow->getType() == ObjectManager::HEALTH){
-                    player->modLife(pow->getValue() * Powerup::VALUE_RATIO);
+                    player->modLife(pow->getValue() * Powerup::VALUE_RATIO_HEALTH);
                 }
                 else if (pow->getType() == ObjectManager::MANA){
-                     player->modMana(pow->getValue() * Powerup::VALUE_RATIO);
+                     player->modMana(pow->getValue() * Powerup::VALUE_RATIO_MANA);
                 }
 
                 //draw effects (how? in what class?)

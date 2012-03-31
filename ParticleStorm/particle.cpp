@@ -6,13 +6,13 @@
 #include "qmath.h"
 #include <QColor>
 
-const int Particle::MAX_PARTICLE_SPEED;
-const float Particle::SPEED_MULTIPLIER;
-const float Particle::AIR_RESIST;
-const float Particle::FORCE_DISSIPATION;
-const double Particle::FORCE_CUTOFF;
-const int Particle::FORCE_EXERT;
-const double Particle::INITITAL_TTL;
+const int Particle::MAX_PARTICLE_SPEED = 1500;
+const float Particle::SPEED_MULTIPLIER = 1;
+const float Particle::AIR_RESIST = 1;
+const float Particle::FORCE_DISSIPATION = 5;
+const double Particle::FORCE_CUTOFF = 1500;
+const int Particle::FORCE_EXERT = 100000;
+const double Particle::INITITAL_TTL = 20;
 
 Particle::Particle():GameObject(){
 

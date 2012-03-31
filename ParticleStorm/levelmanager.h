@@ -16,14 +16,13 @@ public:
         NONSTOP
     };
 
-    //constants
-    static const double TEXT_DISPLAY_TIME = 5;
-    static const double ENEMY_CHECK_RATE = 5;
-
-    static const int MAX_ENEMIES = 70;
-    static const int MIN_ENEMIES = 5;
-    static const int ENEMY_GROWTH = 3;
-    static const int ENEMY_SPAWN_DIST = 300;
+    //declare in implementation
+    static const double TEXT_DISPLAY_TIME;
+    static const double ENEMY_CHECK_RATE;
+    static const int MAX_ENEMIES;
+    static const int MIN_ENEMIES;
+    static const int ENEMY_GROWTH;
+    static const int ENEMY_SPAWN_DIST;
 
     //starts the level
     void startLevel(LevelType t, int lvl);

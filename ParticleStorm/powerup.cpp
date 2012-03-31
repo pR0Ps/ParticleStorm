@@ -1,13 +1,14 @@
 #include "powerup.h"
 #include "gameengine.h"
 
-const float Powerup::AIR_RESIST;
-const int Powerup::MAX_ROTATION_SPD;
-const int Powerup::MIN_ROTATION_SPD;
-const double Powerup::INITIAL_TTL;
-const int Powerup::NUM_LIGHTNING;
-const double Powerup::COLLECT_RING_SIZE;
-const double Powerup::VALUE_RATIO;
+const float Powerup::AIR_RESIST = 1;
+const int Powerup::MAX_ROTATION_SPD = 900;
+const int Powerup::MIN_ROTATION_SPD = 540;
+const double Powerup::INITIAL_TTL = 10;
+const int Powerup::NUM_LIGHTNING = 5;
+const double Powerup::COLLECT_RING_SIZE = 0.8;
+const double Powerup::VALUE_RATIO_HEALTH = 0.5;
+const double Powerup::VALUE_RATIO_MANA = 0.5;
 
 Powerup::Powerup():GameObject(){
     //do nothing

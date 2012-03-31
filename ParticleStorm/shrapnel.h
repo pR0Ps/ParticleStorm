@@ -7,12 +7,12 @@ class Shrapnel : public GameObject
 {
 public:
     //redeclare in cpp file
-    static const int MAX_SHRAPNEL_SPEED = 100;
-    static const int INITIAL_PUSH_MIN = 40;
-    static const int INITIAL_PUSH_MAX = 140;
-    static const int MAX_ROTATION_SPD = 600;
-    static const double INITIAL_TTL = 1.5;
-    static const int DECREMENT_SPEED = 5;
+    static const int MAX_SHRAPNEL_SPEED;
+    static const int INITIAL_PUSH_MIN;
+    static const int INITIAL_PUSH_MAX;
+    static const int MAX_ROTATION_SPD;
+    static const double INITIAL_TTL;
+    static const int DECREMENT_SPEED;
     Shrapnel();
 
     void drawNoFade() const{}

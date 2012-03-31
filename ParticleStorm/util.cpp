@@ -4,11 +4,11 @@
 
 Util::Util(){}
 
-const int Util::FONT_IMG_DIMENSION_X;
-const int Util::FONT_IMG_DIMENSION_Y;
-const int Util::FONT_CHAR_DIMENSION_X;
-const int Util::FONT_CHAR_DIMENSION_Y;
-const double Util::PI;
+const int Util::CHAR_PER_ROW = 16;
+const int Util::CHAR_PER_COL = 16;
+const int Util::FONT_CHAR_DIMENSION_X = 16;
+const int Util::FONT_CHAR_DIMENSION_Y = 16;
+const double Util::PI = 3.141592654;
 
 //distance between 2 points
 double Util::distance(const double x1, const double y1, const double x2, const double y2){
@@ -335,10 +335,10 @@ void Util::drawString(const std::string &s, double x, double y, const GLuint tex
 
 //draws a character to the screen (call drawString instead, this is just a helper)
 void Util::drawChar(const char c, const double x, const double y, const GLuint tex){
-    const int col = c % FONT_IMG_DIMENSION_X;
-    const int row = FONT_IMG_DIMENSION_Y - 1 - (c / FONT_IMG_DIMENSION_Y);
-    const float dim_x = FONT_CHAR_DIMENSION_X * FONT_IMG_DIMENSION_X;
-    const float dim_y = FONT_CHAR_DIMENSION_Y * FONT_IMG_DIMENSION_Y;
+    const int col = c % CHAR_PER_ROW;
+    const int row = CHAR_PER_COL - 1 - (c / CHAR_PER_COL);
+    const float dim_x = FONT_CHAR_DIMENSION_X * CHAR_PER_ROW;
+    const float dim_y = FONT_CHAR_DIMENSION_Y * CHAR_PER_COL;
     const float x1_tex = (col * FONT_CHAR_DIMENSION_X - 1) / dim_x;
     const float y1_tex = (row * FONT_CHAR_DIMENSION_Y + 2) / dim_y;
     const float x2_tex = ((col + 1) * FONT_CHAR_DIMENSION_X - 1) / dim_x;

@@ -5,9 +5,7 @@
 
 ResourceManager* ResourceManager::instance = NULL;
 
-const int ResourceManager::NUM_COLOURS;
-const int ResourceManager::MAIN_LOOP_TIME;
-const int ResourceManager::GAME_LOOP_TIME;
+const int ResourceManager::NUM_GRADIENT_COLOURS = 10;
 
 ResourceManager::ResourceManager()
 {
@@ -23,9 +21,9 @@ ResourceManager::ResourceManager()
     //init colour array
     gradientColours = new std::vector<const QColor*>;
     float per;
-    for (int i = 0 ; i < NUM_COLOURS ; i++){
+    for (int i = 0 ; i < NUM_GRADIENT_COLOURS ; i++){
         //(gradiant from blue -> green -> red, like UI mockup)
-        per = i/(float)NUM_COLOURS;
+        per = i/(float)NUM_GRADIENT_COLOURS;
         //hard one-liner is hard
         //still a little buggy
         gradientColours->push_back(new QColor(
@@ -105,10 +103,10 @@ const QColor* ResourceManager::getColourScale(const float f){
         return gradientColours->at(0);
     }
     else if (f > 1){
-        return gradientColours->at(NUM_COLOURS - 1);
+        return gradientColours->at(NUM_GRADIENT_COLOURS - 1);
     }
     else{
-        return gradientColours->at(round(f * (NUM_COLOURS - 1)));
+        return gradientColours->at(round(f * (NUM_GRADIENT_COLOURS - 1)));
     }
 }
 

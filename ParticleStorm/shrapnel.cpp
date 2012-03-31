@@ -1,12 +1,12 @@
 #include "shrapnel.h"
 #include "util.h"
 
-const int Shrapnel::MAX_SHRAPNEL_SPEED;
-const int Shrapnel::INITIAL_PUSH_MAX;
-const int Shrapnel::INITIAL_PUSH_MIN;
-const int Shrapnel::MAX_ROTATION_SPD;
-const double Shrapnel::INITIAL_TTL;
-const int Shrapnel::DECREMENT_SPEED;
+const int Shrapnel::MAX_SHRAPNEL_SPEED = 100;
+const int Shrapnel::INITIAL_PUSH_MIN = 40;
+const int Shrapnel::INITIAL_PUSH_MAX = 140;
+const int Shrapnel::MAX_ROTATION_SPD = 600;
+const double Shrapnel::INITIAL_TTL = 4;
+const int Shrapnel::DECREMENT_SPEED = 3;
 
 Shrapnel::Shrapnel():GameObject(){
 
@@ -43,27 +43,22 @@ void Shrapnel::update(double deltaTime){
     y += y_vel * 5 * deltaTime;
 
     angle += spin*deltaTime;
-    if (angle>360)
-       {
-        angle = angle - 360;
-        }
+    while (angle > 360) angle -= 360;
 
     //kill old shrapnel
-    if (ttl <= 0)
-        die();
-    else
-        this->ttl -= deltaTime;
+    if (ttl <= 0) die();
+    else ttl -= deltaTime;
 
 }
 void Shrapnel::drawFaded() const{
 
     const double hLen = len/2.0f;
 
-     glPushMatrix();
-     glLoadIdentity();
-     glTranslated(x, y, 0);
-     glRotated(angle, 0, 0, 1);
-     Util::drawLine(-hLen, 0, hLen, 0, clr);
-     glPopMatrix();
+    glPushMatrix();
+    glLoadIdentity();
+    glTranslated(x, y, 0);
+    glRotated(angle, 0, 0, 1);
+    Util::drawLine(-hLen, 0, hLen, 0, clr);
+    glPopMatrix();
 }
 

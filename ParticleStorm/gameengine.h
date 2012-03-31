@@ -17,16 +17,16 @@ public:
     explicit GameEngine(QWidget *parent = 0);
     ~GameEngine();
 
-    //constants (redeclare in implementation)
-    static const int MAX_X = 1024;
-    static const int MAX_Y = 680;
-    static const int MAX_FPS = 60;
-    static const int FPS_COUNT_FRAME_INTERVAL = 50;
-    static const int LINES_PER_FADE = 175;
-    static const int CLEAR_BORDER_AMT = 5;
-    static const double GAME_OVER_SECONDS = 5;
-    static const float PAN_SPEED = 0.5;
-    static const double RESUME_GAME_LAG = 2;
+    //declare in implementation
+    static const int MAX_X;
+    static const int MAX_Y;
+    static const int MAX_FPS;
+    static const int FPS_COUNT_FRAME_INTERVAL;
+    static const int LINES_PER_FADE;
+    static const int CLEAR_BORDER_AMT;
+    static const double GAME_OVER_SECONDS;
+    static const float PAN_SPEED;
+    static const double RESUME_GAME_LAG;
 
     enum Keys{
         DROP,

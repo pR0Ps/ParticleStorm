@@ -4,10 +4,10 @@
 #include "util.h"
 #include "star.h"
 
-const float Star::FORCE_DISSIPATION;
-const int Star::FORCE_EXERT;
-const double Star::FORCE_CUTOFF;
-const int Star::MAX_DIST;
+const float Star::FORCE_DISSIPATION = 25;
+const int Star::FORCE_EXERT = 5000;
+const double Star::FORCE_CUTOFF = 250;
+const int Star::MAX_DIST = 10;
 
 Star::Star():GameObject(){
     initStar();
