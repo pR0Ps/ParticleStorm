@@ -23,6 +23,7 @@ public:
     static const int MIN_ENEMIES;
     static const int ENEMY_GROWTH;
     static const int ENEMY_SPAWN_DIST;
+    static const int MAX_LEVEL;
 
     //starts the level
     void startLevel(LevelType t, int lvl);

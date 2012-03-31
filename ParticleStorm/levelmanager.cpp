@@ -6,6 +6,7 @@ const int LevelManager::MAX_ENEMIES = 70;
 const int LevelManager::MIN_ENEMIES = 5;
 const int LevelManager::ENEMY_GROWTH = 3;
 const int LevelManager::ENEMY_SPAWN_DIST = 300;
+const int LevelManager::MAX_LEVEL = 25;
 
 LevelManager::LevelManager() {
 }
@@ -15,13 +16,6 @@ void LevelManager::startLevel(LevelType t, int lvl) {
     currLvl = lvl;
     levelDone = false;
     enemiesStarted = false;
-
-    //check if game beaten
-    //TODO: better effects ('you win' graphic) but this gets the job done
-    if (currLvl > 25){
-        MainWindow::getInstance()->doneGame(ObjectManager::getInstance()->getPlayer()->getScore());
-        return;
-    }
 
     //init timers
     text_ttl = TEXT_DISPLAY_TIME;
@@ -42,8 +36,11 @@ void LevelManager::startEnemies(){
         }
     }
     else if (currType == LEVELED){
+        //play the last level over and over if the gameengine doesn't stop the game properly
+        int tempLvl = std::min(MAX_LEVEL, currLvl);
+
         //stacked levels (each loads enemies from all the levels below it as well)
-        switch(currLvl){
+        switch(tempLvl){
         case 25:
             om->spawnEnemy(ObjectManager::SHOOTER, randomOffscreenPos());
             om->spawnEnemy(ObjectManager::SHOOTER, randomOffscreenPos());

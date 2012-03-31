@@ -169,6 +169,9 @@ void GameEngine::start(int mode){
     if (mode < 0 || mode > 2) mode = 0;
     gameMode = (LevelManager::LevelType)mode;
 
+    //game over text
+    gameOverText = "GAME OVER";
+
     //FPS stuff
     framecnt = 0;
     fps = 0;
@@ -335,8 +338,13 @@ void GameEngine::update(double deltaTime){
 
     //level stuff
     levelManager->update(deltaTime);
-    if (levelManager->levelFinished())
-        levelManager->nextLevel();
+    if (levelManager->levelFinished()){
+        if (levelManager->getCurrentLevel() == LevelManager::MAX_LEVEL){
+            gameOverText = "YOU WIN!";
+            gameOverTimer += deltaTime;
+        }
+        else levelManager->nextLevel();
+    }
 }
 
 //draws everything - automatically called by timer
@@ -391,6 +399,6 @@ void GameEngine::paintGL(){
         //draw the game over sequence
 
         //fade screen (or other game-overy stuff) for GAME_OVER_FRAMES frames
-        Util::drawString("Game Over", MAX_X/2, MAX_Y/2, resourceManager->getTexture(ResourceManager::TEXT), true, true, 5, 5);
+        Util::drawString(gameOverText, MAX_X/2, MAX_Y/2, resourceManager->getTexture(ResourceManager::TEXT), true, true, 5, 5);
     }
 }

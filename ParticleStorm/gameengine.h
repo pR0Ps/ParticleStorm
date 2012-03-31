@@ -98,6 +98,9 @@ private:
     double gameOverTimer;
     int gameMode;
 
+    //game over text
+    std::string gameOverText;
+
     //flag for initially clearing the framebuffer
     bool initialClear;
 
