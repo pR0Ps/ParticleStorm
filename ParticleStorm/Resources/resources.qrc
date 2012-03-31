@@ -1,10 +1,7 @@
 <RCC>
     <qresource prefix="/Images">
-        <file>Title.png</file>
-        <file>Cursor.png</file>
         <file>font.png</file>
-        <file>Player.png</file>
-        <file>PLAY.png</file>
-        <file>TITLE2.png</file>
+        <file>cursor.png</file>
+        <file>title.png</file>
     </qresource>
 </RCC>

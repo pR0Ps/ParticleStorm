@@ -22,7 +22,7 @@ SoundManager::SoundManager(){
     //load the music
     sounds = new std::vector<QSound*>;
     #ifndef Q_WS_X11
-    sounds->push_back(new QSound("../ParticleStorm/Resources/chaosinvaders.wav"));
+    sounds->push_back(new QSound("../ParticleStorm/Resources/chaosinvaders-loop.wav"));
     sounds->push_back(new QSound("../ParticleStorm/Resources/base-loop.wav"));
     #endif
 

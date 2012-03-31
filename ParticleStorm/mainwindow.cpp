@@ -59,13 +59,13 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
     nextEntry = new Button(0, 0, 0,0);
 
     //highscores
-    highScoreValues = new std::vector<HighScoreEntry*>();
+    highScores = new std::vector<HighScoreEntry*>();
     loadScores();
     //name entry
     setCurrLetter(0);
-    nameEnter = new std::vector<char>();
+    nameEnterCharacters = new std::vector<char>();
     for (int i = 0 ; i < MAX_HIGHSCORE_LETTERS ; i++)
-        nameEnter->push_back('A');
+        nameEnterCharacters->push_back('A');
 
     //timing stuff
     timer = new QTime();
@@ -98,10 +98,10 @@ MainWindow::~MainWindow(){
     delete upEntry;
     delete downEntry;
     delete nextEntry;
-    delete nameEnter;
+    delete nameEnterCharacters;
 
-    while(!highScoreValues->empty()) delete highScoreValues->back(), highScoreValues->pop_back();
-    delete highScoreValues;
+    while(!highScores->empty()) delete highScores->back(), highScores->pop_back();
+    delete highScores;
 
     delete soundManager;
     delete engine;
@@ -186,13 +186,13 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
     //highscore entry buttons
     else if (upEntry->mouseOver(currMousePos) && upEntry->down){
         //increment curr letter
-        nameEnter->at(currEntry)++;
-        if (nameEnter->at(currEntry) > 90) nameEnter->at(currEntry) = 65;
+        nameEnterCharacters->at(currEntry)++;
+        if (nameEnterCharacters->at(currEntry) > 90) nameEnterCharacters->at(currEntry) = 65;
     }
     else if (downEntry->mouseOver(currMousePos) && downEntry->down){
         //decrement curr letter
-        nameEnter->at(currEntry)--;
-        if (nameEnter->at(currEntry) < 65) nameEnter->at(currEntry) = 90;
+        nameEnterCharacters->at(currEntry)--;
+        if (nameEnterCharacters->at(currEntry) < 65) nameEnterCharacters->at(currEntry) = 90;
     }
     else if (nextEntry->mouseOver(currMousePos) && nextEntry->down){
         //move to the next letter/finish entry
@@ -201,7 +201,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
         else{
             std::string temp= "";
             for (int i = 0 ; i < MAX_HIGHSCORE_LETTERS ; i++)
-                temp += nameEnter->at(i);
+                temp += nameEnterCharacters->at(i);
             addScore(temp, currScore);
             setCurrLetter(0);
             setMode(HIGHSCORES);
@@ -239,8 +239,8 @@ void MainWindow::initializeGL(){
 
     //load textures
     fontTex = loadTexture(":/Images/font.png");
-    titleTex = loadTexture(":/Images/TITLE2.png");
-    cursorTex = loadTexture(":/Images/Cursor.png");
+    titleTex = loadTexture(":/Images/title.png");
+    cursorTex = loadTexture(":/Images/cursor.png");
 }
 
 void MainWindow::timerEvent(QTimerEvent *){
@@ -293,9 +293,9 @@ void MainWindow::paintGL(){
     if (menuMode == HIGHSCORES){ //highscores scene
         //highscores display
         Util::drawString("HIGHSCORES", MAX_X / 2, MAX_Y - 100, fontTex, true, false, 3, 3);
-        for (int i = 0 ; i < std::min((int)highScoreValues->size(), MAX_HIGHSCORES) ; i++){
-            Util::drawString(Util::doubleToString(highScoreValues->at(i)->score, 25, 0), 100, MAX_Y - 170 - i * HIGHSCORES_SPACING, fontTex);
-            Util::drawString(Util::doubleToString(i+1, 2, 0) + ". " + highScoreValues->at(i)->name, 100, MAX_Y - 170 - i * HIGHSCORES_SPACING, fontTex);
+        for (int i = 0 ; i < std::min((int)highScores->size(), MAX_HIGHSCORES) ; i++){
+            Util::drawString(Util::doubleToString(highScores->at(i)->score, 25, 0), 100, MAX_Y - 170 - i * HIGHSCORES_SPACING, fontTex);
+            Util::drawString(Util::doubleToString(i+1, 2, 0) + ". " + highScores->at(i)->name, 100, MAX_Y - 170 - i * HIGHSCORES_SPACING, fontTex);
         }
 
         //buttons
@@ -310,7 +310,7 @@ void MainWindow::paintGL(){
         Util::drawString("ENTER YOUR NAME", MAX_X/2, MAX_Y - 200, fontTex, true);
         //draw letters
         for (int i = 0 ; i < MAX_HIGHSCORE_LETTERS ; i++){
-            Util::drawChar(nameEnter->at(i), (MAX_X - MAX_HIGHSCORE_LETTERS * HIGHSCORE_ENTRY_SPACING)/2 + i * HIGHSCORE_ENTRY_SPACING , MAX_Y - 350, fontTex);
+            Util::drawChar(nameEnterCharacters->at(i), (MAX_X - MAX_HIGHSCORE_LETTERS * HIGHSCORE_ENTRY_SPACING)/2 + i * HIGHSCORE_ENTRY_SPACING , MAX_Y - 350, fontTex);
         }
 
         //draw buttons
@@ -456,7 +456,7 @@ void MainWindow::loadScores(){
             inFile >> tempName;
             inFile >> tempScore;
             if (inFile.eof()) break;
-            highScoreValues->push_back(new HighScoreEntry(tempName, atoi(tempScore.c_str())));
+            highScores->push_back(new HighScoreEntry(tempName, atoi(tempScore.c_str())));
     }
     sortScores();
 }
@@ -464,20 +464,20 @@ void MainWindow::saveScores(){
     //write the scores to a file
     std::ofstream outFile;
     outFile.open(HS_FILE, std::ofstream::out | std::ofstream::trunc);
-    for(unsigned int i = 0 ; i < highScoreValues->size() ; i++){
-        outFile << highScoreValues->at(i)->name << "\n";
-        outFile << highScoreValues->at(i)->score << "\n";
+    for(unsigned int i = 0 ; i < highScores->size() ; i++){
+        outFile << highScores->at(i)->name << "\n";
+        outFile << highScores->at(i)->score << "\n";
     }
     outFile.flush();
     outFile.close();
 }
 
 void MainWindow::sortScores(){
-    std::sort(highScoreValues->begin(), highScoreValues->end(), compareHS);
-    while(highScoreValues->size() > MAX_HIGHSCORES) highScoreValues->pop_back();
+    std::sort(highScores->begin(), highScores->end(), compareHS);
+    while(highScores->size() > MAX_HIGHSCORES) highScores->pop_back();
 }
 void MainWindow::addScore(std::string name, int score){
-    highScoreValues->push_back(new HighScoreEntry(name, score));
+    highScores->push_back(new HighScoreEntry(name, score));
     sortScores();
 }
 void MainWindow::setMode(Mode m){

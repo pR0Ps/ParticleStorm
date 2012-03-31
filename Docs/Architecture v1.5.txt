@@ -1,6 +1,5 @@
 Version 1.5
 02/03/2012
-Team Opal
 
 
 Objects:

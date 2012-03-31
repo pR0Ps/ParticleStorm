@@ -1,0 +1,120 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
+<project xmlns="http://audacity.sourceforge.net/xml/" projname="base-loop_data" version="1.3.0" audacityversion="2.0.0" sel0="0.4134625404" sel1="0.4134625404" vpos="0" h="0.0000000000" zoom="149.9531250000" rate="44100.0">
+	<tags>
+		<tag name="TITLE" value="Phat"/>
+		<tag name="Software" value="FL Studio 6"/>
+	</tags>
+	<wavetrack name="48489__flick3r__phat-bass-line" channel="0" linked="1" mute="0" solo="0" height="150" minimized="0" rate="44100" gain="1.0" pan="0.0">
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="790225">
+				<waveblock start="0">
+					<simpleblockfile filename="e0000bba.au" len="245969" min="-0.508844" max="0.62099" rms="0.126883"/>
+				</waveblock>
+				<waveblock start="245969">
+					<simpleblockfile filename="e00007c6.au" len="262144" min="-0.667074" max="1.058796" rms="0.158932"/>
+				</waveblock>
+				<waveblock start="508113">
+					<simpleblockfile filename="e00002fe.au" len="262144" min="-0.598028" max="1.117559" rms="0.149925"/>
+				</waveblock>
+				<waveblock start="770257">
+					<simpleblockfile filename="e00007a0.au" len="19968" min="-0.235924" max="0.692008" rms="0.058865"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+		<waveclip offset="33.93351474">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="16175">
+				<waveblock start="0">
+					<simpleblockfile filename="e000011b.au" len="16175" min="-0.192872" max="0.401234" rms="0.043599"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="48489__flick3r__phat-bass-line" channel="1" linked="0" mute="0" solo="0" height="150" minimized="0" rate="44100" gain="1.0" pan="0.0">
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="790225">
+				<waveblock start="0">
+					<simpleblockfile filename="e00003b0.au" len="245969" min="-0.481324" max="0.583269" rms="0.130981"/>
+				</waveblock>
+				<waveblock start="245969">
+					<simpleblockfile filename="e0000063.au" len="262144" min="-0.646565" max="0.85471" rms="0.172002"/>
+				</waveblock>
+				<waveblock start="508113">
+					<simpleblockfile filename="e000055d.au" len="262144" min="-0.65163" max="0.959016" rms="0.152479"/>
+				</waveblock>
+				<waveblock start="770257">
+					<simpleblockfile filename="e000097f.au" len="19968" min="-0.250856" max="0.824651" rms="0.058724"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+		<waveclip offset="33.93351474">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="16175">
+				<waveblock start="0">
+					<simpleblockfile filename="e0000294.au" len="16175" min="-0.310437" max="0.44861" rms="0.049709"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="48489__flick3r__phat-bass-line" channel="0" linked="1" mute="0" solo="0" height="150" minimized="0" rate="44100" gain="1.0" pan="0.0">
+		<waveclip offset="17.87058957">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="724550">
+				<waveblock start="0">
+					<simpleblockfile filename="e0000382.au" len="194337" min="-0.598028" max="1.105058" rms="0.153148"/>
+				</waveblock>
+				<waveblock start="194337">
+					<simpleblockfile filename="e0000702.au" len="262144" min="-0.667074" max="1.058796" rms="0.159095"/>
+				</waveblock>
+				<waveblock start="456481">
+					<simpleblockfile filename="e0000001.au" len="134034" min="-0.508844" max="0.62099" rms="0.109065"/>
+				</waveblock>
+				<waveblock start="590515">
+					<simpleblockfile filename="e0000edd.au" len="134035" min="-0.370441" max="0.495362" rms="0.09945"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="1">
+				<controlpoint t="0.000000000000" val="0.944444417953"/>
+			</envelope>
+		</waveclip>
+		<waveclip offset="17.31582766">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="24465">
+				<waveblock start="0">
+					<simpleblockfile filename="e0000ec2.au" len="24465" min="-0.204208" max="0.7676" rms="0.044564"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="48489__flick3r__phat-bass-line" channel="1" linked="0" mute="0" solo="0" height="150" minimized="0" rate="44100" gain="1.0" pan="0.0">
+		<waveclip offset="17.87058957">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="724550">
+				<waveblock start="0">
+					<simpleblockfile filename="e000080c.au" len="194337" min="-0.65163" max="0.959016" rms="0.159291"/>
+				</waveblock>
+				<waveblock start="194337">
+					<simpleblockfile filename="e0000c0b.au" len="262144" min="-0.646565" max="0.85471" rms="0.172735"/>
+				</waveblock>
+				<waveblock start="456481">
+					<simpleblockfile filename="e00002ba.au" len="134034" min="-0.382201" max="0.583269" rms="0.107892"/>
+				</waveblock>
+				<waveblock start="590515">
+					<simpleblockfile filename="e0000680.au" len="134035" min="-0.481324" max="0.547749" rms="0.105735"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="1">
+				<controlpoint t="0.000000000000" val="0.944444417953"/>
+			</envelope>
+		</waveclip>
+		<waveclip offset="17.31582766">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="24465">
+				<waveblock start="0">
+					<simpleblockfile filename="e0000fde.au" len="24465" min="-0.178558" max="0.782174" rms="0.044097"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+</project>

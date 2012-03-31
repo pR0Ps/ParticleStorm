@@ -120,7 +120,7 @@ private:
     Button *downEntry;
     Button *nextEntry;
     int currEntry;
-    std::vector<char> *nameEnter;
+    std::vector<char> *nameEnterCharacters;
     int currScore;
     void setCurrLetter(int i);
 
@@ -137,7 +137,7 @@ private:
     };
     static bool compareHS(const HighScoreEntry *h1, const HighScoreEntry *h2){return h1->score > h2->score;}
 
-    std::vector<HighScoreEntry*> *highScoreValues;
+    std::vector<HighScoreEntry*> *highScores;
 
     void setMode(Mode m);
     void loadScores();

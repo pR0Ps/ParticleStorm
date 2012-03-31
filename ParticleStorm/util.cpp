@@ -267,8 +267,6 @@ void Util::drawGem(double x, double y, const double diameter, const bool fill, c
         glColor3d(clr->red(), clr->green(), clr->blue());
     }
 
-    const double temp = diameter/8.0f;
-
     if (!fill){
         //weirdness with the LINE_LOOP
         x += 1;
