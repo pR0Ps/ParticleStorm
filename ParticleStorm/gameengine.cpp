@@ -8,7 +8,7 @@
 //ick, redundancy
 const int GameEngine::MAX_X = 1024;
 const int GameEngine::MAX_Y = 680;
-const int GameEngine::MAX_FPS = 60;
+const int GameEngine::MAX_FPS = 120;
 const int GameEngine::FPS_COUNT_FRAME_INTERVAL = 50;
 const int GameEngine::LINES_PER_FADE = 175;
 const int GameEngine::CLEAR_BORDER_AMT = 5;
