@@ -22,7 +22,7 @@ public:
     static const int MAX_Y;
     static const int MAX_FPS;
     static const int FPS_COUNT_FRAME_INTERVAL;
-    static const int LINES_PER_FADE;
+    static const int FADE_LINES_PER_SECOND;
     static const int CLEAR_BORDER_AMT;
     static const double GAME_OVER_SECONDS;
     static const float PAN_SPEED;
@@ -80,6 +80,9 @@ private:
     double secSinceFrameInterval;
     QTime *timer;
     float fps;
+
+    //how much to fade the screen on next draw
+    int fadeCount;
 
     //game clock
     int gameClock;

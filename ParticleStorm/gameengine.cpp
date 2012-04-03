@@ -10,7 +10,7 @@ const int GameEngine::MAX_X = 1024;
 const int GameEngine::MAX_Y = 680;
 const int GameEngine::MAX_FPS = 120;
 const int GameEngine::FPS_COUNT_FRAME_INTERVAL = 50;
-const int GameEngine::LINES_PER_FADE = 175;
+const int GameEngine::FADE_LINES_PER_SECOND = 30000;
 const int GameEngine::CLEAR_BORDER_AMT = 5;
 const double GameEngine::GAME_OVER_SECONDS = 5;
 const float GameEngine::PAN_SPEED = 0.5;
@@ -191,6 +191,9 @@ void GameEngine::start(int mode){
     //tell the framebuffer to clear properly
     initialClear = true;
 
+    //initilize the fade count
+    fadeCount = 0;
+
     //reset mouse state
     mouseState = Qt::NoButton;
 
@@ -240,13 +243,14 @@ void GameEngine::doFade(){
         Util::drawBox(MAX_X - CLEAR_BORDER_AMT, CLEAR_BORDER_AMT, MAX_X, MAX_Y, true);
 
         //fade the screen
-        for (int i = 0 ; i < LINES_PER_FADE ; i++){
+        for (int i = 0 ; i < fadeCount; i++){
             glBegin(GL_LINES);
                 glVertex2i(qrand() % MAX_X, qrand() % MAX_Y);
                 glVertex2i(qrand() % MAX_X, qrand() % MAX_Y);
             glEnd();
         }
     }
+    fadeCount = 0;
 }
 
 //draws information for the player
@@ -348,6 +352,9 @@ void GameEngine::update(double deltaTime){
         }
         else levelManager->nextLevel();
     }
+
+    //fading the screen
+    fadeCount += FADE_LINES_PER_SECOND * deltaTime;
 }
 
 //draws everything - automatically called by timer
@@ -375,7 +382,7 @@ void GameEngine::paintGL(){
         fbo->bind();
 
         //shift framebuffer by pan amount (by offsetting it and drawing it to itself)
-        Util::drawTexture(0 + panX, 0 + panY, MAX_X + panX, MAX_Y + panY, fbo->texture());
+        Util::drawTexture(panX, panY, MAX_X + panX, MAX_Y + panY, fbo->texture());
 
         //fade the previous frame
         doFade();
