@@ -167,6 +167,12 @@ bool LevelManager::levelFinished () const {
     return levelDone;
 }
 
+std::string LevelManager::getLevelString(){
+    if (currType == LEVELED) return "LEVEL: " + Util::doubleToString((double) currLvl,0,0);
+    if (currType == NONSTOP) return "WAVE: " + Util::doubleToString((double) currLvl,0,0);;
+    return "";
+}
+
 void LevelManager::update(double deltaTime) {
     //run timers
     if (text_ttl > 0) text_ttl -= deltaTime;

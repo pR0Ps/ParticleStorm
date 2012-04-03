@@ -254,8 +254,11 @@ void GameEngine::drawHUD(){
 
     if (gameMode != LevelManager::ZEN){
         //bars for health + mana
-        Util::drawMeter(20, MAX_Y - 35, 220, MAX_Y - 20, objectManager->getPlayer()->getLifePercent(), false, resourceManager->getColour(ResourceManager::RED));
-        Util::drawMeter(240, MAX_Y - 35, 440, MAX_Y - 20, objectManager->getPlayer()->getManaPercent(), false, resourceManager->getColour(ResourceManager::BLUE));
+        Util::drawMeter(20, MAX_Y - 32, 220, MAX_Y - 19, objectManager->getPlayer()->getLifePercent(), false, resourceManager->getColour(ResourceManager::RED));
+        Util::drawMeter(240, MAX_Y - 32, 440, MAX_Y - 19, objectManager->getPlayer()->getManaPercent(), false, resourceManager->getColour(ResourceManager::BLUE));
+
+        //level text
+        Util::drawString(levelManager->getLevelString(), MAX_X - 450, MAX_Y - 25, resourceManager->getTexture(ResourceManager::TEXT), false, true);
 
         //Score text
         Util::drawString("SCORE:", MAX_X - 260, MAX_Y - 25, resourceManager->getTexture(ResourceManager::TEXT), false, true);

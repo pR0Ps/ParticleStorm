@@ -41,6 +41,9 @@ public:
     //get the current level
     int getCurrentLevel() const {return currLvl;}
 
+    //get the level text
+    std::string getLevelString();
+
 private:
     //state stuff
     LevelType currType;
