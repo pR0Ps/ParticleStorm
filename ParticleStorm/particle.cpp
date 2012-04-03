@@ -10,7 +10,7 @@ const float Particle::SPEED_MULTIPLIER = 1;
 const float Particle::AIR_RESIST = 1;
 const float Particle::FORCE_DISSIPATION = 5;
 const double Particle::FORCE_CUTOFF = 1500;
-const int Particle::FORCE_EXERT = 8000000;
+const int Particle::FORCE_EXERT = 6000000;
 const double Particle::INITITAL_TTL = 20;
 
 Particle::Particle():GameObject(){

@@ -34,21 +34,21 @@ bool Util::coordInRect(const double px, const double py, const double rx1, const
 }
 
 //returns a random point on the specified rectangle
-QPoint Util::randCoordOnRect(const double x1, const double y1, const double x2, const double y2){
+Util::Point2D Util::randCoordOnRect(const double x1, const double y1, const double x2, const double y2){
     switch(qrand()%4){
     case 0:
-        return QPoint(x1, randInt(y1, y2));
+        return Point2D(x1, randInt(y1, y2));
     case 1:
-        return QPoint(x2, randInt(y1, y2));
+        return Point2D(x2, randInt(y1, y2));
     case 2:
-        return QPoint(randInt(x1, x2), y1);
+        return Point2D(randInt(x1, x2), y1);
     default:
-        return QPoint(randInt(x1, x2), y2);
+        return Point2D(randInt(x1, x2), y2);
     }
 }
 
 //returns the point of intersection between the lines spaning p1-p2 and p3-p4
-QPointF* Util::lineIntersect(const double x1, const double y1, const double x2, const double y2,
+Util::Point2D* Util::lineIntersect(const double x1, const double y1, const double x2, const double y2,
                              const double x3, const double y3, const double x4, double y4) {
     //for rounding errors
     const float epsilon = 1e-5;
@@ -70,9 +70,7 @@ QPointF* Util::lineIntersect(const double x1, const double y1, const double x2, 
         y < std::min(y3, y4) - epsilon || y > std::max(y3, y4) + epsilon) return NULL;
 
     // Return the point of intersection
-    QPointF* ret = new QPointF();
-    ret->setX(x);
-    ret->setY(y);
+    Point2D* ret = new Point2D(x, y);
     return ret;
 }
 

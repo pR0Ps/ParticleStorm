@@ -92,8 +92,8 @@ public:
     void spawnPowerup (PowerupType t, double x, double y, double x_vel, double y_vel, int value);
     void spawnEnemy(EnemyType t, double x, double y, double x_tar, double y_tar);
     void spawnEnemy(EnemyType t, double x, double y);
-    void spawnEnemy(EnemyType t, QPoint p);
-    void spawnEnemy(QPoint p);
+    void spawnEnemy(EnemyType t, Util::Point2D p);
+    void spawnEnemy(Util::Point2D p);
     void spawnShrapnel (double x, double y, double x_vel, double y_vel, int num, double len, const Util::Color *clr);
 
     //enemy stuff

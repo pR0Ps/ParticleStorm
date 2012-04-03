@@ -252,7 +252,7 @@ void Enemy::drawNoFade() const{
         const double hsx = GameEngine::MAX_X / 2.0f;
         const double hsy = GameEngine::MAX_Y / 2.0f;
 
-        QPointF *temp;
+        Util::Point2D *temp;
         //find intersection between player-enemy line and the edge of the screen
         temp = Util::lineIntersect(hsx, hsy, x, y, 0, 0, GameEngine::MAX_X, 0);
         if (temp == NULL) temp = Util::lineIntersect(hsx, hsy, x, y, GameEngine::MAX_X, 0, GameEngine::MAX_X, GameEngine::MAX_Y);
@@ -260,11 +260,11 @@ void Enemy::drawNoFade() const{
         if (temp == NULL) temp = Util::lineIntersect(hsx, hsy, x, y, 0, 0, 0, GameEngine::MAX_Y);
         if (temp != NULL){
             //found intersection point, draw marker
-            Util::drawRoundShape(temp->x(), temp->y(),
+            Util::drawRoundShape(temp->x, temp->y,
                                  //1000 is the distance the enemy has to be to be off by in order to get the biggest circle
                                  //10 is the minimum size circle
                                  //60 (50 + 10) is the maximum size circle
-                                 Util::min(Util::distance(temp->x(), temp->y(), x, y), 1000)/1000.0f * 50 + 10,
+                                 Util::min(Util::distance(temp->x, temp->y, x, y), 1000)/1000.0f * 50 + 10,
                                  15, false, ResourceManager::getInstance()->getColour(ResourceManager::WHITE));
         }
         //clean up

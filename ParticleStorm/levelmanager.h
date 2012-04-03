@@ -59,7 +59,7 @@ private:
 
     //start the enemies
     void startEnemies();
-    QPoint randomOffscreenPos();
+    Util::Point2D randomOffscreenPos();
 };
 
 #endif // LEVELMANAGER_H

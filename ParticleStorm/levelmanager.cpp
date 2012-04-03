@@ -205,7 +205,7 @@ void LevelManager::drawNoFade() const{
 }
 
 //spawning enemies offscreen
-QPoint LevelManager::randomOffscreenPos(){
+Util::Point2D LevelManager::randomOffscreenPos(){
     return Util::randCoordOnRect(-ENEMY_SPAWN_DIST, -ENEMY_SPAWN_DIST, GameEngine::MAX_X + ENEMY_SPAWN_DIST, GameEngine::MAX_Y + ENEMY_SPAWN_DIST);
 }
 
