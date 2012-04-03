@@ -6,4 +6,8 @@ Licence: GNU GPL v3
 
 Platforms: Platform-Independent
 
+Compiling:
+1. Install the Qt SDK v1.2 from http://qt.nokia.com/downloads
+2. Open ParticleStorm/ParticleStorm.pro in Qt Creator, pick a build directory, and click the green triangle in the lower left corner.
+
 -----Based off the 2006 game "Forces" by Adam Belinski-----
