@@ -79,7 +79,7 @@ private:
         }
     };
     std::vector<mStar*> *stars;
-    const QColor *starClr;
+    const Util::Color *starClr;
 
     //timing stuff
     QTime *timer;

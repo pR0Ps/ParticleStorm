@@ -2,7 +2,6 @@
 #define PARTICLE_H
 
 #include "gameobject.h"
-#include <QColor>
 #include "util.h"
 
 class Particle : public GameObject

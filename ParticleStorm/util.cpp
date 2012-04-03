@@ -89,11 +89,11 @@ float Util::getScaleByFrame(unsigned long int frame, unsigned int steps,
 }
 
 //draws a line
-void Util::drawLine(double x1, const double y1, const double x2, double y2, const QColor *clr){
+void Util::drawLine(double x1, const double y1, const double x2, double y2, const Color *clr){
     //save current color
     if (clr != NULL){
         glPushAttrib(GL_CURRENT_BIT);
-        glColor3d(clr->red(), clr->green(), clr->blue());
+        glColor3d(clr->red, clr->green, clr->blue);
     }
     if (abs(x1 - x2) < 1 && abs(y1 - y2) < 1){
         //draw a point
@@ -114,11 +114,11 @@ void Util::drawLine(double x1, const double y1, const double x2, double y2, cons
 }
 
 //draws a box
-void Util::drawBox(double x1, const double y1, const double x2, double y2, const bool fill, const QColor *clr){
+void Util::drawBox(double x1, const double y1, const double x2, double y2, const bool fill, const Color *clr){
     //save current color
     if (clr != NULL){
         glPushAttrib(GL_CURRENT_BIT);
-        glColor3d(clr->red(), clr->green(), clr->blue());
+        glColor3d(clr->red, clr->green, clr->blue);
     }
     if (!fill){
         //weirdness with the LINE_LOOP
@@ -142,12 +142,12 @@ void Util::drawBox(double x1, const double y1, const double x2, double y2, const
 //using a macro-micro approach allows for some big jagged sections connected
 //by smaller sections, which also have some variation. This makes for a really cool effect.
 void Util::drawJaggedLine(const double x1, const double y1, const double x2, const double y2,
-                          const QColor *clr, const unsigned int var, const unsigned int seg_len,
+                          const Color *clr, const unsigned int var, const unsigned int seg_len,
                           const unsigned int macro_var, const unsigned int macro_seg_len){
     //colour stuff
     if (clr != NULL){
         glPushAttrib(GL_CURRENT_BIT);
-        glColor3d(clr->red(), clr->green(), clr->blue());
+        glColor3d(clr->red, clr->green, clr->blue);
     }
     if (x1 != x2 || y1 != y2){
         double old_x = x1;
@@ -215,7 +215,7 @@ void Util::drawJaggedLineHelper(const double x1, const double y1, const double x
 
 //draws a meter (life guage, mana gauge, etc)
 void Util::drawMeter(const double x1, const double y1, const double x2, const double y2,
-                     const float amt, const bool vert, const QColor *clr){
+                     const float amt, const bool vert, const Color *clr){
 
     drawBox(x1, y1, x2, y2, false, clr); //outside
     //inside
@@ -224,11 +224,11 @@ void Util::drawMeter(const double x1, const double y1, const double x2, const do
 }
 
 //draw a n-sided shape
-void Util::drawRoundShape(double x, double y, const double diameter, const int numSides, const bool fill, const QColor *clr){
+void Util::drawRoundShape(double x, double y, const double diameter, const int numSides, const bool fill, const Color *clr){
     //colour stuff
     if (clr != NULL){
         glPushAttrib(GL_CURRENT_BIT);
-        glColor3d(clr->red(), clr->green(), clr->blue());
+        glColor3d(clr->red, clr->green, clr->blue);
     }
 
     const double rad = diameter/2.0f;
@@ -260,11 +260,11 @@ void Util::drawRoundShape(double x, double y, const double diameter, const int n
 }
 
 //draw a gem
-void Util::drawGem(double x, double y, const double diameter, const bool fill, const QColor *clr){
+void Util::drawGem(double x, double y, const double diameter, const bool fill, const Color *clr){
     //colour stuff
     if (clr != NULL){
         glPushAttrib(GL_CURRENT_BIT);
-        glColor3d(clr->red(), clr->green(), clr->blue());
+        glColor3d(clr->red, clr->green, clr->blue);
     }
 
     if (!fill){

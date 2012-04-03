@@ -19,14 +19,14 @@ ResourceManager::ResourceManager()
     textures->push_back(loadTextureFromFile(":/Images/font.png"));
 
     //init colour array
-    gradientColours = new std::vector<const QColor*>;
+    gradientColours = new std::vector<const Util::Color*>;
     float per;
     for (int i = 0 ; i < NUM_GRADIENT_COLOURS ; i++){
         //(gradiant from blue -> green -> red, like UI mockup)
         per = i/(float)NUM_GRADIENT_COLOURS;
         //hard one-liner is hard
         //still a little buggy
-        gradientColours->push_back(new QColor(
+        gradientColours->push_back(new Util::Color(
             (per <= .1) ? ((255/2.0)-(per/.1)*(255/2.0)) : ((per < .5) ? (0) : ((per <= .7) ? (((per-.5)/.2)*255) : (255))),
             (per <= .1) ? (0) : ((per <= .3) ? (((per-.1)/(.2))*255) : ((per <= .7) ? (255) : (per <=.9) ? (255-((per-.7)/(.2))*255) : (0))),
             (per <= .3) ? (255) : (per <= .5) ? (255-((per-.3)/(.2))*255) : (0)
@@ -34,18 +34,18 @@ ResourceManager::ResourceManager()
     }
 
     //init static colours
-    basicColours = new std::vector<const QColor*>();
+    basicColours = new std::vector<const Util::Color*>();
 
-    basicColours->push_back(new QColor (255, 255, 255));
-    basicColours->push_back(new QColor(255, 255, 0));
-    basicColours->push_back(new QColor(255, 0, 0));
-    basicColours->push_back(new QColor(0, 255, 0));
-    basicColours->push_back(new QColor(0, 0, 255));
-    basicColours->push_back(new QColor (255, 132, 0));
-    basicColours->push_back(new QColor(0, 190, 255));
-    basicColours->push_back(new QColor (255, 0, 150));
-    basicColours->push_back(new QColor(160, 0, 200));
-    basicColours->push_back(new QColor(0, 0, 0));
+    basicColours->push_back(new Util::Color (255, 255, 255));
+    basicColours->push_back(new Util::Color(255, 255, 0));
+    basicColours->push_back(new Util::Color(255, 0, 0));
+    basicColours->push_back(new Util::Color(0, 255, 0));
+    basicColours->push_back(new Util::Color(0, 0, 255));
+    basicColours->push_back(new Util::Color (255, 132, 0));
+    basicColours->push_back(new Util::Color(0, 190, 255));
+    basicColours->push_back(new Util::Color (255, 0, 150));
+    basicColours->push_back(new Util::Color(160, 0, 200));
+    basicColours->push_back(new Util::Color(0, 0, 0));
 
     //set up self reference
     instance = this;
@@ -98,7 +98,7 @@ GLuint ResourceManager::getTexture(Texture t){
 }
 
 //return the stored colour of the specified gradient
-const QColor* ResourceManager::getColourScale(const float f){
+const Util::Color* ResourceManager::getColourScale(const float f){
     if (f < 0){
         return gradientColours->at(0);
     }
@@ -110,6 +110,6 @@ const QColor* ResourceManager::getColourScale(const float f){
     }
 }
 
-const QColor* ResourceManager::getColour(Colours c){
+const Util::Color* ResourceManager::getColour(Colours c){
     return basicColours->at((int)c);
 }

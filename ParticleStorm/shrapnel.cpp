@@ -12,7 +12,7 @@ Shrapnel::Shrapnel():GameObject(){
 
 }
 
-void Shrapnel::startShrapnel(double x, double y, double x_vel, double y_vel, double len, const QColor *clr){
+void Shrapnel::startShrapnel(double x, double y, double x_vel, double y_vel, double len, const Util::Color *clr){
     this->x = x;
     this->y = y;
 

@@ -2,7 +2,6 @@
 #define UTIL_H
 
 #include <QtOpenGL>
-#include <QColor>
 #include <math.h>
 
 //utility class that provides static functions for calculations,
@@ -15,6 +14,24 @@ class Util{
 private:
     Util();
 public:
+
+    //structs
+    struct Color{
+        Color(int red, int green, int blue){
+            this->red = red;
+            this->green = green;
+            this->blue = blue;
+        }
+        int red, green, blue;
+    };
+    struct Point2D{
+        Point2D (double x, double y){
+            this->x = x;
+            this->y = y;
+        }
+        double x, y;
+    };
+
     //constants (redeclare in implementation)
     static const int CHAR_PER_ROW;
     static const int CHAR_PER_COL;
@@ -57,23 +74,23 @@ public:
                                  float min, float max, bool smooth = true);
 
     //drawing:
-    static void drawBox(double x1, double y1, double x2, double y2, bool fill, const QColor *clr = NULL);
-    static void drawLine(double x1, double y1, double x2, double y2, const QColor *clr = NULL);
+    static void drawBox(double x1, double y1, double x2, double y2, bool fill, const Color *clr = NULL);
+    static void drawLine(double x1, double y1, double x2, double y2, const Color *clr = NULL);
 
     //gives a nice lightning effect
     static void drawJaggedLine(double x1, double y1, double x2, double y2,
-                               const QColor *clr = NULL, unsigned int var = 9, unsigned int seg_len = 15,
+                               const Color *clr = NULL, unsigned int var = 9, unsigned int seg_len = 15,
                                unsigned int macro_var = 60, unsigned int macro_seg_len = 90);
 
     //draw a meter for health/mana/whatever else
     static void drawMeter(double x1, double y1, double x2, double y2,
-                          float amt, bool vert = false, const QColor *clr = NULL);
+                          float amt, bool vert = false, const Color *clr = NULL);
 
     //draw an n-sided shape
-    static void drawRoundShape(double x, double y, double diameter, int numsides, bool fill, const QColor *clr = NULL);
+    static void drawRoundShape(double x, double y, double diameter, int numsides, bool fill, const Color *clr = NULL);
 
     //draw an hexagon for player diplay
-    static void drawGem(double x, double y, double diameter, bool fill, const QColor *clr = NULL);
+    static void drawGem(double x, double y, double diameter, bool fill, const Color *clr = NULL);
 
     //draw a string to the screen. When using the centering options, don't try to render multi-line strings (use 2 calls instead)
     static void drawString(const std::string &s, double x, double y, const GLuint tex, bool center_x = false, bool center_y = false,

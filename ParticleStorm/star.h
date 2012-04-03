@@ -1,7 +1,6 @@
 #ifndef STAR_H
 #define STAR_H
 
-#include <QColor>
 #include "util.h"
 
 #include "gameobject.h"

@@ -1,7 +1,7 @@
-    #ifndef GAMEOBJECT_H
+#ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 
-#include <QColor>
+#include "util.h"
 
 class ObjectManager;
 
@@ -55,7 +55,7 @@ protected:
     double x_vel, y_vel;
     double life, maxLife;
     double radius;
-    const QColor *clr; //never need to modify it, just switch pointers
+    const Util::Color *clr; //never need to modify it, just switch pointers
     bool inUse;
 };
 

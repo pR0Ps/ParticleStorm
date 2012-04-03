@@ -412,7 +412,7 @@ void MainWindow::launchGame(){
 
 //init the stars
 void MainWindow::initStars(){
-    starClr = new QColor(255, 255, 255);
+    starClr = new Util::Color(255, 255, 255);
     stars = new std::vector<mStar*>;
     stars->reserve(NUM_STARS);
     for(int i = 0; i < NUM_STARS; i++){

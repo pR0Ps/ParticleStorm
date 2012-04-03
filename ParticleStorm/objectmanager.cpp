@@ -442,7 +442,7 @@ void ObjectManager::spawnEnemy(QPoint p){
     spawnEnemy((EnemyType)Util::randInt(GRUNT, SHOOTER), p.x(), p.y(), getPlayer()->getX(), getPlayer()->getY());
 }
 
-void ObjectManager::spawnShrapnel(const double x, const double y, const double x_vel, const double y_vel, const int num, const double len, const QColor *clr){
+void ObjectManager::spawnShrapnel(const double x, const double y, const double x_vel, const double y_vel, const int num, const double len, const Util::Color *clr){
     for (int i = 0 ; i < num ; i++){
         static_cast<Shrapnel*>(getUnused(SHRAPNEL))->startShrapnel(x, y, x_vel, y_vel, len, clr);
     }

@@ -4,7 +4,6 @@
 #include "util.h"
 #include <iostream>
 #include "qmath.h"
-#include <QColor>
 
 const int Particle::MAX_PARTICLE_SPEED = 1500;
 const float Particle::SPEED_MULTIPLIER = 1;

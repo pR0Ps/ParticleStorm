@@ -3,6 +3,7 @@
 
 #include <QtOpenGL/QGLWidget>
 #include <QImage>
+#include "util.h"
 
 class ResourceManager
 {
@@ -39,8 +40,8 @@ public:
     GLuint getTexture(Texture t);
 
     //get colours
-    const QColor* getColourScale(float f);
-    const QColor* getColour (Colours c);
+    const Util::Color* getColourScale(float f);
+    const Util::Color* getColour (Colours c);
 
 private:
     //the files to load textures from
@@ -50,8 +51,8 @@ private:
     std::vector<GLuint> *textures;
 
     //holds the colours
-    std::vector<const QColor*> *gradientColours;
-    std::vector<const QColor*> *basicColours;
+    std::vector<const Util::Color*> *gradientColours;
+    std::vector<const Util::Color*> *basicColours;
 
     //self-reference
     static ResourceManager* instance;
