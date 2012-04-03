@@ -111,6 +111,7 @@ void MainWindow::doneGame(const unsigned int score){
     pausedGame = false;
     engine->setVisible(false);
     instance->setVisible(true);
+    soundManager->playSound(muted ? SoundManager::NONE : SoundManager::TITLE);
     engine->reset();
     currScore = score;
     setMode(HSENTRY);
