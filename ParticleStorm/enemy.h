@@ -16,6 +16,8 @@ public:
     static const int MIN_ROTATION_SPD;
     static const int OOB_LIMIT;
     static const int OOB_ALLOWANCE;
+    static const int TANK_PARTICLE_FORCE;
+    static const int TANK_STAR_FORCE;
 
     Enemy();
 

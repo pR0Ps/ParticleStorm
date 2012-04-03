@@ -5,7 +5,7 @@
 #include "star.h"
 
 const float Star::FORCE_DISSIPATION = 25;
-const int Star::FORCE_EXERT = 5000;
+const int Star::FORCE_EXERT = 150000;
 const double Star::FORCE_CUTOFF = 250;
 const int Star::MAX_DIST = 10;
 

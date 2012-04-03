@@ -475,7 +475,7 @@ void MainWindow::saveScores(){
 
 void MainWindow::sortScores(){
     std::sort(highScores->begin(), highScores->end(), compareHS);
-    while(highScores->size() > MAX_HIGHSCORES) highScores->pop_back();
+    while(highScores->size() > (uint)MAX_HIGHSCORES) highScores->pop_back();
 }
 void MainWindow::addScore(std::string name, int score){
     highScores->push_back(new HighScoreEntry(name, score));

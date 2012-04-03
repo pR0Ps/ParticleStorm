@@ -30,7 +30,7 @@ void GameObject::applyForce(double x, double y, double mag, double range, double
     if (dist > range) return;
 
     //avoiding a div by 0 error in the next step
-    if(dist == 0) dist = 1;
+    if(dist == 0) dist = 3;
 
     //apply the velocity
     x_vel += (this->x - x) * mag / ((dist * dist) * dissipation);

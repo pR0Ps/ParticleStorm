@@ -10,6 +10,8 @@ const int Enemy::MIN_ROTATION_SPD = 360;
 const int Enemy::MAX_ROTATION_SPD = 45;
 const int Enemy::OOB_LIMIT = 400;
 const int Enemy::OOB_ALLOWANCE = 250;
+const int Enemy::TANK_PARTICLE_FORCE = 1000000;
+const int Enemy::TANK_STAR_FORCE = 100000;
 
 Enemy::Enemy():GameObject(){
 }
@@ -145,8 +147,8 @@ void Enemy::update(double deltaTime){
             y += y_vel * speed * deltaTime;
 
             //apply the force
-            ObjectManager::getInstance()->applyForce(ObjectManager::PARTICLE, x, y, 10000, 200, Particle::FORCE_DISSIPATION);
-            ObjectManager::getInstance()->applyForce(ObjectManager::STAR, x, y, 1000, 200, Star::FORCE_DISSIPATION);
+            ObjectManager::getInstance()->applyForce(ObjectManager::PARTICLE, x, y, TANK_PARTICLE_FORCE * deltaTime, 200, Particle::FORCE_DISSIPATION);
+            ObjectManager::getInstance()->applyForce(ObjectManager::STAR, x, y, TANK_STAR_FORCE * deltaTime, 200, Star::FORCE_DISSIPATION);
         }
         else if (type == ObjectManager::SPRINTER){
             if(currTimer == maxTimer && !timerActive && !moving){

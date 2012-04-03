@@ -23,26 +23,32 @@ const double Player::COLLISON_INDICATION_TIME = 0.1;
 const int Player::MANA_REGEN_DELAY = 5;
 const int Player::MANA_REGEN_RATE = 50;
 
+//abilities
 const double Player::TIME_BETWEEN_CHG_ABILITY = 0.5;
+
 const int Player::LIGHTNING_RANGE = 350;
 const int Player::LIGHTNING_DPS = 175;
 const int Player::LIGHTNING_MANA_COST = 75;
 const int Player::MIN_LIGHTNING_DRAW_DISTANCE = 10;
+const double Player::LIGHTNING_HEAL_MODIFIER = 0.25;
+
 const int Player::SPRAY_PPS = 100;
 const int Player::SPRAY_MANA_COST = 50;
-const double Player::LIGHTNING_HEAL_MODIFIER = 0.25;
 const int Player::SPRAY_PARTICLE_SPEED = 5000;
+
 const int Player::VORTEX_MANA_COST = 100;
 const int Player::VORTEX_PPS = 100;
 const int Player::VORTEX_SPAWN_RAD = 100;
 const int Player::VORTEX_SPAWN_VELOCITY = 1350;
+
 const int Player::SHOCKWAVE_MANA_COST = 100;
 const int Player::SHOCKWAVE_PPS = 100;
 const int Player::SHOCKWAVE_INNER_RAD = 60;
 const int Player::SHOCKWAVE_DPS = 250;
+
 const int Player::REPULSE_RANGE = 200;
 const int Player::REPULSE_DPS = 100;
-const int Player::REPULSE_FORCE = 500;
+const int Player::REPULSE_FORCE = 10000;
 const int Player::REPULSE_MANA_COST = 150;
 const double Player::REPULSE_TIME = 0.3;
 const int Player::STORM_MANA_COST = Player::LIGHTNING_MANA_COST * 2;
@@ -291,11 +297,11 @@ void Player::performAbility(double deltaTime, ObjectManager* manager,
     // particles and stars.
     else if ((window->getMouseState() & Qt::RightButton) ||
              window->getKeyPressed(GameEngine::PUSH))
-        forcePush(manager);
+        forcePush(manager, deltaTime);
     // Force pull.
     else if ((window->getMouseState() & Qt::MiddleButton) ||
              window->getKeyPressed(GameEngine::PULL))
-        forcePull(manager);
+        forcePull(manager, deltaTime);
     // Use special ability.
     else if (window->getKeyPressed(GameEngine::ABILITY))
         useAbility(deltaTime, manager);
@@ -370,14 +376,14 @@ void Player::setImmune(){
     MainWindow::getInstance()->shakeGameScreen(5, 10);
 }
 
-void Player::forcePush(ObjectManager* manager) const {
-    manager->applyForce(ObjectManager::PARTICLE, x, y, Particle::FORCE_EXERT, Particle::FORCE_CUTOFF, Particle::FORCE_DISSIPATION);
-    manager->applyForce(ObjectManager::STAR, x, y, Star::FORCE_EXERT, Star::FORCE_CUTOFF, Star::FORCE_DISSIPATION);
+void Player::forcePush(ObjectManager* manager, double deltaTime) const {
+    manager->applyForce(ObjectManager::PARTICLE, x, y, Particle::FORCE_EXERT * deltaTime, Particle::FORCE_CUTOFF, Particle::FORCE_DISSIPATION);
+    manager->applyForce(ObjectManager::STAR, x, y, Star::FORCE_EXERT * deltaTime, Star::FORCE_CUTOFF, Star::FORCE_DISSIPATION);
 }
 
-void Player::forcePull(ObjectManager* manager) const {
-    manager->applyForce(ObjectManager::PARTICLE, x, y, -Particle::FORCE_EXERT, Particle::FORCE_CUTOFF,  Particle::FORCE_DISSIPATION);
-    manager->applyForce(ObjectManager::STAR, x, y, -Star::FORCE_EXERT, Star::FORCE_CUTOFF, Star::FORCE_DISSIPATION);
+void Player::forcePull(ObjectManager* manager, double deltaTime) const {
+    manager->applyForce(ObjectManager::PARTICLE, x, y, -Particle::FORCE_EXERT * deltaTime, Particle::FORCE_CUTOFF,  Particle::FORCE_DISSIPATION);
+    manager->applyForce(ObjectManager::STAR, x, y, -Star::FORCE_EXERT * deltaTime, Star::FORCE_CUTOFF, Star::FORCE_DISSIPATION);
 }
 
 void Player::useAbility(double deltaTime, ObjectManager* manager) {
@@ -584,7 +590,7 @@ void Player::vortexAbility(double deltaTime, ObjectManager* manager) {
         // of the particles that were already in the game. This is essentially
         // the same as the force pull ability except that the force is not also
         // applied to stars.
-        manager->applyForce(ObjectManager::PARTICLE, x, y, -Particle::FORCE_EXERT, Particle::FORCE_CUTOFF, Particle::FORCE_DISSIPATION);
+        manager->applyForce(ObjectManager::PARTICLE, x, y, -Particle::FORCE_EXERT * deltaTime, Particle::FORCE_CUTOFF, Particle::FORCE_DISSIPATION);
     }
 }
 
@@ -612,8 +618,8 @@ void Player::shockwaveAbility(double deltaTime, ObjectManager *manager){
         delete temp;
 
         //pull particles in, but push them out as well. this creates a bunch of oscilating particles
-        manager->applyForce(ObjectManager::PARTICLE, x, y, -Particle::FORCE_EXERT, Particle::FORCE_CUTOFF, Particle::FORCE_DISSIPATION);
-        manager->applyForce(ObjectManager::PARTICLE, x, y, Particle::FORCE_EXERT * 10, SHOCKWAVE_INNER_RAD + 10, Particle::FORCE_DISSIPATION);
+        manager->applyForce(ObjectManager::PARTICLE, x, y, -Particle::FORCE_EXERT * deltaTime, Particle::FORCE_CUTOFF, Particle::FORCE_DISSIPATION);
+        manager->applyForce(ObjectManager::PARTICLE, x, y, Particle::FORCE_EXERT * 10 * deltaTime, SHOCKWAVE_INNER_RAD + 10, Particle::FORCE_DISSIPATION);
     }
 }
 
@@ -633,7 +639,7 @@ void Player::repulseAbility(double deltaTime, ObjectManager *manager){
         delete temp;
 
         //push them back
-        manager->applyForce(ObjectManager::ENEMY, x, y, REPULSE_FORCE, REPULSE_RANGE, Enemy::FORCE_DISSIPATION);
+        manager->applyForce(ObjectManager::ENEMY, x, y, REPULSE_FORCE * deltaTime, REPULSE_RANGE, Enemy::FORCE_DISSIPATION);
 
         //show repulse animation
         if(repulseDisplayTime <= 0)

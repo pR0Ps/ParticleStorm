@@ -245,7 +245,7 @@ private:
      *
      * Note: force push and force pull are applied only to particles and stars.
      */
-    void forcePush(ObjectManager* manager) const;
+    void forcePush(ObjectManager* manager, double deltaTime) const;
 
     /*
      * Applies force to all nearby enemies and stars, pulling them towards the
@@ -253,7 +253,7 @@ private:
      *
      * Parameter: the current ObjectManager.
      */
-    void forcePull(ObjectManager* manager) const;
+    void forcePull(ObjectManager* manager, double deltaTime) const;
 
     /*
      * Performs the player's currently selected special ability when the special
