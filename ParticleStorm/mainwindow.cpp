@@ -254,9 +254,6 @@ void MainWindow::timerEvent(QTimerEvent *){
 void MainWindow::update(){
     double deltaTime = timer->restart()/(float)1000;
 
-    //update the sound manager
-    soundManager->update(deltaTime);
-
     //get mouse position
     currMousePos = mapFromGlobal(QCursor::pos());
     currMousePos.setY(MAX_Y - currMousePos.y());
@@ -323,14 +320,18 @@ void MainWindow::paintGL(){
         //draw credits
         Util::drawString("CREDITS", MAX_X / 2, MAX_Y - 100, fontTex, true, false, 3, 3);
 
-        //could for loop it, but would have to define the array to iterate over
-        Util::drawString("DANIEL BAMBRICK..RECORD KEEPER", MAX_X/2, MAX_Y - 175 - 0 * 55, fontTex, true);
-        Util::drawString("MARK DION............AI MASTER", MAX_X/2, MAX_Y - 175 - 1 * 55, fontTex, true);
-        Util::drawString("JULIA GREIG............MANAGER", MAX_X/2, MAX_Y - 175 - 2 * 55, fontTex, true);
-        Util::drawString("DONALD KESTER...LEVEL DESIGNER", MAX_X/2, MAX_Y - 175 - 3 * 55, fontTex, true);
-        Util::drawString("ANDREW MCMULLEN....CODE MONKEY", MAX_X/2, MAX_Y - 175 - 4 * 55, fontTex, true);
-        Util::drawString("CAREY METCALFE.......ARCHITECT", MAX_X/2, MAX_Y - 175 - 5 * 55, fontTex, true);
-        Util::drawString("LUKE WALKER...ABILITY DESIGNER", MAX_X/2, MAX_Y - 175 - 6 * 55, fontTex, true);
+        const char* credits[] = {
+            "DANIEL BAMBRICK..RECORD KEEPER",
+            "MARK DION............AI MASTER",
+            "JULIA GREIG............MANAGER",
+            "DONALD KESTER...LEVEL DESIGNER",
+            "ANDREW MCMULLEN....CODE MONKEY",
+            "CAREY METCALFE.......ARCHITECT",
+            "LUKE WALKER...ABILITY DESIGNER",
+        };
+        for (unsigned int i = 0; i<sizeof(credits)/sizeof(char*); i++){
+            Util::drawString(credits[i], MAX_X/2, MAX_Y - 175 - i * 55, fontTex, true);
+        }
 
         //buttons
         Util::drawString("HIGHSCORES", 0, MAX_Y - 15, fontTex);

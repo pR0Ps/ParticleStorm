@@ -9,25 +9,21 @@ public:
     SoundManager();
     ~SoundManager();
 
+    //make sure this matches with the sound_files array in the constructor
     enum Sound{
         GAME,
         TITLE,
-        NONE
+        NONE //must be last
     };
 
     static SoundManager* getInstance(){return instance;}
 
-    void update(double deltaTime);
-    void playSound(Sound s);
+    void playSound(Sound s, int numLoops = -1);
     void stopSound(){playSound(NONE);}
 
 private:
-    //sound management
-    std::vector<double> *sound_times;
-
     //holds the sounds
     std::vector<QSound*> *sounds;
-    double currSoundTime;
     Sound currSound;
 
     //self reference

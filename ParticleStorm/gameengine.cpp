@@ -280,9 +280,6 @@ void GameEngine::drawHUD(){
 //update game logic - automatically called by timer
 void GameEngine::update(double deltaTime){
 
-    //play ingame music
-    SoundManager::getInstance()->update(deltaTime);
-
     //FPS monitoring
     framecnt++;
     secSinceFrameInterval += deltaTime;

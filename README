@@ -8,7 +8,7 @@ Platforms: Platform-Independent
 
 Downloading:
 	* Use Mercurial to clone this repository.
-	* Mercurial can be download at http://mercurial.selenic.com/wiki/Download
+	* Mercurial can be downloaded at http://mercurial.selenic.com/wiki/Download
 	* GUIs for Mercurial can be found at http://mercurial.selenic.com/wiki/OtherTools#Mac-native_GUIs
 
 Compiling:
