@@ -45,3 +45,5 @@ FORMS    +=
 
 RESOURCES += \
     Resources/resources.qrc
+
+LIBS += -lGLU
