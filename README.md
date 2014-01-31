@@ -5,6 +5,13 @@ An addictive game of manipulating the gravity around you to destroy waves of inc
 
 Based off the 2006 game "Forces" by Adam Belinski.
 
+Images
+------
+
+![Poster](https://raw.github.com/pR0Ps/ParticleStorm/master/Docs/Poster.jpg)
+
+![Screenshot](https://raw.github.com/pR0Ps/ParticleStorm/master/Docs/screenshot.png)
+
 Downloading
 -----------
 
