@@ -1,7 +1,9 @@
 Particle Storm
 ==============
 
-An addictive game of manipulating the gravity around you to destroy waves of incoming enemies. You have the ability to create, push, and pull particles. In order to destroy the enemies, you must fling the particles into them. The faster the particles are moving, the more damage they do. Special powers and varied enemt types add variety for a fun, fast-paced arcade game!
+Manipulate the gravity around you to destroy waves of incoming enemies.
+
+You have the ability to create, push, and pull particles. In order to destroy the enemies, you must fling the particles into them. The faster the particles are moving, the more damage they do. Special powers and varied enemy types add variety for a fun, fast-paced arcade game!
 
 Based off the 2006 game "Forces" by Adam Belinski.
 
