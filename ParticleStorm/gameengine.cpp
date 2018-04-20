@@ -16,10 +16,11 @@ const double GameEngine::GAME_OVER_SECONDS = 5;
 const float GameEngine::PAN_SPEED = 0.5;
 const double GameEngine::RESUME_GAME_LAG = 2;
 
-GameEngine::GameEngine(QWidget *parent) : QGLWidget(parent){
-    setFixedSize(MAX_X, MAX_Y);
+GameEngine::GameEngine(QWidget *parent) : QOpenGLWidget(parent){
     setWindowTitle("Particle Storm");
+    setFixedSize(MAX_X, MAX_Y);
     setAutoFillBackground(false);
+    setMouseTracking(true);
 
     QRect frect = frameGeometry();
     frect.moveCenter(QDesktopWidget().availableGeometry().center());
@@ -78,8 +79,7 @@ void GameEngine::timerEvent(QTimerEvent *){
             return;
         }
 
-        update(deltaTime);
-        updateGL();
+        step(deltaTime);
     }
 }
 
@@ -278,7 +278,7 @@ void GameEngine::drawHUD(){
 }
 
 //update game logic - automatically called by timer
-void GameEngine::update(double deltaTime){
+void GameEngine::step(double deltaTime){
 
     //FPS monitoring
     framecnt++;
@@ -352,6 +352,9 @@ void GameEngine::update(double deltaTime){
 
     //fading the screen
     fadeCount += FADE_LINES_PER_SECOND * deltaTime;
+
+    //Update OpenGL
+    update();
 }
 
 //draws everything - automatically called by timer

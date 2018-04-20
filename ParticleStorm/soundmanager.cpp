@@ -16,36 +16,34 @@ SoundManager::SoundManager(){
     //load the music
     sounds = new std::vector<QSound*>;
 
-    #ifndef Q_WS_X11
     const char* sound_files[] = {
-        "../ParticleStorm/Resources/chaosinvaders-loop.wav",
-        "../ParticleStorm/Resources/base-loop.wav"
+        ":/Sounds/chaosinvaders-loop.wav",
+        ":/Sounds/base-loop.wav"
     };
     for (unsigned int i = 0; i<sizeof(sound_files)/sizeof(char*); i++){
         sounds->push_back(new QSound(sound_files[i]));
     }
-    #endif
 
     instance = this;
 }
 
 SoundManager::~SoundManager(){
     //unload sounds
-    while(!sounds->empty()) delete sounds->back(), sounds->pop_back();
+    while(!sounds->empty()){
+        delete sounds->back();
+        sounds->pop_back();
+    }
     delete sounds;
 }
 
 void SoundManager::playSound(Sound s, int numLoops){
-    #ifdef Q_WS_X11
-    return;
-    #endif
-    //turning sound off
-    if (s == NONE && currSound != NONE){
+    //stop current sound
+    if (currSound != NONE){
         sounds->at(currSound)->stop();
         currSound = NONE;
     }
-    else if (s != currSound){
-        //changing sounds
+    //play new sound
+    if (s != NONE){
         currSound = s;
         sounds->at(currSound)->setLoops(numLoops);
         sounds->at(currSound)->play();

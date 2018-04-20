@@ -4,4 +4,8 @@
         <file>cursor.png</file>
         <file>title.png</file>
     </qresource>
+    <qresource prefix="/Sounds">
+        <file>base-loop.wav</file>
+        <file>chaosinvaders-loop.wav</file>
+    </qresource>
 </RCC>

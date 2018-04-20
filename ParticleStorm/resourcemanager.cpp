@@ -16,7 +16,7 @@ ResourceManager::ResourceManager()
 
     //load the textures
     textures = new std::vector<GLuint>;
-    textures->push_back(loadTextureFromFile(":/Images/font.png"));
+    textures->push_back(Util::loadTextureFromFile(":/Images/font.png"));
 
     //init colour array
     gradientColours = new std::vector<const Util::Color*>;
@@ -67,29 +67,6 @@ ResourceManager::~ResourceManager()
     //delete static colours
     while(!basicColours->empty()) delete basicColours->back(), basicColours->pop_back();
     delete basicColours;
-}
-
-//loads an image from a file and returns the OpenGL handle for it
-GLuint ResourceManager::loadTextureFromFile(const char* c){
-    GLuint ret;
-    QImage tex;
-    tex = QGLWidget::convertToGLFormat(QImage(c));
-    if (tex.isNull()){
-        qDebug() << "Error loading texture" << c;
-        return 0;
-    }
-    //save settings
-    glPushAttrib(GL_ENABLE_BIT);
-    glEnable(GL_TEXTURE_2D);
-    //generate texture slot
-    glGenTextures(1, &ret);
-    //bind, load, unbind texture
-    glBindTexture(GL_TEXTURE_2D, ret);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tex.width(), tex.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, tex.bits());
-    glBindTexture(GL_TEXTURE_2D, 0);
-    //restore settings
-    glPopAttrib();
-    return ret;
 }
 
 //return a texture

@@ -21,9 +21,9 @@ const char* MainWindow::HS_FILE = "highscores.dat";
 
 MainWindow* MainWindow::instance = NULL;
 
-MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
+MainWindow::MainWindow(QWidget *parent) : QOpenGLWidget(parent){
     setWindowTitle("Particle Storm");
-    setFixedSize(MAX_X,MAX_Y);
+    setFixedSize(MAX_X, MAX_Y);
 
     QRect frect = frameGeometry();
     frect.moveCenter(QDesktopWidget().availableGeometry().center());
@@ -31,7 +31,6 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
 
     //set up the game engine
     engine = new GameEngine();
-    engine->setMouseTracking(true);
 
     //self reference
     instance = this;
@@ -74,7 +73,7 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent){
 
     //sounds
     soundManager = new SoundManager();
-    soundManager->playSound(SoundManager::TITLE);
+    soundManager->playSound(muted ? SoundManager::NONE : SoundManager::TITLE);
 
     //start with the main menu
     setMode(MENU);
@@ -236,22 +235,23 @@ void MainWindow::initializeGL(){
     gluOrtho2D(0, MAX_X, 0, MAX_Y); //orthogonal, not perspective
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    glClearColor(0, 0, 0, 255);
     glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     //load textures
-    fontTex = loadTexture(":/Images/font.png");
-    titleTex = loadTexture(":/Images/title.png");
-    cursorTex = loadTexture(":/Images/cursor.png");
+    fontTex = Util::loadTextureFromFile(":/Images/font.png");
+    titleTex = Util::loadTextureFromFile(":/Images/title.png");
+    cursorTex = Util::loadTextureFromFile(":/Images/cursor.png");
 }
 
 void MainWindow::timerEvent(QTimerEvent *){
     if (instance->isVisible()){
-        update();
-        updateGL();
+        step();
     }
 }
 
-void MainWindow::update(){
+void MainWindow::step(){
     double deltaTime = timer->restart()/(float)1000;
 
     //get mouse position
@@ -271,6 +271,9 @@ void MainWindow::update(){
         if (stars->at(i)->y > MAX_Y)  stars->at(i)->y -= MAX_Y;
         else if (stars->at(i)->y < 0) stars->at(i)->y = MAX_Y - stars->at(i)->y;
     }
+
+    //update OpenGL
+    update();
 }
 
 //draw the scene
@@ -419,29 +422,6 @@ void MainWindow::initStars(){
     for(int i = 0; i < NUM_STARS; i++){
         stars->push_back(new mStar(qrand() % MAX_X, qrand() % MAX_Y, Util::randInt(1,MAX_DIST)));
     }
-}
-
-//load a texture from a file
-GLuint MainWindow::loadTexture(const char* c){
-    GLuint ret;
-    QImage tex;
-    tex = QGLWidget::convertToGLFormat(QImage(c));
-    if (tex.isNull()){
-        qDebug() << "Error loading texture" << c;
-        return 0;
-    }
-    //save settings
-    glPushAttrib(GL_ENABLE_BIT);
-    glEnable(GL_TEXTURE_2D);
-    //generate texture slot
-    glGenTextures(1, &ret);
-    //bind, load, unbind texture
-    glBindTexture(GL_TEXTURE_2D, ret);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tex.width(), tex.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, tex.bits());
-    glBindTexture(GL_TEXTURE_2D, 0);
-    //restore settings
-    glPopAttrib();
-    return ret;
 }
 
 //highscores stuff

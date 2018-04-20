@@ -1,10 +1,3 @@
-/**
- * Implementation file for the Player class.
- *
- * Last modified by: Luke
- * Last modified on: March 29, 2012
- */
-
 #include "player.h"
 #include "gameengine.h"
 #include "mainwindow.h"

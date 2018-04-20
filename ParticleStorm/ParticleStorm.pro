@@ -4,14 +4,15 @@
 #
 #-------------------------------------------------
 
-QT       += core gui opengl
+QT += core gui opengl widgets multimedia
 
 TARGET = ParticleStorm
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp \
+SOURCES += \
+    main.cpp \
+    mainwindow.cpp \
     objectmanager.cpp \
     gameobject.cpp \
     player.cpp \
@@ -26,7 +27,8 @@ SOURCES += main.cpp\
     levelmanager.cpp \
     soundmanager.cpp
 
-HEADERS  += mainwindow.h \
+HEADERS  += \
+    mainwindow.h \
     objectmanager.h \
     gameobject.h \
     player.h \
@@ -41,9 +43,6 @@ HEADERS  += mainwindow.h \
     levelmanager.h \
     soundmanager.h
 
-FORMS    +=
+RESOURCES += Resources/resources.qrc
 
-RESOURCES += \
-    Resources/resources.qrc
-
-LIBS += -lGLU
+LIBS += -framework OpenGL

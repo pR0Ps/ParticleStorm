@@ -112,7 +112,7 @@ void Util::drawLine(double x1, const double y1, const double x2, double y2, cons
 }
 
 //draws a box
-void Util::drawBox(double x1, const double y1, const double x2, double y2, const bool fill, const Color *clr){
+void Util::drawBox(double x1, double y1, const double x2, const double y2, const bool fill, const Color *clr){
     //save current color
     if (clr != NULL){
         glPushAttrib(GL_CURRENT_BIT);
@@ -121,7 +121,7 @@ void Util::drawBox(double x1, const double y1, const double x2, double y2, const
     if (!fill){
         //weirdness with the LINE_LOOP
         x1 += 1;
-        y2 -= 1;
+        y1 += 1;
         glBegin(GL_LINE_LOOP);
     }
     else glBegin(GL_QUADS);
@@ -370,6 +370,14 @@ void Util::drawTexture(const double x1, const double y1, const double x2, const 
     glEnd();
     //restore settings
     glPopAttrib();
+}
+
+
+//loads an image from a file and returns the OpenGL handle for it
+GLuint Util::loadTextureFromFile(const char* c){
+    QOpenGLTexture *tex = new QOpenGLTexture(QImage(c).mirrored());
+    tex->bind();
+    return tex->textureId();
 }
 
 //converts a double to a string (because it's apparently too hard for C++)

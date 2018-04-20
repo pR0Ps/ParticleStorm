@@ -3,7 +3,9 @@ Particle Storm
 
 Manipulate the gravity around you to destroy waves of incoming enemies.
 
-You have the ability to create, push, and pull particles. In order to destroy the enemies, you must fling the particles into them. The faster the particles are moving, the more damage they do. Special powers and varied enemy types add variety for a fun, fast-paced arcade game!
+You have the ability to create, push, and pull particles. In order to destroy the enemies, you must
+fling the particles into them. The faster the particles are moving, the more damage they do. Special
+powers and varied enemy types add variety for a fun, fast-paced arcade game!
 
 Based off the 2006 game "Forces" by Adam Belinski.
 
@@ -24,7 +26,9 @@ Downloading
 Compiling
 ---------
 
-1. Install the Qt SDK v1.2 from <http://qt.nokia.com/downloads> (or via your preferred package manager)
+This project has been tested using Qt 5.10.1
+
+1. Install the Qt SDK from <https://www.qt.io/download-qt-installer> (or via your preferred package manager)
 2. [Windows Only] In the installer, make sure the MinGW compiler will be installed.
 3. Open `ParticleStorm/ParticleStorm.pro` in Qt Creator and pick a build directory.
 4. In the Projects tab, make sure the build configuration is set to use MinGW/GCC to compile (MSVC won't work).

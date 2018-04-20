@@ -1,7 +1,6 @@
 #ifndef RESOURCEMANAGER_H
 #define RESOURCEMANAGER_H
 
-#include <QtOpenGL/QGLWidget>
 #include <QImage>
 #include "util.h"
 
@@ -56,9 +55,6 @@ private:
 
     //self-reference
     static ResourceManager* instance;
-
-    //loads a texture:
-    GLuint loadTextureFromFile(const char* c);
 };
 
 #endif // RESOURCEMANAGER_H

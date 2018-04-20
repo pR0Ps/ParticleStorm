@@ -1,10 +1,3 @@
-/**
- * Header file for the Player class.
- *
- * Last modified by: Luke
- * Last modified on: March 29, 2012
- */
-
 #ifndef PLAYER_H
 #define PLAYER_H
 

@@ -3,8 +3,8 @@
 
 #include <QMainWindow>
 #include <QtOpenGL>
-#include <GL/glu.h>
-#include <GL/gl.h>
+#include <OpenGL/glu.h>
+#include <OpenGL/gl.h>
 #include <vector>
 #include <QImage>
 #include "gameengine.h"
@@ -12,7 +12,7 @@
 
 class GameEngine;
 
-class MainWindow : public QGLWidget{
+class MainWindow : public QOpenGLWidget{
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
@@ -168,12 +168,10 @@ protected:
     void initializeGL();
     void paintGL();
     void timerEvent(QTimerEvent*);
-    void update();
+    void step();
 
     void mousePressEvent(QMouseEvent* event);
     void mouseReleaseEvent(QMouseEvent* event);
-
-    GLuint loadTexture(const char* c);
 };
 
 

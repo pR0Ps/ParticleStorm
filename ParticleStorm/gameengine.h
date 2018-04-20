@@ -2,8 +2,8 @@
 #define GAMEENGINE_H
 
 #include <QtOpenGL>
-#include <GL/glu.h>
-#include <GL/gl.h>
+#include <OpenGL/glu.h>
+#include <OpenGL/gl.h>
 #include <QTime>
 
 #include "objectmanager.h"
@@ -12,7 +12,7 @@
 
 class LevelManager;
 
-class GameEngine : public QGLWidget{
+class GameEngine : public QOpenGLWidget{
 public:
     explicit GameEngine(QWidget *parent = 0);
     ~GameEngine();
@@ -68,7 +68,7 @@ private:
 
     void doFade(); //fade the previous screen every frame
     void drawHUD();
-    void update(double deltaTime); //update the logic for all the objects
+    void step(double deltaTime); //update the logic for all the objects
 
     QGLFramebufferObject *fbo; //offscreen framebuffer
     ObjectManager *objectManager; //manages all the objects in the game

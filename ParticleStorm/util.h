@@ -102,6 +102,9 @@ public:
                             GLuint tex, float x1_tex = 0, float y1_tex = 0,
                             float x2_tex = 1, float y2_tex = 1);
 
+    //loads an image from a file and returns the OpenGL handle for it
+    static GLuint loadTextureFromFile(const char* c);
+
     //formatting:
     static std::string doubleToString(double d, unsigned int width = 0, unsigned int precision = 2);
 
