@@ -123,7 +123,7 @@ void MainWindow::pauseGame(){
     soundManager->playSound(muted ? SoundManager::NONE : SoundManager::TITLE);
 }
 
-void MainWindow::mousePressEvent(QMouseEvent *event){
+void MainWindow::mousePressEvent(QMouseEvent *__unused(event)){
     if (levelButton->mouseOver(currMousePos)) levelButton->down = true;
     else if (endlessButton->mouseOver(currMousePos)) endlessButton->down = true;
     else if (zenButton->mouseOver(currMousePos)) zenButton->down = true;
@@ -138,7 +138,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
     else if (downEntry->mouseOver(currMousePos)) downEntry->down = true;
     else if (nextEntry->mouseOver(currMousePos)) nextEntry->down = true;
 }
-void MainWindow::mouseReleaseEvent(QMouseEvent *event){
+void MainWindow::mouseReleaseEvent(QMouseEvent *__unused(event)){
     //starting a new game
     if (levelButton->mouseOver(currMousePos) && levelButton->down){
         gameType = LevelManager::LEVELED;
@@ -247,13 +247,11 @@ void MainWindow::initializeGL(){
 
 void MainWindow::timerEvent(QTimerEvent *){
     if (instance->isVisible()){
-        step();
+        step(timer->restart()/(float)1000);
     }
 }
 
-void MainWindow::step(){
-    double deltaTime = timer->restart()/(float)1000;
-
+void MainWindow::step(double deltaTime){
     //get mouse position
     currMousePos = mapFromGlobal(QCursor::pos());
     currMousePos.setY(MAX_Y - currMousePos.y());

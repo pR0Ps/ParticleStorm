@@ -20,7 +20,7 @@ public:
     void drawNoFade() const;
     void drawFaded() const{}
     void pan(double x, double y);
-    void update(double deltaTime);
+    void step(double deltaTime);
     void applyForce(double x, double y, double mag, double range, double dissipation);
 private:
     double x_old, y_old;

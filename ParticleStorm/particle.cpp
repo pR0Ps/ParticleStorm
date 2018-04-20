@@ -17,7 +17,7 @@ Particle::Particle():GameObject(){
 
 }
 
-void Particle::update(double deltaTime) {
+void Particle::step(double deltaTime) {
 
     //limit speed
     if(Util::magnitude(x_vel,y_vel) > MAX_PARTICLE_SPEED) {

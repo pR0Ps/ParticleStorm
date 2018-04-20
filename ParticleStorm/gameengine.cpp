@@ -328,12 +328,12 @@ void GameEngine::step(double deltaTime){
     objectManager->pan(ObjectManager::SHRAPNEL, panX, panY);
 
     //update everything
-    objectManager->update(ObjectManager::PLAYER, deltaTime);
-    objectManager->update(ObjectManager::PARTICLE, deltaTime);
-    objectManager->update(ObjectManager::ENEMY, deltaTime);
-    objectManager->update(ObjectManager::STAR, deltaTime);
-    objectManager->update(ObjectManager::POWERUP, deltaTime);
-    objectManager->update(ObjectManager::SHRAPNEL, deltaTime);
+    objectManager->step(ObjectManager::PLAYER, deltaTime);
+    objectManager->step(ObjectManager::PARTICLE, deltaTime);
+    objectManager->step(ObjectManager::ENEMY, deltaTime);
+    objectManager->step(ObjectManager::STAR, deltaTime);
+    objectManager->step(ObjectManager::POWERUP, deltaTime);
+    objectManager->step(ObjectManager::SHRAPNEL, deltaTime);
 
     //do collisions after everything has updated into place
     objectManager->doEnemyParticleCollisions();
@@ -341,7 +341,7 @@ void GameEngine::step(double deltaTime){
     objectManager->doPlayerPowerupCollisions();
 
     //level stuff
-    levelManager->update(deltaTime);
+    levelManager->step(deltaTime);
     if (levelManager->levelFinished()){
         if (levelManager->getCurrentLevel() == LevelManager::MAX_LEVEL){
             gameOverText = "YOU WIN!";

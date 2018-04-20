@@ -9,7 +9,7 @@ class GameObject {
 public:
     GameObject();
 
-    ~GameObject();
+    virtual ~GameObject();
 
     //draw the object
     virtual void drawNoFade() const = 0;
@@ -19,7 +19,7 @@ public:
     virtual void pan(double x, double y);
 
     //update the object (pos from vel, AI, etc) using the ms since last update
-    virtual void update(double deltaTime) = 0;
+    virtual void step(double deltaTime) = 0;
 
     //apply force to the object
     //x, y is the point that the force originated from

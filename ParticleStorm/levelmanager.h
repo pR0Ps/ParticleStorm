@@ -30,7 +30,7 @@ public:
     void nextLevel();
 
     //updates the levelManager and polls isFinished
-    void update(double deltaTime);
+    void step(double deltaTime);
 
     //draw the level manager stuff (text overlays)
     void drawNoFade() const;

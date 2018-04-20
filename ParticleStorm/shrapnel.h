@@ -17,7 +17,7 @@ public:
 
     void drawNoFade() const{}
     void drawFaded() const;
-    void update(double deltaTime);
+    void step(double deltaTime);
     void startShrapnel(double x, double y, double x_vel, double y_vel, double len, const Util::Color *clr);
 
 private:

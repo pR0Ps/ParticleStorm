@@ -20,7 +20,7 @@ public:
 
     void drawNoFade() const{}
     void drawFaded() const;
-    void update(double deltaTime);
+    void step(double deltaTime);
     void die();
     void startParticle(double x, double y, double x_vel, double y_vel); //initializes a new particle, specifying the position
     float getSpeedPercent() const {return Util::magnitude(x_vel, y_vel)/(float)MAX_PARTICLE_SPEED;}

@@ -117,7 +117,7 @@ public:
     // methods in Java.
     // Note: do not use the virutal keyword in the implementation of these
     // functions.
-    void update(double deltaTime);
+    void step(double deltaTime);
     void drawNoFade() const;
     void drawFaded() const;
 

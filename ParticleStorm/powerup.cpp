@@ -47,7 +47,7 @@ void Powerup::drawFaded() const{
     glPopMatrix();
 }
 
-void Powerup::update(double deltaTime){
+void Powerup::step(double deltaTime){
     //adjust velocity
     x_vel -= AIR_RESIST * x_vel * deltaTime;
     y_vel -= AIR_RESIST * y_vel * deltaTime;

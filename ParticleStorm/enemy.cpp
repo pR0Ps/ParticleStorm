@@ -113,7 +113,7 @@ void Enemy::startEnemy(int type, double x, double y, double x_tar, double y_tar)
     }
 }
 
-void Enemy::update(double deltaTime){
+void Enemy::step(double deltaTime){
 
     const Player* player = ObjectManager::getInstance()->getPlayer();
 
@@ -337,8 +337,8 @@ void Enemy::die(){
 void Enemy::findDirection(double x2, double y2, double x_tar2, double y_tar2){
 
     //calculating the x and y distance from enemy spawn and current player position
-    double x_dist = abs(x_tar2 - x2);
-    double y_dist = abs(y_tar2 - y2);
+    double x_dist = std::abs(x_tar2 - x2);
+    double y_dist = std::abs(y_tar2 - y2);
 
     //calculate angle in radians
     double theta = atan(y_dist/x_dist);

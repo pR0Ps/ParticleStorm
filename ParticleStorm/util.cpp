@@ -93,7 +93,7 @@ void Util::drawLine(double x1, const double y1, const double x2, double y2, cons
         glPushAttrib(GL_CURRENT_BIT);
         glColor3d(clr->red, clr->green, clr->blue);
     }
-    if (abs(x1 - x2) < 1 && abs(y1 - y2) < 1){
+    if (std::abs(x1 - x2) < 1 && std::abs(y1 - y2) < 1){
         //draw a point
         glBegin(GL_POINTS);
             glVertex2d(x1, y1);

@@ -173,7 +173,7 @@ std::string LevelManager::getLevelString(){
     return "";
 }
 
-void LevelManager::update(double deltaTime) {
+void LevelManager::step(double deltaTime) {
     //run timers
     if (text_ttl > 0) text_ttl -= deltaTime;
     if (enemyCheck_ttl > 0) enemyCheck_ttl -= deltaTime;

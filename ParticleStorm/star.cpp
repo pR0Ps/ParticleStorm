@@ -21,7 +21,7 @@ void Star::initStar(){
     dist = qrand() % 3 == 1 ? 2 : qrand() % 3 == 1 ? MAX_DIST : Util::randInt(2, MAX_DIST);
 }
 
-void Star::update(double deltaTime){
+void Star::step(double deltaTime){
     //update velocity
     x_vel -= 2 * x_vel * deltaTime;
     y_vel -= 2 * y_vel * deltaTime;

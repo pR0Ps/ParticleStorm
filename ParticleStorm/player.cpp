@@ -114,7 +114,7 @@ void Player::reset(){
 
 // Implementation of pure virtual functions.
 
-void Player::update(double deltaTime) {
+void Player::step(double deltaTime) {
     // Update the previous coordinates of the avatar with the current
     // coordinates.
     x_old = x;

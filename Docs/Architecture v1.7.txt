@@ -15,7 +15,7 @@ Objects:
 			GameObject* getUnused(type) //returns first unused object for reuse
 			static ObjectManager* getObjectManager() //returns an instance of itself 
 		Methods:
-			draw, pan, update, applyforce //need to specify what type
+			draw, pan, step, applyforce //need to specify what type
 			init (type, number) //creates the initial batch of objects to use for the entire game
 			collisions (enemy-particle, player-enemy, player-powerup)
 			spawning (particle, powerup, enemy, shrapnel
@@ -37,9 +37,8 @@ Objects:
 		Properties:
 			vector of sound files
 			current sound playing
-			double to keep tract of how long the sound has been playing
+			double to keep track of how long the sound has been playing
 		Methods:
-			update() //call this every frame, update the time playing variable
 			playSound(Sound) //sets the specified sound to play
 			stopSound() //stops playing sounds
 	GameObject
@@ -55,7 +54,7 @@ Objects:
 		Methods:
 			virtual void draw ()
 			virtual void pan(x, y)
-			virtual void update ()
+			virtual void step ()
 			virtual void applyForce (x, y, mag)
 			virtual void die ()
 			
@@ -139,9 +138,9 @@ Things to note:
 	-All objects will be kept in a fixed-length array. When adding a new object, it will replace an inactive object in the array. This avoids memory issues. In addition, it can be optimized so that when an object is set to inactive, it is switched with the last non-inactive particle. This speeds up operations on the objects as the loop can stop when it encounters the first inactive object.
 	-All object types have their own array of objects
 	-Abilities are only active if there is no regular force being exerted
-	-Before the Update procedures are called, only the velocities of objects get updated (except for panning). The update procedures take the velocity and apply it to the objects, updating the position, speed, colour, etc.
+	-Before the step procedures are called, only the velocities of objects get updated (except for panning). The step procedures take the velocity and apply it to the objects, updating the position, speed, colour, etc.
 	-The panning procedures will also take care of shaking the screen on player getting hit (if implemented)
 	-QGLWidget is the Qt OpenGL canvas. We want a double buffered window to draw everything to so at the end of the frameloop we can tell it to update the screen.
-	-Qt calls the main frameloop method at a regular interval of our choosing. The game should run fine at 30 FPS on all systems, if we want to remove the limit on the framerate, we'll have to introduce a delta-t system for the update methods to keep the game running smoothly.
+	-Qt calls the main frameloop method at a regular interval of our choosing. The game should run fine at 30 FPS on all systems, if we want to remove the limit on the framerate, we'll have to introduce a delta-t system for the step methods to keep the game running smoothly.
 	-The only pint that you can draw is in the draw function. Everywhere else will not work.
 	-The ObjectManager singleton class will manage the brunt of the operations, everything else will be in the derivitives of the GameObject classes.

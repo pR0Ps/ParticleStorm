@@ -168,7 +168,7 @@ protected:
     void initializeGL();
     void paintGL();
     void timerEvent(QTimerEvent*);
-    void step();
+    void step(double deltaTime);
 
     void mousePressEvent(QMouseEvent* event);
     void mouseReleaseEvent(QMouseEvent* event);

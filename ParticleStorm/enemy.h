@@ -21,7 +21,7 @@ public:
 
     Enemy();
 
-    void update(double deltaTime);
+    void step(double deltaTime);
 
     //move from current position to given position
     void move(double x, double y);
