@@ -1,7 +1,6 @@
 # Build directories
-ParticleStorm-build-desktop
-ParticleStorm-build-desktop-Qt_4_8_0_for_Desktop_-_MinGW__Qt_SDK__Release
-ParticleStorm-build-desktop-Qt_4_8_0_for_Desktop_-_MinGW__Qt_SDK__Debug
+ParticleStorm-build-*
+build-ParticleStorm-*
 ParticleStorm.pro.user
 
 # Generated files
